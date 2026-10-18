@@ -2,7 +2,7 @@ services:
   - type: web
     name: udec-knowledge
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python core/ingestion.py
     startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
     healthCheckPath: /_stcore/health
     envVars:
