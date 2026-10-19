@@ -1,7 +1,16 @@
+import os
+
 import streamlit as st
+
 from core.pipeline import query_rag_system, warm_up
 
 st.set_page_config(page_title="UdeC Knowledge Hub", page_icon="🎓", layout="centered")
+
+try:
+    for _secret_key, _secret_value in st.secrets.items():
+        os.environ.setdefault(_secret_key, str(_secret_value))
+except Exception:
+    pass
 
 
 @st.cache_resource(show_spinner="Loading the search engine (only once)...")
