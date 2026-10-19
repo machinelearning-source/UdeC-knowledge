@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import tempfile
 
@@ -18,10 +19,20 @@ SYSTEM_PROMPT = """You are the institutional knowledge assistant of Universidad 
 
 Rules:
 - Answer ONLY using the information contained in the official document fragments provided below.
-- Answer in the same language the user used in their question.
+- Always write the whole answer in the same language as the user's question, even when the document fragments are written in another language.
+- The fragments are usually written in Spanish. That must NEVER change your language: if the question is in English, every word of your answer must be in English; if the question is in Spanish, answer fully in Spanish.
 - Be clear, brief and use plain language.
 - If the fragments do NOT contain enough information to answer, say so explicitly: tell the user the information was not found in the consulted official documents. Never invent information or use external knowledge.
 - Always end with a short list of the sources used (document name and page)."""
+
+SPANISH_MARKERS = r"[áéíóúñ¿¡]|\b(qué|cuál|cuáles|cómo|dónde|cuándo|cuánto|cuántos|es|son|debo|puedo|universidad|estudiante|estudiantes)\b"
+ENGLISH_MARKERS = r"\b(what|which|how|why|when|where|who|is|are|does|do|can|the|university|student|students)\b"
+
+
+def detect_question_language(question):
+    spanish_hits = len(re.findall(SPANISH_MARKERS, question, re.IGNORECASE))
+    english_hits = len(re.findall(ENGLISH_MARKERS, question, re.IGNORECASE))
+    return "Spanish" if spanish_hits > english_hits else "English"
 
 
 def query_rag_system(user_question):
@@ -63,12 +74,18 @@ def query_rag_system(user_question):
                 ("system", SYSTEM_PROMPT),
                 (
                     "human",
-                    "Official document fragments:\n\n{context}\n\nUser question: {question}",
+                    "Write your entire answer in {language}.\n\nOfficial document fragments:\n\n{context}\n\nUser question: {question}",
                 ),
             ]
         )
         chain = prompt | llm | StrOutputParser()
-        synthesized_response = chain.invoke({"context": context_text, "question": user_question})
+        synthesized_response = chain.invoke(
+            {
+                "context": context_text,
+                "question": user_question,
+                "language": detect_question_language(user_question),
+            }
+        )
     except Exception as exc:
         return f"Error: the AI service could not answer ({exc})", []
 
