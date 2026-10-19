@@ -1,13 +1,12 @@
 import os
 import sys
-import tempfile
 
 from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from core import FastEmbedEmbeddings
+from core import FastEmbedEmbeddings, default_cache_dir
 
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
@@ -16,7 +15,7 @@ def run_ingestion():
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     documents_path = os.path.join(base_path, "data", "documents")
     vector_store_path = os.path.join(base_path, "vector_store")
-    model_cache_path = os.path.join(tempfile.gettempdir(), "fastembed_cache")
+    model_cache_path = default_cache_dir()
 
     print(f"[PROCESS] Starting to read PDFs in: {documents_path}")
 

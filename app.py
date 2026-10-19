@@ -1,7 +1,15 @@
 import streamlit as st
-from core.pipeline import query_rag_system
+from core.pipeline import query_rag_system, warm_up
 
 st.set_page_config(page_title="UdeC Knowledge Hub", page_icon="🎓", layout="centered")
+
+
+@st.cache_resource(show_spinner="Loading the search engine (only once)...")
+def _warm_engine():
+    warm_up()
+
+
+_warm_engine()
 
 GREEN_DARK = "#00482b"
 GREEN = "#007b3e"

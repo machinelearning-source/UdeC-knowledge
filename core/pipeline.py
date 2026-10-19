@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-import tempfile
 from functools import lru_cache
 
 from dotenv import load_dotenv
@@ -11,7 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from core import FastEmbedEmbeddings
+from core import FastEmbedEmbeddings, default_cache_dir
 
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LLM_MODEL = "openai/gpt-oss-120b"
@@ -47,10 +46,19 @@ def load_vector_store(vector_store_path, model_cache_path):
     return FAISS.load_local(vector_store_path, embeddings, allow_dangerous_deserialization=True)
 
 
+def warm_up():
+    """Preload the embedding model and the FAISS index into memory."""
+    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    vector_store_path = os.path.join(base_path, "vector_store")
+
+    if os.path.exists(os.path.join(vector_store_path, "index.faiss")):
+        load_vector_store(vector_store_path, default_cache_dir())
+
+
 def query_rag_system(user_question):
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     vector_store_path = os.path.join(base_path, "vector_store")
-    model_cache_path = os.path.join(tempfile.gettempdir(), "fastembed_cache")
+    model_cache_path = default_cache_dir()
 
     load_dotenv(os.path.join(base_path, ".env"))
 
