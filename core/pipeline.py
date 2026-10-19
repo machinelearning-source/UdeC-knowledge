@@ -15,7 +15,7 @@ from core import FastEmbedEmbeddings
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 LLM_MODEL = "openai/gpt-oss-120b"
 
-SYSTEM_PROMPT = """You are the institutional knowledge assistant of Universidad de Cundinamarca (UdeC).
+SYSTEM_PROMPT = """You are the institutional knowledge assistant of this university.
 
 Rules:
 - Answer ONLY using the information contained in the official document fragments provided below.

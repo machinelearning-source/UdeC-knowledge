@@ -104,7 +104,7 @@ st.markdown(
     """
     <div class="udec-hero">
         <h1>🎓 UdeC-<span>Knowledge</span></h1>
-        <p>Intelligent Knowledge Management System &middot; Universidad de Cundinamarca</p>
+        <p>Intelligent Knowledge Management System</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -135,7 +135,7 @@ if about_col.button("ℹ️ About", use_container_width=True):
 
 if st.session_state.show_about:
     st.info(
-        "**About this app** — This pilot answers questions about Universidad de Cundinamarca "
+        "**About this app** — This pilot answers questions about the university's official "
         "documents using a Retrieval-Augmented Generation pipeline:\n\n"
         "1. **Ingestion:** the PDF files in `data/documents` are read and split into chunks.\n"
         "2. **Embeddings:** each chunk is converted into a vector with the multilingual model "
@@ -196,6 +196,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">Universidad de Cundinamarca &middot; FastEmbed + FAISS + Groq</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq</div>',
     unsafe_allow_html=True,
 )
