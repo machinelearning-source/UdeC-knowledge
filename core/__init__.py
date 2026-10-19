@@ -10,10 +10,10 @@ class FastEmbedEmbeddings(Embeddings):
     porque ese presentaba un error con pydantic 2 (el modelo quedaba en None).
     """
 
-    def __init__(self, model_name=DEFAULT_MODEL, cache_dir=None):
+    def __init__(self, model_name=DEFAULT_MODEL, cache_dir=None, threads=1):
         from fastembed import TextEmbedding
 
-        self.model = TextEmbedding(model_name=model_name, cache_dir=cache_dir)
+        self.model = TextEmbedding(model_name=model_name, cache_dir=cache_dir, threads=threads)
 
     def embed_documents(self, texts):
         return [vector.tolist() for vector in self.model.embed(texts)]

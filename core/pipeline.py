@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import tempfile
+from functools import lru_cache
 
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
@@ -35,6 +36,17 @@ def detect_question_language(question):
     return "Spanish" if spanish_hits > english_hits else "English"
 
 
+@lru_cache(maxsize=1)
+def load_vector_store(vector_store_path, model_cache_path):
+    """Load the embedding model and FAISS index only once per process.
+
+    Loading the ONNX embedding model is expensive (tens of seconds on a
+    low-CPU host), so it must never happen on every question.
+    """
+    embeddings = FastEmbedEmbeddings(model_name=EMBEDDING_MODEL, cache_dir=model_cache_path)
+    return FAISS.load_local(vector_store_path, embeddings, allow_dangerous_deserialization=True)
+
+
 def query_rag_system(user_question):
     base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     vector_store_path = os.path.join(base_path, "vector_store")
@@ -46,8 +58,7 @@ def query_rag_system(user_question):
         return "Error: No knowledge index found. Please run 'python core/ingestion.py' first to process the university documents.", []
 
     print(f"[PROCESS] Searching document sources for: '{user_question}'")
-    embeddings = FastEmbedEmbeddings(model_name=EMBEDDING_MODEL, cache_dir=model_cache_path)
-    vector_db = FAISS.load_local(vector_store_path, embeddings, allow_dangerous_deserialization=True)
+    vector_db = load_vector_store(vector_store_path, model_cache_path)
     found_documents = vector_db.similarity_search(user_question, k=4)
 
     if len(found_documents) == 0:
