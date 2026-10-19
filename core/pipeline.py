@@ -67,7 +67,9 @@ def query_rag_system(user_question):
 
     print(f"[PROCESS] Searching document sources for: '{user_question}'")
     vector_db = load_vector_store(vector_store_path, model_cache_path)
-    found_documents = vector_db.max_marginal_relevance_search(user_question, k=6, fetch_k=40)
+    found_documents = vector_db.max_marginal_relevance_search(
+        user_question, k=6, fetch_k=40, lambda_mult=0.6
+    )
 
     if len(found_documents) == 0:
         return "No sections within the uploaded documents match your query.", []
