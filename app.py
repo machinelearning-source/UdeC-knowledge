@@ -24,8 +24,27 @@ st.markdown(
     [data-testid="stDecoration"] {{display: none;}}
     footer {{visibility: hidden;}}
     [data-testid="stHeader"] {{background: transparent;}}
-    .stApp {{background: linear-gradient(180deg, #f2faf3 0%, #ffffff 55%);}}
+    .stApp {{
+        background:
+            radial-gradient(circle at 12% 0%, rgba(121, 192, 0, 0.35) 0%, rgba(121, 192, 0, 0) 45%),
+            radial-gradient(circle at 92% 8%, rgba(255, 215, 0, 0.38) 0%, rgba(255, 215, 0, 0) 40%),
+            linear-gradient(160deg, #e9fbe4 0%, #f6fff0 40%, #fff9e0 100%) !important;
+    }}
+    [data-testid="stAppViewContainer"], [data-testid="stHeader"] {{background: transparent !important;}}
     .block-container {{padding-top: 2rem; max-width: 850px;}}
+    [data-testid="stChatMessage"] {{
+        background: #ffffff;
+        border: 1px solid rgba(0, 72, 43, 0.12);
+        border-left: 6px solid {LIME};
+        border-radius: 14px;
+        box-shadow: 0 4px 14px rgba(0, 72, 43, 0.10);
+        padding: 4px 10px;
+        margin-bottom: 8px;
+    }}
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
+        border-left-color: {GREEN};
+        background: #f4fdf6;
+    }}
     .udec-hero {{
         background: linear-gradient(100deg, {GREEN_DARK} 0%, {GREEN} 62%, {LIME} 100%);
         border-bottom: 7px solid {GOLD};
