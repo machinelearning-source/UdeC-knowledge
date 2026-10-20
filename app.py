@@ -281,21 +281,23 @@ st.markdown(
     footer {{visibility: hidden;}}
     [data-testid="stHeader"] {{background: transparent;}}
 
-    [data-testid="stSidebar"] {{
-        background-color: {GREEN_DARK} !important;
-        background-image: linear-gradient(175deg, {GREEN_DARK} 0%, {GREEN} 70%, {LIME} 160%) !important;
-    }}
-    [data-testid="stSidebar"] * {{color: #ffffff;}}
+    [data-testid="stSidebar"],
     [data-testid="stSidebarContent"] {{
-        background: linear-gradient(175deg, {GREEN_DARK} 0%, {GREEN} 70%, {LIME} 160%);
+        background-color: #edf7e7 !important;
+        background-image: none !important;
     }}
+    [data-testid="stSidebar"] {{
+        border-right: 4px solid {GOLD};
+    }}
+    [data-testid="stSidebar"] * {{color: {GREEN_DARK};}}
+    [data-testid="stSidebar"] h4 {{color: {GREEN_DARK}; font-weight: 800;}}
     [data-testid="stSidebar"] .stButton > button {{
-        background: #062f1c !important;
-        border: 2px solid {GOLD} !important;
+        background: {GREEN_DARK} !important;
+        border: 2px solid {GREEN_DARK} !important;
         border-radius: 12px;
         width: 100%;
         font-weight: 700;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 3px 10px rgba(0, 72, 43, 0.22);
     }}
     [data-testid="stSidebar"] .stButton > button,
     [data-testid="stSidebar"] .stButton > button * {{
@@ -310,15 +312,15 @@ st.markdown(
         color: {GREEN_DARK} !important;
     }}
     .udec-brand {{
-        background: rgba(255, 215, 0, 0.16);
+        background: rgba(0, 72, 43, 0.06);
         border-left: 5px solid {GOLD};
         border-radius: 12px;
         padding: 14px 16px;
         margin-bottom: 18px;
     }}
-    .udec-brand h2 {{margin: 0; font-size: 1.35rem; color: #ffffff;}}
-    .udec-brand h2 span {{color: {GOLD};}}
-    .udec-brand p {{margin: 4px 0 0; font-size: 0.82rem; color: #d8f0dc;}}
+    .udec-brand h2 {{margin: 0; font-size: 1.35rem; color: {GREEN_DARK};}}
+    .udec-brand h2 span {{color: #8a6d00;}}
+    .udec-brand p {{margin: 4px 0 0; font-size: 0.82rem; color: #3c5a49;}}
 
     .stApp {{
         background:
@@ -582,6 +584,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.4</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.5</div>',
     unsafe_allow_html=True,
 )
