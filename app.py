@@ -289,19 +289,20 @@ st.markdown(
         background: linear-gradient(175deg, {GREEN_DARK} 0%, {GREEN} 70%, {LIME} 160%);
     }}
     [data-testid="stSidebar"] .stButton > button {{
-        background: {GOLD};
-        border: 2px solid {GOLD};
+        background: #062f1c !important;
+        border: 2px solid {GOLD} !important;
         border-radius: 12px;
         width: 100%;
         font-weight: 700;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
     }}
     [data-testid="stSidebar"] .stButton > button,
     [data-testid="stSidebar"] .stButton > button * {{
-        color: {GREEN_DARK} !important;
+        color: {GOLD} !important;
     }}
     [data-testid="stSidebar"] .stButton > button:hover {{
-        background: #ffffff;
-        border-color: #ffffff;
+        background: {GOLD} !important;
+        border-color: {GOLD} !important;
     }}
     [data-testid="stSidebar"] .stButton > button:hover,
     [data-testid="stSidebar"] .stButton > button:hover * {{
@@ -578,6 +579,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.2</div>',
     unsafe_allow_html=True,
 )
