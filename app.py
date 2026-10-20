@@ -273,7 +273,8 @@ CALENDAR_QUESTION = (
 )
 CALENDAR_RETRIEVAL_QUESTION = (
     "According to the 2026 academic calendar, when does the following activity take "
-    "place: {option} (official name in the document: {official})? Give the dates and the month."
+    "place: {option} (official name in the document: {official})? Give the dates and the month. "
+    "Answer in English without repeating the Spanish official name."
 )
 
 st.markdown(
@@ -605,6 +606,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.6</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.7</div>',
     unsafe_allow_html=True,
 )

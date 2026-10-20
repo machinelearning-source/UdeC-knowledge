@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from core import FastEmbedEmbeddings, default_cache_dir
 
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-CALENDAR_PREFIX = "CALENDARIO"
+CALENDAR_PREFIX = "ACADEMIC CALENDAR"
 
 CALENDAR_MONTHS = [
     ("December 2025", 3),
