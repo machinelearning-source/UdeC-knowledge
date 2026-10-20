@@ -282,7 +282,8 @@ st.markdown(
     [data-testid="stHeader"] {{background: transparent;}}
 
     [data-testid="stSidebar"] {{
-        background: linear-gradient(175deg, {GREEN_DARK} 0%, {GREEN} 70%, {LIME} 160%) !important;
+        background-color: {GREEN_DARK} !important;
+        background-image: linear-gradient(175deg, {GREEN_DARK} 0%, {GREEN} 70%, {LIME} 160%) !important;
     }}
     [data-testid="stSidebar"] * {{color: #ffffff;}}
     [data-testid="stSidebarContent"] {{
@@ -309,7 +310,7 @@ st.markdown(
         color: {GREEN_DARK} !important;
     }}
     .udec-brand {{
-        background: rgba(255, 255, 255, 0.10);
+        background: rgba(255, 215, 0, 0.16);
         border-left: 5px solid {GOLD};
         border-radius: 12px;
         padding: 14px 16px;
@@ -329,7 +330,8 @@ st.markdown(
     .block-container {{padding-top: 1.6rem; padding-bottom: 2rem; max-width: 1080px;}}
 
     .udec-hero {{
-        background: linear-gradient(100deg, {GREEN_DARK} 0%, {GREEN} 58%, {LIME} 100%);
+        background-color: {GREEN};
+        background-image: linear-gradient(100deg, {GREEN_DARK} 0%, {GREEN} 58%, {LIME} 100%);
         border-bottom: 7px solid {GOLD};
         border-radius: 20px;
         padding: 30px 34px;
@@ -360,9 +362,9 @@ st.markdown(
 
     [data-testid="stVerticalBlockBorderWrapper"] {{
         border-radius: 16px;
-        border: 1px solid rgba(0, 72, 43, 0.28);
-        background: #ffffff;
-        box-shadow: 0 8px 22px rgba(0, 72, 43, 0.10);
+        border: 1px solid rgba(0, 72, 43, 0.30);
+        background: linear-gradient(180deg, #e8f6e2 0%, #f4fcef 100%);
+        box-shadow: 0 8px 22px rgba(0, 72, 43, 0.12);
     }}
 
     div.stButton > button {{
@@ -389,8 +391,8 @@ st.markdown(
         color: #ffffff;
     }}
     [data-testid="stChatMessage"] {{
-        background: #ffffff;
-        border: 1px solid rgba(0, 72, 43, 0.12);
+        background: #f5fcf1;
+        border: 1px solid rgba(0, 72, 43, 0.14);
         border-left: 6px solid {LIME};
         border-radius: 14px;
         box-shadow: 0 4px 14px rgba(0, 72, 43, 0.10);
@@ -399,7 +401,7 @@ st.markdown(
     }}
     [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {{
         border-left-color: {GREEN};
-        background: #f4fdf6;
+        background: #e6f6df;
     }}
     [data-testid="stChatInput"] div[data-baseweb="textarea"] {{
         border: 2px solid {GREEN};
@@ -580,6 +582,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.3</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.4</div>',
     unsafe_allow_html=True,
 )
