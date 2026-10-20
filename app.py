@@ -445,7 +445,8 @@ with st.sidebar:
 
     st.markdown("#### Quick actions")
     if st.button("🔄 Reload page", use_container_width=True):
-        st.session_state.flash = "Page reloaded."
+        st.session_state.clear()
+        st.query_params["reloaded"] = "1"
         st.rerun()
 
     if st.button("🧹 New conversation", use_container_width=True):
@@ -456,8 +457,21 @@ with st.sidebar:
         st.rerun()
 
     if st.button("ℹ️ About", use_container_width=True):
-        st.session_state.show_about = True
-        st.rerun()
+        st.session_state.show_about = not st.session_state.show_about
+
+    if st.session_state.show_about:
+        st.markdown(
+            "**About this app**  \n"
+            "This pilot answers questions about the university's official documents with a "
+            "Retrieval-Augmented Generation pipeline:\n\n"
+            "1. **Ingestion:** the PDFs are read and split into chunks.\n"
+            "2. **Embeddings:** FastEmbed (multilingual MiniLM) runs locally.\n"
+            "3. **Retrieval:** FAISS + MMR finds the most similar chunks.\n"
+            "4. **Generation:** the Groq model `openai/gpt-oss-120b` writes the answer using only "
+            "those chunks, in the language of the question.\n\n"
+            "Every answer cites the document and page it came from and says clearly when the "
+            "information is not in the indexed documents."
+        )
 
     st.markdown("#### Knowledge base")
     st.markdown(
@@ -468,27 +482,6 @@ with st.sidebar:
         - 🧠 Multilingual local embeddings
         """
     )
-
-
-@st.dialog("About this app")
-def _about_dialog():
-    st.markdown(
-        "This pilot answers questions about the university's official documents using a "
-        "Retrieval-Augmented Generation pipeline:\n\n"
-        "1. **Ingestion:** the PDF files in `data/documents` are read and split into chunks.\n"
-        "2. **Embeddings:** each chunk is converted into a vector with the multilingual model "
-        "`paraphrase-multilingual-MiniLM-L12-v2` (FastEmbed, runs locally).\n"
-        "3. **Retrieval:** FAISS finds the most similar chunks for your question (MMR).\n"
-        "4. **Generation:** the Groq LLM (`openai/gpt-oss-120b`) writes the answer using only those "
-        "chunks, in the language of your question.\n\n"
-        "Every answer cites the document and page it came from, and the assistant states clearly "
-        "when the answer is not present in the indexed documents."
-    )
-
-
-if st.session_state.show_about:
-    st.session_state.show_about = False
-    _about_dialog()
 
 st.markdown(
     """
@@ -507,6 +500,10 @@ st.markdown(
 flash_message = st.session_state.pop("flash", None)
 if flash_message:
     st.success(flash_message)
+
+if st.query_params.get("reloaded") == "1" and "_reload_notice" not in st.session_state:
+    st.session_state["_reload_notice"] = True
+    st.success("Application reloaded.")
 
 if "messages" not in st.session_state:
     st.session_state.messages = [dict(WELCOME_MESSAGE)]
@@ -606,6 +603,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.7</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.8</div>',
     unsafe_allow_html=True,
 )
