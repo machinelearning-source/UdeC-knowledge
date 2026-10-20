@@ -142,12 +142,12 @@ CALENDAR_ACTIVITIES = [
     "CAI - Moment 1 (diagnostic)",
     "CAI - Moment 2, remedial, first attempt (satisfactory)",
     "CAI - Moment 2, remedial, second attempt (satisfactory)",
-    "CAI Generacion Siglo 21 course - Moment 1 (diagnostic)",
-    "CAI Generacion Siglo 21 course - Moment 2, remedial, first attempt (satisfactory)",
-    "CAI Generacion Siglo 21 course - Moment 2, remedial, second attempt (satisfactory)",
-    "CAI Generacion Siglo 21 course - Moment 3, on-site (advanced level), first attempt",
-    "CAI Generacion Siglo 21 course - Moment 3, on-site (advanced level), second attempt",
-    "CAI Generacion Siglo 21 course - Moment 3, on-site (advanced level), third attempt",
+    "CAI 21st Century Generation course - Moment 1 (diagnostic)",
+    "CAI 21st Century Generation course - Moment 2, remedial, first attempt (satisfactory)",
+    "CAI 21st Century Generation course - Moment 2, remedial, second attempt (satisfactory)",
+    "CAI 21st Century Generation course - Moment 3, on-site (advanced level), first attempt",
+    "CAI 21st Century Generation course - Moment 3, on-site (advanced level), second attempt",
+    "CAI 21st Century Generation course - Moment 3, on-site (advanced level), third attempt",
     "Deadline for grade entry per term",
     "University week",
     "End of academic period",
@@ -212,12 +212,12 @@ CALENDAR_OFFICIAL_NAMES = {
     "CAI - Moment 1 (diagnostic)": "Presentación Campos De Aprendizaje Institucional CAI- Momento 1 (Diagnóstico)",
     "CAI - Moment 2, remedial, first attempt (satisfactory)": "Presentación Campos De Aprendizaje Institucional CAI- Momento 2 Nivelatorio Primera Vez (Satisfactorio)",
     "CAI - Moment 2, remedial, second attempt (satisfactory)": "Presentación Campos De Aprendizaje Institucional CAI- Momento 2 Nivelatorio Segunda Vez (Satisfactorio)",
-    "CAI Generacion Siglo 21 course - Moment 1 (diagnostic)": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 1 (Diagnóstico)",
-    "CAI Generacion Siglo 21 course - Moment 2, remedial, first attempt (satisfactory)": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 2 -Nivelatorio Primera Vez (Satisfactorio)",
-    "CAI Generacion Siglo 21 course - Moment 2, remedial, second attempt (satisfactory)": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 2 -Nivelatorio Segunda Vez (Satisfactorio)",
-    "CAI Generacion Siglo 21 course - Moment 3, on-site (advanced level), first attempt": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 3 - Presencial (Nivel Avanzado) -- Primera Vez",
-    "CAI Generacion Siglo 21 course - Moment 3, on-site (advanced level), second attempt": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 3 - Presencial (Nivel Avanzado) - Segunda Vez",
-    "CAI Generacion Siglo 21 course - Moment 3, on-site (advanced level), third attempt": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 3 - Presencial (Nivel Avanzado) - Tercera Vez",
+    "CAI 21st Century Generation course - Moment 1 (diagnostic)": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 1 (Diagnóstico)",
+    "CAI 21st Century Generation course - Moment 2, remedial, first attempt (satisfactory)": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 2 -Nivelatorio Primera Vez (Satisfactorio)",
+    "CAI 21st Century Generation course - Moment 2, remedial, second attempt (satisfactory)": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 2 -Nivelatorio Segunda Vez (Satisfactorio)",
+    "CAI 21st Century Generation course - Moment 3, on-site (advanced level), first attempt": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 3 - Presencial (Nivel Avanzado) -- Primera Vez",
+    "CAI 21st Century Generation course - Moment 3, on-site (advanced level), second attempt": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 3 - Presencial (Nivel Avanzado) - Segunda Vez",
+    "CAI 21st Century Generation course - Moment 3, on-site (advanced level), third attempt": "Presentación Campo De Aprendizaje Institucional CAI Cátedra Generación Siglo 21 Momento 3 - Presencial (Nivel Avanzado) - Tercera Vez",
     "Deadline for grade entry per term": "Fecha Limite Para Registro De Notas Por Corte",
     "University week": "Semana Universitaria",
     "End of academic period": "Finalización De Periodo Académico",
@@ -268,6 +268,10 @@ COURSE_QUESTION = (
     "requirements to homologate the course {option}?"
 )
 CALENDAR_QUESTION = (
+    "According to the 2026 academic calendar, when does the following activity take "
+    "place: {option}? Give the dates and the month."
+)
+CALENDAR_RETRIEVAL_QUESTION = (
     "According to the 2026 academic calendar, when does the following activity take "
     "place: {option} (official name in the document: {official})? Give the dates and the month."
 )
@@ -440,16 +444,19 @@ with st.sidebar:
 
     st.markdown("#### Quick actions")
     if st.button("🔄 Reload page", use_container_width=True):
+        st.session_state.flash = "Page reloaded."
         st.rerun()
 
     if st.button("🧹 New conversation", use_container_width=True):
         st.session_state.messages = [dict(WELCOME_MESSAGE)]
         st.session_state.pending_question = None
-        st.session_state.show_about = False
+        st.session_state.pending_query = None
+        st.session_state.flash = "New conversation started."
         st.rerun()
 
     if st.button("ℹ️ About", use_container_width=True):
-        st.session_state.show_about = not st.session_state.show_about
+        st.session_state.show_about = True
+        st.rerun()
 
     st.markdown("#### Knowledge base")
     st.markdown(
@@ -461,10 +468,12 @@ with st.sidebar:
         """
     )
 
-if st.session_state.show_about:
-    st.info(
-        "**About this app** — This pilot answers questions about the university's official "
-        "documents using a Retrieval-Augmented Generation pipeline:\n\n"
+
+@st.dialog("About this app")
+def _about_dialog():
+    st.markdown(
+        "This pilot answers questions about the university's official documents using a "
+        "Retrieval-Augmented Generation pipeline:\n\n"
         "1. **Ingestion:** the PDF files in `data/documents` are read and split into chunks.\n"
         "2. **Embeddings:** each chunk is converted into a vector with the multilingual model "
         "`paraphrase-multilingual-MiniLM-L12-v2` (FastEmbed, runs locally).\n"
@@ -474,6 +483,11 @@ if st.session_state.show_about:
         "Every answer cites the document and page it came from, and the assistant states clearly "
         "when the answer is not present in the indexed documents."
     )
+
+
+if st.session_state.show_about:
+    st.session_state.show_about = False
+    _about_dialog()
 
 st.markdown(
     """
@@ -488,6 +502,10 @@ st.markdown(
     '<p class="udec-tagline">Pilot Project: smart search of institutional regulations and university guidelines.</p>',
     unsafe_allow_html=True,
 )
+
+flash_message = st.session_state.pop("flash", None)
+if flash_message:
+    st.success(flash_message)
 
 if "messages" not in st.session_state:
     st.session_state.messages = [dict(WELCOME_MESSAGE)]
@@ -542,9 +560,11 @@ with calendar_column:
             label_visibility="collapsed",
         )
         if st.button("Ask about this date", key="ask_calendar", type="primary", use_container_width=True):
-            st.session_state.pending_question = CALENDAR_QUESTION.format(
+            official_name = CALENDAR_OFFICIAL_NAMES[chosen_activity]
+            st.session_state.pending_question = CALENDAR_QUESTION.format(option=chosen_activity)
+            st.session_state.pending_query = CALENDAR_RETRIEVAL_QUESTION.format(
                 option=chosen_activity,
-                official=CALENDAR_OFFICIAL_NAMES[chosen_activity],
+                official=official_name,
             )
             st.rerun()
 
@@ -560,6 +580,7 @@ for message in st.session_state.messages:
 
 typed_prompt = st.chat_input("Type your question here...")
 prompt = st.session_state.pop("pending_question", None) or typed_prompt
+retrieval_query = st.session_state.pop("pending_query", None) or prompt
 
 if prompt:
     with st.chat_message("user"):
@@ -568,7 +589,7 @@ if prompt:
 
     with st.spinner("Searching the documents..."):
         _warm_engine()
-        assistant_response, sources = query_rag_system(prompt)
+        assistant_response, sources = query_rag_system(retrieval_query)
 
     shown_sources = [] if assistant_response.startswith("Error:") else sources
 
@@ -584,6 +605,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.5</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.6</div>',
     unsafe_allow_html=True,
 )
