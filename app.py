@@ -321,9 +321,9 @@ st.markdown(
 
     .stApp {{
         background:
-            radial-gradient(circle at 10% 0%, rgba(121, 192, 0, 0.30) 0%, rgba(121, 192, 0, 0) 42%),
-            radial-gradient(circle at 94% 6%, rgba(255, 215, 0, 0.34) 0%, rgba(255, 215, 0, 0) 38%),
-            linear-gradient(160deg, #e9fbe4 0%, #f6fff0 42%, #fff9e0 100%) !important;
+            radial-gradient(circle at 8% 0%, rgba(121, 192, 0, 0.38) 0%, rgba(121, 192, 0, 0) 45%),
+            radial-gradient(circle at 96% 8%, rgba(255, 215, 0, 0.45) 0%, rgba(255, 215, 0, 0) 40%),
+            linear-gradient(160deg, #dcefd4 0%, #f3fbee 45%, #faf1cc 100%) !important;
     }}
     [data-testid="stAppViewContainer"], [data-testid="stHeader"] {{background: transparent !important;}}
     .block-container {{padding-top: 1.6rem; padding-bottom: 2rem; max-width: 1080px;}}
@@ -352,7 +352,7 @@ st.markdown(
         margin-bottom: 6px;
     }}
     .udec-card-head .title {{font-weight: 700; font-size: 0.98rem; display: block;}}
-    .udec-card-head .count {{font-size: 0.75rem; opacity: 0.92;}}
+    .udec-card-head .count {{font-size: 0.85rem; opacity: 1;}}
     .udec-card-green {{background: linear-gradient(120deg, {GREEN_DARK}, {GREEN});}}
     .udec-card-gold {{background: linear-gradient(120deg, #b8860b, {GOLD}); color: {GREEN_DARK};}}
     .udec-card-gold .title {{color: {GREEN_DARK};}}
@@ -360,8 +360,9 @@ st.markdown(
 
     [data-testid="stVerticalBlockBorderWrapper"] {{
         border-radius: 16px;
-        border-color: rgba(0, 72, 43, 0.22);
-        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(0, 72, 43, 0.28);
+        background: #ffffff;
+        box-shadow: 0 8px 22px rgba(0, 72, 43, 0.10);
     }}
 
     div.stButton > button {{
@@ -409,9 +410,9 @@ st.markdown(
         margin-top: 26px;
         padding-top: 10px;
         border-top: 3px solid {GOLD};
-        color: {GREEN};
+        color: {GREEN_DARK};
         font-size: 0.8rem;
-        font-weight: 600;
+        font-weight: 700;
         text-align: center;
     }}
     </style>
@@ -579,6 +580,6 @@ if prompt:
     )
 
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.2</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.3</div>',
     unsafe_allow_html=True,
 )
