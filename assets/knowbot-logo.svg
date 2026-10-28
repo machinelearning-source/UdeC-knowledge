@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 280" width="960" height="280">
+  <!-- Versión para fondo azul noche, colores del robot (plata + cian) -->
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F4F6F9"/>
+      <stop offset="0.5" stop-color="#C9D1DB"/>
+      <stop offset="1" stop-color="#8A96A6"/>
+    </linearGradient>
+    <linearGradient id="silverTxt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#B8C2CF"/>
+    </linearGradient>
+    <linearGradient id="cyanTxt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5EEAF5"/>
+      <stop offset="1" stop-color="#22D3EE"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <g transform="translate(30 30)">
+    <path d="M40 0 H180 A40 40 0 0 1 220 40 V150 A40 40 0 0 1 180 190 H80 L36 224 L44 190 H40 A40 40 0 0 1 0 150 V40 A40 40 0 0 1 40 0 Z" fill="url(#metal)"/>
+    <rect x="34" y="52" width="152" height="86" rx="40" fill="#0B1E38"/>
+    <g filter="url(#glow)">
+      <circle cx="80" cy="92" r="19" fill="#5EEAF5"/>
+      <circle cx="140" cy="92" r="19" fill="#5EEAF5"/>
+    </g>
+    <circle cx="80" cy="92" r="8" fill="#0B1E38"/>
+    <circle cx="140" cy="92" r="8" fill="#0B1E38"/>
+    <circle cx="86" cy="85" r="4" fill="#FFFFFF"/>
+    <circle cx="146" cy="85" r="4" fill="#FFFFFF"/>
+    <path d="M92 162 Q110 174 128 162" fill="none" stroke="#0B2A4F" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="206" cy="10" r="18" fill="#5EEAF5" stroke="#0B2A4F" stroke-width="6" filter="url(#glow)"/>
+  </g>
+
+  <text x="285" y="168" font-family="'Source Sans Pro', 'Source Sans 3', 'Segoe UI', Arial, sans-serif" font-size="124" font-weight="800" letter-spacing="-3">
+    <tspan fill="url(#silverTxt)">Know</tspan><tspan fill="url(#cyanTxt)" filter="url(#glow)">Bot</tspan>
+  </text>
+  <text x="290" y="218" font-family="'Source Sans Pro', 'Source Sans 3', 'Segoe UI', Arial, sans-serif" font-size="30" font-weight="600" fill="#A5D8F0" letter-spacing="10">ASK. LEARN. KNOW.</text>
+</svg>

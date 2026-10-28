@@ -8,3 +8,7 @@ __pycache__/
 .venv/
 venv/
 .fastembed_cache/
+
+# Local only
+logs/
+_local_backup/

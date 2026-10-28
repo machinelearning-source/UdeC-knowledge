@@ -24,10 +24,10 @@ def default_cache_dir():
 
 
 class FastEmbedEmbeddings(Embeddings):
-    """Embeddings locales con fastembed (ONNX, sin GPU, sin API key).
+    """Local embeddings with fastembed (ONNX, no GPU, no API key).
 
-    Se usa en reemplazo de langchain_community.embeddings.FastEmbedEmbeddings
-    porque ese presentaba un error con pydantic 2 (el modelo quedaba en None).
+    Used instead of langchain_community.embeddings.FastEmbedEmbeddings
+    because that class failed with pydantic 2 (the model ended up as None).
     """
 
     def __init__(self, model_name=DEFAULT_MODEL, cache_dir=None, threads=1):

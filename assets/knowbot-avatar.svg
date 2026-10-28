@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="0.5" cy="0.4" r="0.65">
+      <stop offset="0" stop-color="#0E4A80"/>
+      <stop offset="0.6" stop-color="#0B2A4F"/>
+      <stop offset="1" stop-color="#071A33"/>
+    </radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F4F6F9"/>
+      <stop offset="0.45" stop-color="#C9D1DB"/>
+      <stop offset="1" stop-color="#8A96A6"/>
+    </linearGradient>
+    <linearGradient id="metalSide" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D7DDE5"/>
+      <stop offset="1" stop-color="#7F8B9B"/>
+    </linearGradient>
+    <radialGradient id="eye" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#E0FBFF"/>
+      <stop offset="0.45" stop-color="#5EEAF5"/>
+      <stop offset="1" stop-color="#0891B2"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Fondo azul noche con aro cian -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="244" fill="none" stroke="#22D3EE" stroke-width="8" opacity="0.85"/>
+
+  <!-- Antena -->
+  <rect x="249" y="92" width="14" height="60" rx="7" fill="url(#metalSide)"/>
+  <circle cx="256" cy="86" r="20" fill="#5EEAF5" filter="url(#glow)"/>
+  <circle cx="250" cy="80" r="6" fill="#FFFFFF" opacity="0.9"/>
+
+  <!-- Orejas -->
+  <rect x="88" y="228" width="40" height="96" rx="18" fill="url(#metalSide)"/>
+  <rect x="384" y="228" width="40" height="96" rx="18" fill="url(#metalSide)"/>
+  <circle cx="108" cy="276" r="8" fill="#22D3EE" filter="url(#glow)"/>
+  <circle cx="404" cy="276" r="8" fill="#22D3EE" filter="url(#glow)"/>
+
+  <!-- Cabeza metálica -->
+  <rect x="120" y="146" width="272" height="250" rx="80" fill="url(#metal)"/>
+  <path d="M160 170 Q256 150 352 170" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Visor -->
+  <rect x="148" y="200" width="216" height="118" rx="58" fill="#0B1E38"/>
+  <rect x="148" y="200" width="216" height="118" rx="58" fill="none" stroke="#22D3EE" stroke-width="3" opacity="0.5"/>
+
+  <!-- Ojos -->
+  <g filter="url(#glow)">
+    <circle cx="210" cy="258" r="30" fill="url(#eye)"/>
+    <circle cx="302" cy="258" r="30" fill="url(#eye)"/>
+  </g>
+  <circle cx="210" cy="258" r="13" fill="#0B1E38"/>
+  <circle cx="302" cy="258" r="13" fill="#0B1E38"/>
+  <circle cx="218" cy="248" r="6" fill="#FFFFFF"/>
+  <circle cx="310" cy="248" r="6" fill="#FFFFFF"/>
+
+  <!-- Sonrisa -->
+  <path d="M222 346 Q256 372 290 346" fill="none" stroke="#0B2A4F" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Libro abierto (conocimiento) -->
+  <g transform="translate(256 438)">
+    <path d="M-66 -12 Q-33 -28 0 -9 L0 28 Q-33 9 -66 24 Z" fill="#F4F6F9"/>
+    <path d="M66 -12 Q33 -28 0 -9 L0 28 Q33 9 66 24 Z" fill="#C9D1DB"/>
+    <line x1="0" y1="-9" x2="0" y2="28" stroke="#22D3EE" stroke-width="4"/>
+    <g stroke="#5EA3C9" stroke-width="3" stroke-linecap="round">
+      <line x1="-52" y1="-3" x2="-14" y2="4"/>
+      <line x1="-52" y1="9" x2="-14" y2="16"/>
+      <line x1="14" y1="4" x2="52" y2="-3"/>
+      <line x1="14" y1="16" x2="52" y2="9"/>
+    </g>
+  </g>
+</svg>
