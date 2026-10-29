@@ -111,7 +111,15 @@ The results are written to `eval/results/` (`summary.md`, `retrieval.csv`, `answ
 
 The improvement comes from the exact calendar lookup, the article-number lookup ("Article 35" → `ARTÍCULO 35`) and the order in which the three searches are combined. MMR settings were also compared (λ = 0.5–0.9, fetch_k = 40/80): the differences stayed within about 3 points, so the default λ = 0.6, fetch_k = 40 was kept.
 
-**Answers**: run `python eval/evaluate.py --answers 20` to add the LLM-judged answer quality to `eval/results/summary.md`.
+**Answers** (20 random questions, seed 7, graded by an LLM judge against the text of the expected page; run on 2026-10-29):
+
+| Verdict | Questions | Share |
+|---|---|---|
+| Correct | 10 | 50% |
+| Partial | 2 | 10% |
+| Incorrect | 8 | 40% |
+
+4 of the 8 incorrect answers say the information was not found: the expected page was not retrieved, and 3 of them ask about the Commission report, a slide deck with little text whose date questions ("meeting held on 16 November 2021") pull in date-heavy calendar lines instead. The other 4 have content errors (a wrong date, a missing three-year limitation period, two procedures mixed). Retrieval of that report is the main area to improve. Per-question reasons are in `eval/results/answers.csv`.
 <!-- EVAL_RESULTS_END -->
 
 ## Deployment
