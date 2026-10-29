@@ -476,54 +476,76 @@ def _avatar_for(role):
     return ASSISTANT_AVATAR if role == "assistant" else None
 
 
+def _ask_category():
+    chosen = st.session_state.chosen_category
+    if chosen:
+        st.session_state.pending_question = CATEGORY_QUESTION.format(option=chosen)
+        st.session_state.chosen_category = None
+
+
+def _ask_course():
+    chosen = st.session_state.chosen_course
+    if chosen:
+        st.session_state.pending_question = COURSE_QUESTION.format(option=chosen)
+        st.session_state.chosen_course = None
+
+
+def _ask_calendar():
+    chosen = st.session_state.chosen_activity
+    if chosen:
+        official_name = CALENDAR_OFFICIAL_NAMES.get(chosen, chosen)
+        st.session_state.pending_question = CALENDAR_QUESTION.format(option=chosen)
+        st.session_state.pending_query = CALENDAR_SEARCH_QUERY.format(option=chosen, official=official_name)
+        st.session_state.pending_calendar = official_name
+        st.session_state.chosen_activity = None
+
+
 def _render_suggestions():
-    """Quick questions shown under the welcome message (they replace the three cards)."""
+    """Quick questions under the welcome message: choosing an option asks it right away.
+
+    Each selector starts empty and is emptied again after asking, so the first
+    option and a repeated option also trigger a question.
+    """
     category_column, course_column, calendar_column, _ = st.columns([1.15, 1.2, 1.1, 1.3], gap="small")
 
     with category_column:
         with st.popover(":material/school: Student categories"):
-            st.caption(f"{len(STUDENT_CATEGORIES)} student situations · choose one")
-            chosen_category = st.selectbox(
+            st.caption(f"{len(STUDENT_CATEGORIES)} student situations · choose one to ask")
+            st.selectbox(
                 "Choose a student category",
                 STUDENT_CATEGORIES,
+                index=None,
+                placeholder="Choose a student situation…",
                 key="chosen_category",
+                on_change=_ask_category,
                 label_visibility="collapsed",
             )
-            if st.button("Ask about this category", key="ask_category", type="primary", use_container_width=True):
-                st.session_state.pending_question = CATEGORY_QUESTION.format(option=chosen_category)
-                st.rerun()
 
     with course_column:
         with st.popover(":material/bookmark: Course homologation"):
-            st.caption(f"{len(HOMOLOGATION_COURSES)} courses · choose one")
-            chosen_course = st.selectbox(
+            st.caption(f"{len(HOMOLOGATION_COURSES)} courses · choose one to ask")
+            st.selectbox(
                 "Choose a course",
                 HOMOLOGATION_COURSES,
+                index=None,
+                placeholder="Choose a course…",
                 key="chosen_course",
+                on_change=_ask_course,
                 label_visibility="collapsed",
             )
-            if st.button("Ask about this course", key="ask_course", type="primary", use_container_width=True):
-                st.session_state.pending_question = COURSE_QUESTION.format(option=chosen_course)
-                st.rerun()
 
     with calendar_column:
         with st.popover(":material/calendar_month: Academic calendar"):
-            st.caption(f"{len(CALENDAR_ACTIVITIES)} activities of 2026 · choose one")
-            chosen_activity = st.selectbox(
+            st.caption(f"{len(CALENDAR_ACTIVITIES)} activities of 2026 · choose one to ask")
+            st.selectbox(
                 "Choose an academic calendar activity",
                 CALENDAR_ACTIVITIES,
+                index=None,
+                placeholder="Choose an activity…",
                 key="chosen_activity",
+                on_change=_ask_calendar,
                 label_visibility="collapsed",
             )
-            if st.button("Ask about this date", key="ask_calendar", type="primary", use_container_width=True):
-                official_name = CALENDAR_OFFICIAL_NAMES.get(chosen_activity, chosen_activity)
-                st.session_state.pending_question = CALENDAR_QUESTION.format(option=chosen_activity)
-                st.session_state.pending_query = CALENDAR_SEARCH_QUERY.format(
-                    option=chosen_activity,
-                    official=official_name,
-                )
-                st.session_state.pending_calendar = official_name
-                st.rerun()
 
 
 def _source_tags(sources):
