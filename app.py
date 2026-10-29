@@ -294,6 +294,14 @@ st.markdown(
         border-radius: 10px;
         color: {NAVY};
     }}
+    /* Hand cursor on the dropdowns and their options (the select is searchable, so it showed a text cursor). */
+    [data-testid="stSelectbox"] div[data-baseweb="select"],
+    [data-testid="stSelectbox"] div[data-baseweb="select"] *,
+    [data-baseweb="popover"] li[role="option"],
+    [data-baseweb="popover"] li[role="option"] *,
+    [data-testid="stPopover"] button {{
+        cursor: pointer !important;
+    }}
 
     [data-testid="stChatMessage"] {{
         background: #ffffff;
