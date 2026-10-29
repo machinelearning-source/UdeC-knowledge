@@ -53,7 +53,7 @@ FOLLOW_UP_HINTS = (
 )
 FOLLOW_UP_MAX_WORDS = 7
 POSTGRADUATE_SUFFIX = "(POSGRADOS)"
-CITATION_PATTERN = re.compile(r"[\[【](\d{1,2})[\]】]")
+CITATION_PATTERN = re.compile(r"[\[【](\d{1,2})(?:†[^\]】]*)?[\]】]")
 ARTICLE_PATTERN = re.compile(r"\b(?:article|art[ií]culo|art\.)s?\s+(\d{1,3})\b", re.IGNORECASE)
 ARTICLE_CHUNKS_PER_NUMBER = 2
 MAX_HISTORY_MESSAGES = 4
@@ -328,6 +328,11 @@ def stream_answer(request):
             print(f"[WARNING] {model} reached its daily limit; answering with {FALLBACK_LLM_MODEL}")
 
 
+def normalize_citations(answer):
+    """Write every citation as [n]: the model sometimes uses 【n】 or 【n†fragment n】."""
+    return CITATION_PATTERN.sub(lambda match: f"[{match.group(1)}]", answer)
+
+
 def cited_sources(answer, fragment_sources):
     """Return the sources of the fragments the answer cites, numbered like the citations.
 
@@ -364,6 +369,7 @@ def query_rag_system(user_question, search_query=None, calendar_name=None, histo
             return _ai_error(fallback_exc), []
     if not answer.strip():
         return "Error: the AI service returned an empty answer.", []
+    answer = normalize_citations(answer)
     return answer, cited_sources(answer, request.fragment_sources)
 
 

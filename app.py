@@ -9,7 +9,14 @@ from pathlib import Path
 import streamlit as st
 
 from core.calendar_names import CALENDAR_OFFICIAL_NAMES
-from core.pipeline import cited_sources, knowledge_stats, prepare_query, stream_answer, warm_up
+from core.pipeline import (
+    cited_sources,
+    knowledge_stats,
+    normalize_citations,
+    prepare_query,
+    stream_answer,
+    warm_up,
+)
 
 ASSETS_DIR = Path(__file__).parent / "assets"
 LOGO_PATH = ASSETS_DIR / "knowbot-logo.png"
@@ -573,7 +580,8 @@ def _write_live(chunks):
     answer = ""
     for chunk in chunks:
         answer += chunk
-        placeholder.markdown(answer + " ▌")
+        placeholder.markdown(normalize_citations(answer) + " ▌")
+    answer = normalize_citations(answer)
     placeholder.markdown(answer)
     return answer
 
