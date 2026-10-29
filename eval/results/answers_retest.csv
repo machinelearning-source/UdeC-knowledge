@@ -1,0 +1,46 @@
+id,question,verdict,reason,cites_expected_page,says_not_found,api_error,answer,sources
+5,"What are the key responsibilities of the committee for planning, analyzing, publishing, and improving formative experiences?",partial,"The answer includes several key duties but omits several listed functions such as applying improvements, publishing final results, and issuing internal regulations and procedures.",True,False,False,"The committee’s key responsibilities are:
+
+* **Approve, reject or modify each formative experience** according to the agreement.  
+* **Supervise the development of the formative experiences** and ensure they are aligned with the educational and curricular objectives of the academic programs.  
+* **Establish and disclose the annual schedule** of approved formative experiences.  
+* **Analyze the data** of the formative experiences to assess their impact and guide future improvements.  
+* **Publish and communicate the decisions** taken by the committee and the approved formative experiences to the campus directors, financial direction, human‑talent direction and the office of physical resources and general services, and share the minutes with the faculties and academic programs.  
+
+These responsibilities are defined in the committee’s functions and duties sections of the agreement [5][6].",[5] PDF: Agreement 005.pdf (Page 14) | [6] PDF: Agreement 005.pdf (Page 15)
+10,"What safety, insurance, location, work‑plan, and deliverable requirements must be met for a formative experience to be approved?",incorrect,"The answer adds unrelated safety programs and misstates requirements, contradicting the reference information.",True,False,False,"To obtain approval for a formative experience, the following requirements must be satisfied:
+
+* **Safety** – The experience must respect the university’s road‑safety policy and the critical risk‑management programs, including the Safe Speed Management Program, the Sleep‑and‑Fatigue Prevention Program, the Distraction Prevention Program and the Zero‑Tolerance Program, as well as any other applicable safety documents or procedures[5].  
+
+* **Insurance** – Students (the “opportunity creators”) must have an active student accident insurance policy and must be affiliated with a health‑care provider (EPS) that is currently valid[6].  
+
+* **Location** – The experience must not be carried out in Cundinamarca if the proposal explicitly states that it cannot be performed there, and any visited zones must be described for possible climatic or other factors that could affect the activity[5].  
+
+* **Work‑plan** – A detailed work plan and schedule must be submitted through the university’s application platform, following the format established in the call for proposals. The plan must include the itinerary (starting point and destination) and be linked to the university’s digital learning plan (PAD) and the program’s learning pathway[1][3].  
+
+* **Deliverables** – A list of the academic products to be delivered (impact, improvement, transformation) must be attached, using the format prescribed by the university, and the knowledge‑management manager must demonstrate full compliance with the delivery of those products[3][6].  
+
+All these elements are evaluated by the Committee of Formative Experiences, which approves, rejects or modifies the proposal based on compliance with the regulations.",[1] PDF: Agreement 005.pdf (Page 7) | [3] PDF: Agreement 005.pdf (Page 8) | [5] PDF: Agreement 005.pdf (Page 8) | [6] PDF: Agreement 005.pdf (Page 7)
+20,When does the Office of Academic Development publish the annual call for formative experiences?,incorrect,"The answer gives a different timing than the reference, which states the call is published in the 3rd week of February",False,False,False,The Office of Academic Development publishes the annual call for formative experiences within fifteen (15) business days after the agreement that establishes the call is issued[7].,[7] PDF: Agreement 005.pdf (Page 13)
+42,"What are the key deadlines (registration, approval, evaluations, vacations, etc.) for graduate program activities for the years 2025‑2027?",incorrect,"The reference includes graduate program deadlines for 2026, so the answer incorrectly claims no information is available.",False,True,False,"The consulted official documents do not contain information about graduate‑program deadlines for the years 2025‑2027. Therefore, the requested details cannot be provided based on the available sources.",
+47,Who were the members of the delegated commission and the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021?,incorrect,"The reference lists the commission members, but the answer claims no information is available.",False,True,False,The consulted official documents do not contain information about the members of the delegated commission or the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021.,
+51,What was the agenda for the Comisión Reglamento Estudiantil meeting held on 16 November 2021?,correct,The answer lists all agenda items exactly as in the reference.,True,False,False,"The agenda for the Student‑Regulation Commission meeting held on 16 November 2021 was:
+
+1. Call to roll and quorum verification  
+2. Reading of the agenda  
+3. National anthem  
+4. Explanation of the methodology  
+5. Report on the project route – Student‑Regulation version 3 (including background, process stage, information analysis, inferences, conclusions)  
+6. Intervention of the deans  
+7. Intervention of the students  
+8. Closing  
+
+[2]",[2] PDF: Commission Report CA.pdf (Page 2)
+54,How many total contributions were recorded for version 3 of the student regulation?,incorrect,"Reference does not provide a numeric total, so the answer's figure cannot be verified",False,False,False,"The documents record a total of **6,864 contributions** for version 3 of the student regulation[3].",[3] PDF: Commission Report CA.pdf (Page 10)
+56,What does Article 35 define about university exchange and what requirements are set out in Article 36 of Chapter VI?,partial,"The answer gives the basic definition of Article 35 but omits important details about credit recognition and exclusions, and it leaves out the specific documentation requirements listed in Article 36",True,False,False,"Article 35 defines university exchange as the process by which a student takes academic credits from his/her learning pathway at another higher‑education institution, either in Colombia or abroad, different from the University of Cundinamarca[4].  
+
+Article 36 lists the requirements and criteria for university exchange: a student who wishes to study part of his/her program at another higher‑education institution must do so with an institution that has a current agreement (convention) with the University of Cundinamarca, either in Colombia or abroad[4].",[4] PDF: Undergraduate Student Regulations.pdf (Page 10)
+71,What is the minimum number of students required for a university group and what is the procedure for a student to voluntarily withdraw after enrollment?,incorrect,"The procedure described for voluntary withdrawal is wrong; the reference requires a written notice to the direction or coordination, not a cancellation request via email to Admissions.",True,False,False,"The university requires that each academic group have **at least eight students**[3].  
+
+If a student wishes to **voluntarily withdraw after enrollment**, the cancellation of the academic registration can be requested within the first two weeks of the academic period. The request must be made by the student’s own decision and submitted either as an email with a formal record (radicado) or as an official letter addressed to the Admissions and Registration Office[4].",[3] PDF: Undergraduate Student Regulations.pdf (Page 6) | [4] PDF: Undergraduate Student Regulations.pdf (Page 6)
+75,What is the statute of limitations for academic disciplinary actions and how are sanctions determined at the University of Cundinamarca?,incorrect,"Reference specifies a 3‑year prescription period, which the answer incorrectly claims is absent",False,True,False,"The consulted official documents do not contain information about a statute of limitations for academic disciplinary actions at the University of Cundinamarca. They do describe how sanctions are determined and applied: disciplinary sanctions are classified as minor or serious based on the nature of the violation, its effects, circumstances, motives, and the student’s academic, disciplinary and personal background; sanctions are recorded in the student’s academic record (except verbal warnings); and students who receive disciplinary sanctions lose eligibility for university incentives and recognitions [1]. Specific sanctions such as suspension, cancellation of enrollment, and expulsion are imposed by the Internal Disciplinary Control Office, with possible confirmation by the Academic Council in a second instance [8]. However, the documents do not specify any time limit for initiating or enforcing disciplinary actions.",[1] PDF: Undergraduate Student Regulations.pdf (Page 21) | [8] PDF: Undergraduate Student Regulations.pdf (Page 21)

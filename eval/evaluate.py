@@ -164,9 +164,12 @@ def _judge(question, reference, answer):
     return verdict.get("verdict", "unparsed"), verdict.get("reason", raw[:200])
 
 
-def evaluate_answers(rows, sample_size, delay):
+def evaluate_answers(rows, sample_size, delay, ids=None, output="answers.csv"):
     vector_db = load_vector_store(_vector_store_path(), default_cache_dir())
-    sample = random.Random(SAMPLE_SEED).sample(rows, min(sample_size, len(rows)))
+    if ids:
+        sample = [row for row in rows if row["id"] in ids]
+    else:
+        sample = random.Random(SAMPLE_SEED).sample(rows, min(sample_size, len(rows)))
     results = []
     for position, row in enumerate(sample, start=1):
         print(f"[{position}/{len(sample)}] {row['question'][:80]}")
@@ -198,7 +201,7 @@ def evaluate_answers(rows, sample_size, delay):
                 "sources": " | ".join(sources),
             }
         )
-        _write_csv(os.path.join(RESULTS_DIR, "answers.csv"), results)
+        _write_csv(os.path.join(RESULTS_DIR, output), results)
         time.sleep(delay)
     return results
 
@@ -295,10 +298,23 @@ def main():
         "--delay", type=float, default=20.0,
         help="seconds to wait between answered questions (the Groq free tier allows 8000 tokens per minute)",
     )
+    parser.add_argument(
+        "--ids", default="",
+        help="comma-separated question ids to answer and grade again (results go to answers_retest.csv; "
+        "the summary is not rewritten)",
+    )
     args = parser.parse_args()
 
     os.makedirs(RESULTS_DIR, exist_ok=True)
     rows = load_questions()
+
+    if args.ids:
+        ids = {question_id.strip() for question_id in args.ids.split(",") if question_id.strip()}
+        print(f"[PROCESS] Answering and grading {len(ids)} selected questions...")
+        retest = evaluate_answers(rows, 0, args.delay, ids=ids, output="answers_retest.csv")
+        for result in retest:
+            print(f"{result['id']:>4}  {result['verdict']:<10} cites expected page: {result['cites_expected_page']}")
+        return
 
     print(f"[PROCESS] Evaluating retrieval on {len(rows)} questions...")
     retrieval = evaluate_retrieval(rows)

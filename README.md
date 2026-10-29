@@ -96,6 +96,7 @@ The app opens at <http://localhost:8501>. The first question takes a little long
 ```bash
 python eval/evaluate.py                # retrieval metrics, no API calls
 python eval/evaluate.py --answers 20   # also answers 20 random questions and grades them with an LLM judge
+python eval/evaluate.py --ids 47,75    # answers and grades only these questions again
 ```
 
 The results are written to `eval/results/` (`summary.md`, `retrieval.csv`, `answers.csv`). Latest results:
@@ -123,7 +124,7 @@ Experiments that were measured and not kept: MMR settings (λ = 0.5–0.9, fetch
 | Partial | 2 | 10% |
 | Incorrect | 8 | 40% |
 
-4 of the 8 incorrect answers say the information was not found: the expected page was not retrieved, and 3 of them ask about the Commission report, a slide deck with little text whose date questions ("meeting held on 16 November 2021") pull in date-heavy calendar lines instead. The other 4 have content errors (a wrong date, a missing three-year limitation period, two procedures mixed). The keyword search added afterwards fixed the agenda question; the members question still fails because the question is in English and the slide in Spanish. Per-question reasons are in `eval/results/answers.csv`.
+4 of the 8 incorrect answers say the information was not found: the expected page was not retrieved, and 3 of them ask about the Commission report, a slide deck with little text whose date questions ("meeting held on 16 November 2021") pull in date-heavy calendar lines instead. The other 4 have content errors (a wrong date, a missing three-year limitation period, two procedures mixed). After the keyword search was added, the 10 questions that were incorrect or partial were graded again (`python eval/evaluate.py --ids 42,20,51,10,47,75,54,71,5,56`, results in `eval/results/answers_retest.csv`): only the agenda question became correct. In 7 of the 9 that still fail the expected page now reaches the model, so the remaining errors are mostly in answer writing, not retrieval; the short reasoning used to save tokens is the first thing to test. The members question (47) still is not retrieved because the question is in English and the slide in Spanish. Per-question reasons are in `eval/results/answers.csv`.
 <!-- EVAL_RESULTS_END -->
 
 ## Deployment
