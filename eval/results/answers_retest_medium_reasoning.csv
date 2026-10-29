@@ -1,0 +1,38 @@
+id,question,verdict,reason,cites_expected_page,says_not_found,api_error,answer,sources
+5,"What are the key responsibilities of the committee for planning, analyzing, publishing, and improving formative experiences?",partial,"The answer mentions some duties (approval, scheduling, analysis, supervision) but omits others like performing analytics, applying improvements, and issuing internal regulations and procedures, and adds details not in the reference.",True,False,False,"The Formative Experiences Committee is responsible for the following key actions:
+
+* **Planning** – Approve, deny or modify each proposed formative experience and create the annual schedule of approved experiences, which is then disseminated to the relevant units [5].  
+* **Analyzing** – Carry out data analysis of the formative experiences to assess their outcomes and inform future decisions [5].  
+* **Publishing** – Publish and communicate the Committee’s decisions and the list of approved formative experiences to campus directors, the finance office, human‑talent management, and facilities services; share the minutes and send the schedule to the units that will implement and control the activities [6].  
+* **Improving** – Supervise the development of the experiences to ensure they align with the educational and curricular objectives of the academic programs and make recommendations or adjustments as needed [5].
+
+These responsibilities together ensure that formative experiences are properly planned, evaluated, communicated and continuously enhanced.",[5] PDF: Agreement 005.pdf (Page 14) | [6] PDF: Agreement 005.pdf (Page 15)
+10,"What safety, insurance, location, work‑plan, and deliverable requirements must be met for a formative experience to be approved?",partial,"The answer includes most required points but adds unrelated safety details, misstates the Cundinamarca location requirement, and omits the need to evidence inability to conduct the experience in Cundinamarca when applicable.",True,False,False,"**Safety**  
+- The experience must follow the university’s Road Safety Policy and include the required safety programs: Safe Speed Management, Fatigue Prevention, Distraction Prevention, Zero‑Tolerance, and any other applicable documents [5].  
+- Any climatic or other environmental factors that could affect the activity must be described [5].  
+- The experience must not involve a high public‑order risk that endangers the lives of students, the Knowledge and Learning Manager, or other staff [6].
+
+**Insurance**  
+- Students (the “opportunity creators”) must have a valid student accident‑insurance policy and current health‑insurance affiliation through an EPS [6].
+
+**Location**  
+- The proposal must specify the zones to be visited and indicate any climatic or other factors that could affect the activity [5].  
+- If the experience is planned to be carried out outside the department of Cundinamarca, this must be expressly stated and justified; otherwise the experience cannot be conducted in Cundinamarca [6].
+
+**Work‑plan**  
+- A detailed work plan and schedule, following the university‑approved format, must be submitted (including point of departure and destination) [1].  
+- The work plan must be entered in the Digital Learning Plan (PAD) and the program’s learning route, and its verification is done through the institutional platform [3].  
+- An activity plan for the students must be developed and delivered [3].  
+- The work plan must be uploaded through the university’s application link indicated in the call [6].
+
+**Deliverables**  
+- A list of academic products to be delivered must be included, using the format that records impact, improvement and transformation [1].  
+- All academic products established for the experience must be fully delivered and documented according to the university‑specified document [3][6].  
+
+These are the safety, insurance, location, work‑plan and deliverable conditions that must be satisfied for a formative experience to obtain approval.",[1] PDF: Agreement 005.pdf (Page 7) | [3] PDF: Agreement 005.pdf (Page 8) | [5] PDF: Agreement 005.pdf (Page 8) | [6] PDF: Agreement 005.pdf (Page 7)
+20,When does the Office of Academic Development publish the annual call for formative experiences?,incorrect,"The answer states a 15‑day timeline, but the reference says the call is published in the third week of February each year.",False,False,False,The Office of Academic Development publishes the final terms of reference for the annual call for formative experiences on the university’s website within **fifteen calendar days** of the triggering step [1].,[1] PDF: Agreement 005.pdf (Page 12)
+42,"What are the key deadlines (registration, approval, evaluations, vacations, etc.) for graduate program activities for the years 2025‑2027?",incorrect,"Reference includes graduate program deadlines for 2026, which the answer incorrectly claims are absent",False,True,False,"The consulted official documents do not contain any information about graduate‑program deadlines (registration, approval, evaluations, vacations, etc.) for the years 2025‑2027. All the provided fragments refer to undergraduate activities or to general procedural rules without specific dates for postgraduate programs. Therefore, the requested graduate‑program schedule cannot be extracted from the available sources.",
+54,How many total contributions were recorded for version 3 of the student regulation?,correct,"Reference lacks a numeric total, so stating it is not provided is accurate",False,True,False,The consulted official documents do not provide the total number of contributions recorded for version 3 of the student regulation.,
+56,What does Article 35 define about university exchange and what requirements are set out in Article 36 of Chapter VI?,partial,Correctly states Article 35 but omits the specific requirement in Article 36 to attach a certificate of preliminary approval/admission,True,True,False,"Article 35 defines university exchange as the process by which a student takes academic credits from his or her learning path at a higher‑education institution different from the University of Cundinamarca, either in Colombia or abroad. It adds that the learning fields, seminars, courses, modules or cores completed at the host institution will be taken into account by the student’s academic program, and that credits belonging to the institutional learning field cannot be exchanged [4].
+
+Article 36 sets out the requirements and criteria for university exchange. The fragment indicates that a student who wishes to study part of the program at another higher‑education institution must do so at an institution that has a current agreement with the University of Cundinamarca, either in Colombia or abroad [4]. The document fragment does not provide the complete list of specific requirements.",[4] PDF: Undergraduate Student Regulations.pdf (Page 10)

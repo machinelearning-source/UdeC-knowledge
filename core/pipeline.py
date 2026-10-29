@@ -23,8 +23,8 @@ LLM_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-120b")
 # Groq limits are per model: when the main model runs out of its daily tokens the
 # answer is written by this smaller model, and follow-ups are always rewritten by it.
 FALLBACK_LLM_MODEL = os.environ.get("GROQ_FALLBACK_MODEL", "openai/gpt-oss-20b")
-# Short reasoning roughly halves the tokens of a gpt-oss answer.
-REASONING_EFFORT = "low"
+# Short reasoning roughly halves the tokens of a gpt-oss answer ("low", "medium" or "high").
+REASONING_EFFORT = os.environ.get("GROQ_REASONING_EFFORT", "low")
 LLM_TIMEOUT_SECONDS = 60
 LLM_MAX_RETRIES = 1
 
