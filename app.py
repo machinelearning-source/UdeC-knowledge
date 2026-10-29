@@ -1,12 +1,14 @@
 import base64
 import csv
 import html
+import json
 import os
 import re
 from datetime import datetime
 from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 from core.calendar_names import CALENDAR_OFFICIAL_NAMES
 from core.pipeline import (
@@ -417,9 +419,7 @@ with st.sidebar:
 
     if st.button("New conversation", icon=":material/add_comment:", use_container_width=True):
         st.session_state.messages = [dict(WELCOME_MESSAGE)]
-        st.session_state.pending_question = None
-        st.session_state.pending_query = None
-        st.session_state.pending_calendar = None
+        st.session_state.suggestion = None
         st.session_state.flash = "New conversation started."
         st.rerun()
 
@@ -476,74 +476,118 @@ def _avatar_for(role):
     return ASSISTANT_AVATAR if role == "assistant" else None
 
 
-def _ask_category():
+def _suggest(question, search_query=None, calendar_name=None):
+    """Put a quick question in the chat box; it is asked when the user sends it."""
+    st.session_state.suggestion = {
+        "question": question,
+        "search_query": search_query,
+        "calendar_name": calendar_name,
+    }
+    st.session_state.fill_chat_input = True
+
+
+def _suggest_category():
     chosen = st.session_state.chosen_category
     if chosen:
-        st.session_state.pending_question = CATEGORY_QUESTION.format(option=chosen)
+        _suggest(CATEGORY_QUESTION.format(option=chosen))
         st.session_state.chosen_category = None
 
 
-def _ask_course():
+def _suggest_course():
     chosen = st.session_state.chosen_course
     if chosen:
-        st.session_state.pending_question = COURSE_QUESTION.format(option=chosen)
+        _suggest(COURSE_QUESTION.format(option=chosen))
         st.session_state.chosen_course = None
 
 
-def _ask_calendar():
+def _suggest_calendar():
     chosen = st.session_state.chosen_activity
     if chosen:
         official_name = CALENDAR_OFFICIAL_NAMES.get(chosen, chosen)
-        st.session_state.pending_question = CALENDAR_QUESTION.format(option=chosen)
-        st.session_state.pending_query = CALENDAR_SEARCH_QUERY.format(option=chosen, official=official_name)
-        st.session_state.pending_calendar = official_name
+        _suggest(
+            CALENDAR_QUESTION.format(option=chosen),
+            CALENDAR_SEARCH_QUERY.format(option=chosen, official=official_name),
+            official_name,
+        )
         st.session_state.chosen_activity = None
 
 
-def _render_suggestions():
-    """Quick questions under the welcome message: choosing an option asks it right away.
+def _fill_chat_input(text):
+    """Write text into the chat box (st.chat_input has no value parameter in Streamlit 1.39).
 
-    Each selector starts empty and is emptied again after asking, so the first
-    option and a repeated option also trigger a question.
+    A zero-height component runs a script in the page that sets the box's value
+    the way React expects and focuses it, so the user can edit and send it.
+    """
+    components.html(
+        f"""
+        <script>
+        const text = {json.dumps(text)};
+        const page = window.parent.document;
+        function fill(attempts) {{
+            const box = page.querySelector('[data-testid="stChatInput"] textarea');
+            if (!box) {{
+                if (attempts > 0) setTimeout(() => fill(attempts - 1), 100);
+                return;
+            }}
+            const setValue = Object.getOwnPropertyDescriptor(
+                window.parent.HTMLTextAreaElement.prototype, "value"
+            ).set;
+            setValue.call(box, text);
+            box.dispatchEvent(new Event("input", {{ bubbles: true }}));
+            box.focus();
+        }}
+        fill(30);
+        </script>
+        """,
+        height=0,
+    )
+
+
+def _render_suggestions():
+    """Quick questions under the welcome message: choosing an option writes it in the chat box.
+
+    The question is asked only when the user sends it, so it can be edited first.
+    Each selector starts empty and is emptied again, so the first option and a
+    repeated option also work.
     """
     category_column, course_column, calendar_column, _ = st.columns([1.15, 1.2, 1.1, 1.3], gap="small")
 
     with category_column:
         with st.popover(":material/school: Student categories"):
-            st.caption(f"{len(STUDENT_CATEGORIES)} student situations · choose one to ask")
+            st.caption(f"{len(STUDENT_CATEGORIES)} student situations · choose one, then send it")
             st.selectbox(
                 "Choose a student category",
                 STUDENT_CATEGORIES,
                 index=None,
                 placeholder="Choose a student situation…",
                 key="chosen_category",
-                on_change=_ask_category,
+                on_change=_suggest_category,
                 label_visibility="collapsed",
             )
 
     with course_column:
         with st.popover(":material/bookmark: Course homologation"):
-            st.caption(f"{len(HOMOLOGATION_COURSES)} courses · choose one to ask")
+            st.caption(f"{len(HOMOLOGATION_COURSES)} courses · choose one, then send it")
             st.selectbox(
                 "Choose a course",
                 HOMOLOGATION_COURSES,
                 index=None,
                 placeholder="Choose a course…",
                 key="chosen_course",
-                on_change=_ask_course,
+                on_change=_suggest_course,
                 label_visibility="collapsed",
             )
 
     with calendar_column:
         with st.popover(":material/calendar_month: Academic calendar"):
-            st.caption(f"{len(CALENDAR_ACTIVITIES)} activities of 2026 · choose one to ask")
+            st.caption(f"{len(CALENDAR_ACTIVITIES)} activities of 2026 · choose one, then send it")
             st.selectbox(
                 "Choose an academic calendar activity",
                 CALENDAR_ACTIVITIES,
                 index=None,
                 placeholder="Choose an activity…",
                 key="chosen_activity",
-                on_change=_ask_calendar,
+                on_change=_suggest_calendar,
                 label_visibility="collapsed",
             )
 
@@ -634,13 +678,18 @@ for index, message in enumerate(st.session_state.messages):
         if index > 0 and message["role"] == "assistant":
             _render_feedback(index)
 
-typed_prompt = st.chat_input("Ask KnowBot your question...")
-pending_question = st.session_state.pop("pending_question", None)
-pending_query = st.session_state.pop("pending_query", None)
-pending_calendar = st.session_state.pop("pending_calendar", None)
-prompt = pending_question or typed_prompt
-search_query = (pending_query if pending_question else None) or prompt
-calendar_name = pending_calendar if pending_question else None
+prompt = st.chat_input("Ask KnowBot your question...")
+suggestion = st.session_state.get("suggestion") or {}
+if st.session_state.pop("fill_chat_input", False) and suggestion:
+    _fill_chat_input(suggestion["question"])
+
+# A sent suggestion keeps its search hints (the official calendar name); an edited one is a typed question.
+search_query, calendar_name = prompt, None
+if prompt and prompt.strip() == suggestion.get("question"):
+    search_query = suggestion.get("search_query") or prompt
+    calendar_name = suggestion.get("calendar_name")
+if prompt:
+    st.session_state.suggestion = None
 
 if prompt:
     history = _chat_history()
