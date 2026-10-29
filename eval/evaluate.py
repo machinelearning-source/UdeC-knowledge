@@ -36,6 +36,8 @@ from core import default_cache_dir
 from core.calendar_names import calendar_name_in
 from core.pipeline import (
     NOT_FOUND_MARKERS,
+    TRANSLATE_QUERIES,
+    spanish_query,
     _file_name,
     _llm,
     _vector_store_path,
@@ -62,6 +64,7 @@ RETRIES = 4
 RETRY_WAIT_SECONDS = 30
 SAMPLE_SEED = 7
 DAILY_LIMIT_TEXT = "tokens per day"
+TRANSLATION_PAUSE_SECONDS = 2.5
 
 JUDGE_PROMPT = """You grade the answers of a university regulations chatbot.
 You receive a question, the reference text of the official page that answers it, and the chatbot answer.
@@ -110,8 +113,24 @@ def _is_not_found(answer):
     return any(marker in answer.lower() for marker in NOT_FOUND_MARKERS)
 
 
+def _translate_all(rows):
+    """Translate every question once, slowly, so the Groq limit per minute is not hit during retrieval."""
+    failed = 0
+    for row in rows:
+        before = spanish_query.cache_info().misses
+        if spanish_query(row["question"]) is None:
+            failed += 1
+        if spanish_query.cache_info().misses > before:
+            time.sleep(TRANSLATION_PAUSE_SECONDS)
+    if failed:
+        print(f"[WARNING] {failed} questions could not be translated; their keyword search uses English only.")
+
+
 def evaluate_retrieval(rows):
     vector_db = load_vector_store(_vector_store_path(), default_cache_dir())
+    if TRANSLATE_QUERIES:
+        print("[PROCESS] Translating the questions for the keyword search (uses gpt-oss-20b)...")
+        _translate_all(rows)
     results = []
     for row in rows:
         question = row["question"]

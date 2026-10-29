@@ -36,7 +36,8 @@ Rules:
 - The fragments are usually written in Spanish. That must NEVER change your language: every word of your answer must be in English.
 - Translate Spanish institutional terms, course names, calendar activity names and document names into English. Never include Spanish words or Spanish glosses in parentheses: for every Spanish term in the question or in the fragments, write only its English equivalent.
 - Academic calendar fragments look like '2026 academic calendar (PREGRADO) — ACTIVITY NAME INICIA — March 2026: 30; September 2026: 1'. PREGRADO means undergraduate and POSGRADOS postgraduate (in an English answer write only 'undergraduate' or 'postgraduate', never PREGRADO or POSGRADOS); INICIA marks the start and TERMINA the end of the activity; each 'Month Year: day' (or 'day-day') is one date or date range, and several dates mean the activity happens in each academic period. Combine the INICIA and TERMINA lines of the same activity into one period per semester.
-- Be clear, brief and use plain language.
+- Use plain language, but be complete: answer every part of the question, and when a fragment lists requirements, steps, causes, dates or documents, include every item of that list, even if the answer gets longer.
+- When the fragments mention several similar deadlines, procedures or figures, say which one answers the question and do not mix them.
 - If the fragments do NOT contain enough information to answer, say so explicitly: tell the user the information was not found in the consulted official documents. Never invent information or use external knowledge.
 - Never repeat the same term in parentheses (write 'admission test', never 'admission test (Admission Test)').
 - Cite the fragments you use with their number in square brackets right after the sentence they support, for example [2] or [1][4]. Use only fragment numbers that appear below.
@@ -60,6 +61,12 @@ ARTICLE_PATTERN = re.compile(r"\b(?:article|art[ií]culo|art\.)s?\s+(\d{1,3})\b"
 ARTICLE_CHUNKS_PER_NUMBER = 2
 KEYWORD_HITS = 2
 MAX_FRAGMENTS = 10
+TRANSLATE_QUERIES = True
+# Next fragment added after the first regulation hits (0 = off); helps lists cut between fragments.
+NEIGHBOR_HITS = int(os.environ.get("KNOWBOT_NEIGHBOR_HITS", "0"))
+TRANSLATION_PROMPT = """Translate the user's question into Spanish, using the formal vocabulary of Colombian university regulations and academic calendars.
+Keep names, numbers, dates and article numbers. If the question is already in Spanish, return it unchanged.
+Return only the translated question."""
 KEYWORD_STOPWORDS = set(
     "the of and to in a an for is are what which how who when does do on at by with from as be or that this "
     "its their el la los las de del y en un una por para con que se es su al lo".split()
@@ -216,6 +223,7 @@ class KeywordIndex:
 
 
 _keyword_indexes = {}
+_next_fragment_maps = {}
 
 
 def _keyword_index(vector_db):
@@ -233,6 +241,52 @@ def _unique(documents):
     return unique_documents[:MAX_FRAGMENTS]
 
 
+@lru_cache(maxsize=1024)
+def spanish_query(question):
+    """Translate a question into Spanish so it shares words with the Spanish documents.
+
+    'Statute of limitations' and 'prescripción' are close in meaning but share no
+    word, so the keyword search cannot match them. Uses the fallback model, which
+    has its own daily quota. Returns None when translation is off or fails.
+    """
+    if not TRANSLATE_QUERIES:
+        return None
+    llm = _llm(FALLBACK_LLM_MODEL)
+    if llm is None:
+        return None
+    prompt = ChatPromptTemplate.from_messages([("system", TRANSLATION_PROMPT), ("human", "{question}")])
+    try:
+        translated = (prompt | llm | StrOutputParser()).invoke({"question": question}).strip()
+    except Exception as exc:
+        print(f"[WARNING] Could not translate the question for search ({exc.__class__.__name__})")
+        return None
+    return translated or None
+
+
+def _next_fragments(vector_db):
+    """Map each fragment to the one that follows it in the same document."""
+    if id(vector_db) not in _next_fragment_maps:
+        documents = list(vector_db.docstore._dict.values())
+        _next_fragment_maps[id(vector_db)] = {
+            current.page_content: following
+            for current, following in zip(documents, documents[1:])
+            if current.metadata.get("source") == following.metadata.get("source")
+        }
+    return _next_fragment_maps[id(vector_db)]
+
+
+def _with_neighbors(vector_db, documents):
+    """Add the next fragment after the first few regulation hits, so lists cut between fragments stay whole."""
+    following = _next_fragments(vector_db)
+    result, added = [], 0
+    for doc in documents:
+        result.append(doc)
+        if added < NEIGHBOR_HITS and not _is_calendar_document(doc) and doc.page_content in following:
+            result.append(following[doc.page_content])
+            added += 1
+    return result
+
+
 def retrieve_documents(vector_db, search_query, calendar_name=None):
     """Combine exact matches, the MMR search, a keyword (BM25) search and a calendar-only search.
 
@@ -240,7 +294,12 @@ def retrieve_documents(vector_db, search_query, calendar_name=None):
     always about the calendar, and they must not push the right regulation out.
     The keyword hits go right after the first result (hybrid retrieval): on the
     validation set this raised the right page (±1) in the top 6 from 88% to 93%.
+    The keyword search also uses the question translated into Spanish, the
+    language of the documents: the right page reaches the model in 87% of the
+    validation questions instead of 84%.
     """
+    translated = spanish_query(search_query)
+
     found_documents = []
     if calendar_name:
         found_documents += find_calendar_activity(vector_db, calendar_name)
@@ -258,8 +317,10 @@ def retrieve_documents(vector_db, search_query, calendar_name=None):
         )
 
     found_documents = _unique(found_documents)
-    keyword_hits = _keyword_index(vector_db).search(search_query, KEYWORD_HITS)
-    return _unique(found_documents[:1] + keyword_hits + found_documents[1:])
+    keyword_query = f"{search_query} {translated}" if translated else search_query
+    keyword_hits = _keyword_index(vector_db).search(keyword_query, KEYWORD_HITS)
+    merged = _unique(found_documents[:1] + keyword_hits + found_documents[1:])
+    return _unique(_with_neighbors(vector_db, merged))
 
 
 def warm_up():

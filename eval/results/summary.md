@@ -1,6 +1,6 @@
 # KnowBot evaluation results
 
-Generated on 2026-10-29 09:38 with `python eval/evaluate.py`.
+Generated on 2026-10-29 10:35 with `python eval/evaluate.py`.
 Validation set: 100 questions (`eval/validation_questions.csv`).
 
 ## Retrieval
@@ -12,16 +12,16 @@ A hit means the expected document (and page) is among the first 6 retrieved frag
 |---|---|---|
 | Correct document, first result | 80% | 81% |
 | Correct page, first result | 44% | 46% |
-| Correct document in top 6 | 99% | 98% |
-| Correct page in top 6 | — | 82% |
-| Correct page ±1 in top 6 | 73% | 93% |
-| Correct page in all fragments sent to the model (up to 10) | — | 84% |
+| Correct document in top 6 | 99% | 100% |
+| Correct page in top 6 | — | 84% |
+| Correct page ±1 in top 6 | 73% | 92% |
+| Correct page in all fragments sent to the model (up to 10) | — | 87% |
 
 The first-version page column comes from the original validation run, whose exact page rule is not documented; treat that comparison as approximate.
 
 ## Answers
 
-Run on 2026-10-29 with the retrieval that existed before the keyword (BM25) search was added; it must be re-run to reflect the current retrieval.
+Run on 2026-10-29 before the keyword (BM25) search and the Spanish translation were added; the 10 problem questions were graded again in answers_retest.csv. A full re-run is needed to reflect the current retrieval.
 
 20 questions sampled at random (seed 7), answered by KnowBot and graded by an LLM judge against the text of the expected page.
 
