@@ -30,14 +30,15 @@ flowchart LR
     S --> C1[Exact calendar match<br/>by official name]
     S --> C2[FAISS MMR search<br/>multilingual embeddings]
     S --> C3[Calendar-only search]
-    C1 & C2 & C3 --> CTX[Up to 10 numbered fragments]
+    S --> C4[Keyword search<br/>BM25]
+    C1 & C2 & C3 & C4 --> CTX[Up to 10 numbered fragments]
     CTX --> G[Answer generation<br/>Groq openai/gpt-oss-120b]
     G --> A[Answer with citations + source tags]
 ```
 
 1. **Ingestion** (`core/ingestion.py`) – the PDFs in `data/documents/` are split into ~1000-character chunks. The academic calendar is a wide table, so each activity is rebuilt from the table cells as one line with its dates.
 2. **Embeddings** – [FastEmbed](https://github.com/qdrant/fastembed) runs the multilingual `paraphrase-multilingual-MiniLM-L12-v2` model locally (no GPU, no API key) and the vectors are stored in a [FAISS](https://github.com/facebookresearch/faiss) index (`vector_store/`).
-3. **Retrieval** (`core/pipeline.py`) – exact calendar matches first, then Maximal Marginal Relevance (MMR) search, then a calendar-only search for date questions.
+3. **Retrieval** (`core/pipeline.py`) – hybrid: exact matches (calendar activity, "Article N") first, then Maximal Marginal Relevance (MMR) search over the vectors, a keyword (BM25) search over the same fragments, and a calendar-only search for date questions.
 4. **Generation** – [Groq](https://groq.com/) runs `openai/gpt-oss-120b` (short reasoning, about 2,300 tokens per answer) with a system prompt that forbids external knowledge and requires citations. Groq limits are per model: when `gpt-oss-120b` runs out of its daily tokens, `openai/gpt-oss-20b` writes the answer instead; follow-up questions are always rewritten by `gpt-oss-20b`. Both models can be changed with the `GROQ_MODEL` and `GROQ_FALLBACK_MODEL` environment variables.
 5. **Interface** (`app.py`) – [Streamlit](https://streamlit.io/) chat with quick questions, source tags and feedback.
 
@@ -106,12 +107,15 @@ The results are written to `eval/results/` (`summary.md`, `retrieval.csv`, `answ
 |---|---|---|
 | Correct document, first result | 80% | 81% |
 | Correct page, first result | 44% | 46% |
-| Correct document in the top 6 fragments | 99% | 99% |
-| Correct page (±1) in the top 6 fragments | 73% | 88% |
+| Correct document in the top 6 fragments | 99% | 98% |
+| Correct page (±1) in the top 6 fragments | 73% | 93% |
+| Correct page in all fragments sent to the model | — | 84% |
 
-The improvement comes from the exact calendar lookup, the article-number lookup ("Article 35" → `ARTÍCULO 35`) and the order in which the three searches are combined. MMR settings were also compared (λ = 0.5–0.9, fetch_k = 40/80): the differences stayed within about 3 points, so the default λ = 0.6, fetch_k = 40 was kept.
+The improvement came in two steps. The exact calendar lookup, the article-number lookup ("Article 35" → `ARTÍCULO 35`) and the order of the searches took the right page (±1) in the top 6 to 88%. The keyword (BM25) search then took it to 93%; it mostly fixed the Commission report, a slide deck with little text, whose right page (±1) in the top 6 went from 45% to 91%.
 
-**Answers** (20 random questions, seed 7, graded by an LLM judge against the text of the expected page; run on 2026-10-29):
+Experiments that were measured and not kept: MMR settings (λ = 0.5–0.9, fetch_k = 40/80) changed results by about 3 points; removing the calendar from the MMR search dropped calendar questions from 100% to 33%; adding the document title to every fragment helped the Commission report (64%) but lowered the overall score by 1 point.
+
+**Answers** (20 random questions, seed 7, graded by an LLM judge against the text of the expected page; run on 2026-10-29, before the keyword search was added — it must be re-run to reflect the current retrieval):
 
 | Verdict | Questions | Share |
 |---|---|---|
@@ -119,7 +123,7 @@ The improvement comes from the exact calendar lookup, the article-number lookup 
 | Partial | 2 | 10% |
 | Incorrect | 8 | 40% |
 
-4 of the 8 incorrect answers say the information was not found: the expected page was not retrieved, and 3 of them ask about the Commission report, a slide deck with little text whose date questions ("meeting held on 16 November 2021") pull in date-heavy calendar lines instead. The other 4 have content errors (a wrong date, a missing three-year limitation period, two procedures mixed). Retrieval of that report is the main area to improve. Per-question reasons are in `eval/results/answers.csv`.
+4 of the 8 incorrect answers say the information was not found: the expected page was not retrieved, and 3 of them ask about the Commission report, a slide deck with little text whose date questions ("meeting held on 16 November 2021") pull in date-heavy calendar lines instead. The other 4 have content errors (a wrong date, a missing three-year limitation period, two procedures mixed). The keyword search added afterwards fixed the agenda question; the members question still fails because the question is in English and the slide in Spanish. Per-question reasons are in `eval/results/answers.csv`.
 <!-- EVAL_RESULTS_END -->
 
 ## Deployment
