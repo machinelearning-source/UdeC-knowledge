@@ -354,6 +354,16 @@ st.markdown(
     }}
     [data-testid="stChatMessage"] [data-testid="stPopover"] button:hover * {{color: #ffffff !important;}}
     [data-testid="stPopoverBody"] {{border-radius: 14px; border: 1px solid {BORDER};}}
+    /* Quick-question chips: each as wide as its text, wrapping to a new line instead of overlapping. */
+    [data-testid="stChatMessage"] [data-testid="stHorizontalBlock"]:has([data-testid="stPopover"]) {{
+        flex-wrap: wrap;
+        gap: 8px;
+    }}
+    [data-testid="stChatMessage"] [data-testid="stHorizontalBlock"]:has([data-testid="stPopover"]) > [data-testid="stColumn"] {{
+        flex: 0 0 auto !important;
+        width: auto !important;
+        min-width: 0 !important;
+    }}
 
     .kb-sources {{display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 4px;}}
     .kb-sources-label {{font-size: 0.78rem; font-weight: 700; color: #5b6b80;}}
