@@ -687,6 +687,7 @@ if not github_token:
         "`GITHUB_TOKEN` en los secrets de Streamlit con permiso **Contents: Read and write**."
     )
 else:
+    required_pass = os.environ.get("UPLOAD_PASSPHRASE", "").strip()
     documents_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "documents")
     try:
         existing_pdfs = sorted(
@@ -718,6 +719,11 @@ else:
             )
             uploader = st.text_input("Tu nombre o correo (opcional)")
             description = st.text_area("Descripción breve (opcional)")
+            passphrase = (
+                st.text_input("Clave de publicación", type="password")
+                if required_pass
+                else ""
+            )
             uploaded_file = st.file_uploader(
                 f"Archivo PDF (máximo {MAX_UPLOAD_MB} MB)", type=["pdf"]
             )
@@ -735,6 +741,8 @@ else:
                 _a = random.randint(2, 9)
                 _b = random.randint(2, 9)
                 st.session_state.upload_captcha = (_a, _b, _a + _b)
+            elif required_pass and passphrase != required_pass:
+                st.error("La clave de publicación no es correcta.")
             elif uploaded_file is None:
                 st.error("Selecciona un archivo PDF.")
             elif uploaded_file.size > MAX_UPLOAD_MB * 1024 * 1024:
