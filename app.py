@@ -1,4 +1,11 @@
+import base64
+import json
 import os
+import random
+import re
+import time
+import urllib.error
+import urllib.request
 
 import streamlit as st
 
@@ -6,12 +13,11 @@ from core.pipeline import query_rag_system, warm_up
 
 st.set_page_config(page_title="UdeC Knowledge Hub", page_icon="🎓", layout="wide")
 
-if not os.environ.get("GROQ_API_KEY"):
-    try:
-        for _secret_key, _secret_value in st.secrets.items():
-            os.environ.setdefault(_secret_key, str(_secret_value))
-    except Exception:
-        pass
+try:
+    for _secret_key, _secret_value in st.secrets.items():
+        os.environ.setdefault(_secret_key, str(_secret_value))
+except Exception:
+    pass
 
 
 @st.cache_resource(show_spinner="Loading the search engine (only once)...")
@@ -24,6 +30,71 @@ GREEN_DARK = "#00482b"
 GREEN = "#007b3e"
 LIME = "#79c000"
 GOLD = "#ffd700"
+
+GITHUB_REPO = os.environ.get("GITHUB_REPO", "machinelearning-source/UdeC-knowledge").strip()
+GITHUB_BRANCH = os.environ.get("GITHUB_BRANCH", "main").strip()
+MAX_UPLOAD_MB = 15
+
+
+def _github_api(method, path, token, payload=None):
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/{path.lstrip('/')}"
+    data = json.dumps(payload).encode("utf-8") if payload is not None else None
+    request = urllib.request.Request(url, data=data, method=method)
+    request.add_header("Authorization", f"Bearer {token}")
+    request.add_header("Accept", "application/vnd.github+json")
+    request.add_header("X-GitHub-Api-Version", "2022-11-28")
+    request.add_header("User-Agent", "UdeC-Knowledge-Hub")
+    if data is not None:
+        request.add_header("Content-Type", "application/json")
+    try:
+        with urllib.request.urlopen(request, timeout=45) as response:
+            body = response.read().decode("utf-8")
+            return response.status, (json.loads(body) if body else {})
+    except urllib.error.HTTPError as error:
+        try:
+            detail = json.loads(error.read().decode("utf-8"))
+        except Exception:
+            detail = {}
+        return error.code, detail
+    except Exception as error:
+        return None, {"message": str(error)}
+
+
+def _safe_pdf_name(title, original_name=""):
+    base = (title or "").strip()
+    if not base:
+        base = os.path.splitext(os.path.basename(original_name or ""))[0]
+    base = re.sub(r"\.pdf$", "", base, flags=re.IGNORECASE)
+    base = re.sub(r"[^A-Za-z0-9 _-]+", "", base)
+    base = re.sub(r"\s+", " ", base).strip()[:80] or "documento"
+    return f"{base}.pdf"
+
+
+def _upload_pdf(token, filename, payload, replace=False, uploader=""):
+    path = f"data/documents/{filename}"
+    status, existing = _github_api("GET", f"contents/{path}", token)
+    sha = None
+    if status == 200:
+        if not replace:
+            return False, "Ya existe un documento con ese nombre. Usa 'Reemplazar' o cambia el título."
+        sha = existing.get("sha")
+    elif status != 404:
+        return False, existing.get("message", "No se pudo verificar el documento existente.")
+
+    message = f"Upload {filename} from UdeC Knowledge Hub form"
+    if uploader:
+        message += f" ({uploader})"
+    body = {
+        "message": message,
+        "content": base64.b64encode(payload).decode("ascii"),
+        "branch": GITHUB_BRANCH,
+    }
+    if sha:
+        body["sha"] = sha
+    status, result = _github_api("PUT", f"contents/{path}", token, body)
+    if status in (200, 201):
+        return True, result.get("content", {}).get("html_url", "")
+    return False, result.get("message", "GitHub rechazó la subida.")
 
 WELCOME_MESSAGE = {
     "role": "assistant",
@@ -602,7 +673,114 @@ if prompt:
         {"role": "assistant", "content": assistant_response, "sources": shown_sources}
     )
 
+st.divider()
+st.markdown("## Contribuir al conocimiento")
+st.caption(
+    "Cualquier persona puede añadir un PDF nuevo o reemplazar un documento existente. "
+    "El archivo se publica en GitHub y el índice de búsqueda se reconstruye automáticamente."
+)
+
+github_token = os.environ.get("GITHUB_TOKEN", "").strip()
+if not github_token:
+    st.info(
+        "La subida de documentos aún no está activada. El administrador debe configurar "
+        "`GITHUB_TOKEN` en los secrets de Streamlit con permiso **Contents: Read and write**."
+    )
+else:
+    documents_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "documents")
+    try:
+        existing_pdfs = sorted(
+            name for name in os.listdir(documents_dir) if name.lower().endswith(".pdf")
+        )
+    except OSError:
+        existing_pdfs = []
+
+    if "upload_captcha" not in st.session_state:
+        _a = random.randint(2, 9)
+        _b = random.randint(2, 9)
+        st.session_state.upload_captcha = (_a, _b, _a + _b)
+    _a, _b, _answer = st.session_state.upload_captcha
+
+    with st.expander("Subir o reemplazar un documento", expanded=False):
+        with st.form("upload_form", clear_on_submit=True):
+            mode = st.radio(
+                "Acción",
+                ["Agregar documento nuevo", "Reemplazar documento existente"],
+                horizontal=True,
+            )
+            target_pdf = st.selectbox(
+                "Documento a reemplazar",
+                existing_pdfs or ["(no hay documentos)"],
+                disabled=not mode.startswith("Reemplazar") or not existing_pdfs,
+            )
+            title = st.text_input(
+                "Título del documento", placeholder="Ej: Reglamento de posgrado"
+            )
+            uploader = st.text_input("Tu nombre o correo (opcional)")
+            description = st.text_area("Descripción breve (opcional)")
+            uploaded_file = st.file_uploader(
+                f"Archivo PDF (máximo {MAX_UPLOAD_MB} MB)", type=["pdf"]
+            )
+            captcha = st.text_input(f"Verificación: ¿cuánto es {_a} + {_b}?")
+            accept = st.checkbox("Entiendo que el documento quedará público en GitHub.")
+            submitted = st.form_submit_button(
+                "Publicar documento", type="primary", use_container_width=True
+            )
+
+        if submitted:
+            if not accept:
+                st.error("Debes aceptar que el documento será público.")
+            elif captcha.strip() != str(_answer):
+                st.error("La verificación no es correcta. Inténtalo de nuevo.")
+                _a = random.randint(2, 9)
+                _b = random.randint(2, 9)
+                st.session_state.upload_captcha = (_a, _b, _a + _b)
+            elif uploaded_file is None:
+                st.error("Selecciona un archivo PDF.")
+            elif uploaded_file.size > MAX_UPLOAD_MB * 1024 * 1024:
+                st.error(f"El archivo supera el límite de {MAX_UPLOAD_MB} MB.")
+            elif not mode.startswith("Reemplazar") and not title.strip():
+                st.error("Escribe un título para el documento.")
+            elif mode.startswith("Reemplazar") and not existing_pdfs:
+                st.error("No hay documentos disponibles para reemplazar.")
+            else:
+                now = time.time()
+                last_upload = st.session_state.get("last_upload_ts", 0)
+                if now - last_upload < 60:
+                    st.error("Espera un minuto antes de subir otro documento.")
+                else:
+                    payload = uploaded_file.getvalue()
+                    if not payload.startswith(b"%PDF-"):
+                        st.error("El archivo no parece ser un PDF válido.")
+                    else:
+                        replace = mode.startswith("Reemplazar")
+                        filename = (
+                            target_pdf
+                            if replace
+                            else _safe_pdf_name(title, uploaded_file.name)
+                        )
+                        ok, message = _upload_pdf(
+                            github_token,
+                            filename,
+                            payload,
+                            replace=replace,
+                            uploader=uploader.strip(),
+                        )
+                        if ok:
+                            st.session_state.last_upload_ts = time.time()
+                            _a = random.randint(2, 9)
+                            _b = random.randint(2, 9)
+                            st.session_state.upload_captcha = (_a, _b, _a + _b)
+                            st.success(f"Documento publicado: {filename}")
+                            if message:
+                                st.markdown(f"[Ver documento en GitHub]({message})")
+                            st.info(
+                                "El índice de búsqueda se reconstruirá en unos minutos."
+                            )
+                        else:
+                            st.error(f"No se pudo publicar: {message}")
+
 st.markdown(
-    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.8</div>',
+    '<div class="udec-footer">FastEmbed + FAISS + Groq · UI v1.9</div>',
     unsafe_allow_html=True,
 )

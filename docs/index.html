@@ -90,7 +90,8 @@
 
   <section>
     <h2>Documentos oficiales (PDF)</h2>
-    <ul>
+    <p><small id="doc-status">Lista actualizada automáticamente desde GitHub. Para añadir o reemplazar un documento usa el formulario de la aplicación.</small></p>
+    <ul id="doc-list">
       <li>
         <span class="name">Undergraduate Student Regulations.pdf</span>
         <span class="links">
@@ -160,9 +161,41 @@
     <p>Todas las URLs de archivos de esta página son públicas y funcionan sin iniciar sesión.
     Una URL de carpeta como <code>raw.githubusercontent.com/.../data/documents/</code> no es válida
     y devuelve 404; para las carpetas usa las vistas de GitHub (<code>github.com/.../tree/main/...</code>).</p>
+    <p>Para contribuir, abre la aplicación, ve a la sección <strong>Contribuir al conocimiento</strong>
+    y sube o reemplaza un PDF. El cambio se publica en GitHub y esta lista se actualiza sola.</p>
   </section>
 
   <footer>FastEmbed + FAISS + Groq · UdeC Knowledge Hub</footer>
 </main>
+<script>
+(async function () {
+  const repo = "machinelearning-source/UdeC-knowledge";
+  const branch = "main";
+  const list = document.getElementById("doc-list");
+  const status = document.getElementById("doc-status");
+  const esc = (value) => String(value).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}/contents/data/documents?ref=${branch}`);
+    if (!response.ok) throw new Error("GitHub API " + response.status);
+    const files = (await response.json())
+      .filter((file) => file.type === "file" && file.name.toLowerCase().endsWith(".pdf"))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    if (!files.length) throw new Error("Sin documentos");
+    list.innerHTML = files.map((file) => {
+      const encoded = file.path.split("/").map(encodeURIComponent).join("/");
+      const blob = `https://github.com/${repo}/blob/${branch}/${encoded}`;
+      const raw = `https://raw.githubusercontent.com/${repo}/${branch}/${encoded}`;
+      return `<li><span class="name">${esc(file.name)}</span><span class="links">` +
+        `<a href="${blob}" target="_blank" rel="noopener">Ver</a>` +
+        `<a href="${raw}" target="_blank" rel="noopener">Descargar</a></span></li>`;
+    }).join("");
+    status.textContent = `${files.length} documento(s) público(s), actualizado automáticamente desde GitHub.`;
+  } catch (error) {
+    status.textContent = "No se pudo cargar la lista dinámica. Abre la carpeta en GitHub para ver todos los documentos.";
+  }
+})();
+</script>
 </body>
 </html>
