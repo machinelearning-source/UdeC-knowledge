@@ -1,36 +1,38 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UdeC Knowledge Hub - Recursos públicos</title>
+<title>KnowBot - Public resources</title>
 <style>
   :root {
-    --green-dark: #00482b;
-    --green: #007b3e;
-    --lime: #79c000;
-    --gold: #ffd700;
-    --bg: #f3fbee;
-    --card: #ffffff;
+    --navy-dark: #071a33;
+    --navy: #0b2a4f;
+    --blue: #0e4a80;
+    --cyan: #22d3ee;
+    --soft: #a5d8f0;
+    --ink: #1e293b;
+    --page: #eef4f9;
+    --surface: #f5f9fc;
+    --border: rgba(11, 42, 79, 0.14);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
-    background: linear-gradient(160deg, #dcefd4 0%, #f3fbee 45%, #faf1cc 100%);
-    color: #1f3329;
+    background: var(--page);
+    color: var(--ink);
     min-height: 100vh;
   }
   header {
-    background: linear-gradient(100deg, var(--green-dark) 0%, var(--green) 58%, var(--lime) 100%);
-    border-bottom: 7px solid var(--gold);
+    background: linear-gradient(100deg, var(--navy-dark) 0%, var(--navy) 55%, var(--blue) 100%);
+    border-bottom: 7px solid var(--cyan);
     color: #fff;
-    padding: 34px 24px;
+    padding: 28px 24px;
     text-align: center;
   }
-  header h1 { margin: 0; font-size: 2.1rem; }
-  header h1 span { color: var(--gold); }
-  header p { margin: 8px 0 0; color: #e7f5ea; }
+  header img { height: 96px; max-width: 100%; }
+  header p { margin: 10px 0 0; color: var(--soft); }
   main { max-width: 1000px; margin: 0 auto; padding: 28px 18px 60px; }
   .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 28px; }
   .btn {
@@ -39,22 +41,22 @@
     border-radius: 12px;
     font-weight: 700;
     text-decoration: none;
-    border: 2px solid var(--green-dark);
-    background: var(--green-dark);
-    color: var(--gold);
+    border: 2px solid var(--navy);
+    background: var(--navy);
+    color: #fff;
   }
-  .btn.secondary { background: #fff; color: var(--green-dark); }
-  .btn:hover { background: var(--gold); color: var(--green-dark); border-color: var(--gold); }
+  .btn.secondary { background: #fff; color: var(--navy); }
+  .btn:hover { background: var(--blue); color: #fff; border-color: var(--cyan); }
   section {
-    background: var(--card);
-    border: 1px solid rgba(0, 72, 43, 0.18);
-    border-left: 6px solid var(--lime);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-left: 6px solid var(--cyan);
     border-radius: 14px;
     padding: 18px 20px;
     margin-bottom: 18px;
-    box-shadow: 0 8px 22px rgba(0, 72, 43, 0.10);
+    box-shadow: 0 6px 18px rgba(7, 26, 51, 0.08);
   }
-  section h2 { margin: 0 0 12px; color: var(--green-dark); font-size: 1.2rem; }
+  section h2 { margin: 0 0 12px; color: var(--navy); font-size: 1.2rem; }
   ul { list-style: none; margin: 0; padding: 0; }
   li {
     display: flex;
@@ -63,106 +65,141 @@
     align-items: center;
     gap: 8px;
     padding: 10px 0;
-    border-bottom: 1px dashed rgba(0, 72, 43, 0.16);
+    border-bottom: 1px dashed var(--border);
   }
   li:last-child { border-bottom: none; }
   .name { font-weight: 600; }
-  .links a { color: var(--green); font-weight: 600; text-decoration: none; margin-left: 14px; }
+  .links a { color: var(--blue); font-weight: 600; text-decoration: none; margin-left: 14px; }
   .links a:hover { text-decoration: underline; }
-  small { color: #4c6658; }
-  .note {
-    background: #fffbe6;
-    border-left-color: var(--gold);
-  }
-  footer { text-align: center; color: var(--green-dark); font-size: 0.82rem; font-weight: 600; padding: 10px; }
+  small { color: #5b6b80; }
+  .note { background: var(--surface); border-left-color: var(--blue); }
+  footer { text-align: center; color: var(--navy); font-size: 0.82rem; font-weight: 600; padding: 10px; }
 </style>
 </head>
 <body>
 <header>
-  <h1>UdeC-<span>Knowledge</span></h1>
-  <p>Recursos públicos: aplicación, repositorio, documentos y base de datos</p>
+  <img src="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/assets/knowbot-logo.png" alt="KnowBot - Ask. Learn. Know.">
+  <p>Public resources: app, repository, official documents, search index and evaluation</p>
 </header>
 <main>
   <div class="actions">
-    <a class="btn" href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">Abrir la aplicación</a>
-    <a class="btn secondary" href="https://github.com/machinelearning-source/UdeC-knowledge" target="_blank" rel="noopener">Ver repositorio en GitHub</a>
+    <a class="btn" href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">Open KnowBot</a>
+    <a class="btn secondary" href="https://github.com/machinelearning-source/UdeC-knowledge" target="_blank" rel="noopener">View the repository on GitHub</a>
   </div>
 
   <section>
-    <h2>Documentos oficiales (PDF)</h2>
-    <ul>
+    <h2>Official documents (PDF)</h2>
+    <p><small id="doc-status">These are the documents KnowBot answers from. The list is updated automatically from GitHub.</small></p>
+    <ul id="doc-list">
       <li>
         <span class="name">Undergraduate Student Regulations.pdf</span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Undergraduate%20Student%20Regulations.pdf" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Undergraduate%20Student%20Regulations.pdf" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Undergraduate%20Student%20Regulations.pdf" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Undergraduate%20Student%20Regulations.pdf" target="_blank" rel="noopener">Download</a>
         </span>
       </li>
       <li>
         <span class="name">Academic Calendar 2026.pdf</span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Academic%20Calendar%202026.pdf" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Academic%20Calendar%202026.pdf" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Academic%20Calendar%202026.pdf" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Academic%20Calendar%202026.pdf" target="_blank" rel="noopener">Download</a>
         </span>
       </li>
       <li>
         <span class="name">Agreement 005.pdf</span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Agreement%20005.pdf" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Agreement%20005.pdf" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Agreement%20005.pdf" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Agreement%20005.pdf" target="_blank" rel="noopener">Download</a>
         </span>
       </li>
       <li>
         <span class="name">Commission Report CA.pdf</span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Commission%20Report%20CA.pdf" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Commission%20Report%20CA.pdf" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/data/documents/Commission%20Report%20CA.pdf" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/data/documents/Commission%20Report%20CA.pdf" target="_blank" rel="noopener">Download</a>
         </span>
       </li>
     </ul>
   </section>
 
   <section>
-    <h2>Base de datos vectorial (FAISS)</h2>
+    <h2>Vector search index (FAISS)</h2>
+    <p><small>Rebuilt automatically by a GitHub Actions workflow whenever a document changes.</small></p>
     <ul>
       <li>
         <span class="name">index.faiss <small>(445 KB)</small></span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/vector_store/index.faiss" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/vector_store/index.faiss" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/vector_store/index.faiss" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/vector_store/index.faiss" target="_blank" rel="noopener">Download</a>
         </span>
       </li>
       <li>
         <span class="name">index.pkl <small>(224 KB)</small></span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/vector_store/index.pkl" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/vector_store/index.pkl" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/vector_store/index.pkl" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/vector_store/index.pkl" target="_blank" rel="noopener">Download</a>
         </span>
       </li>
     </ul>
   </section>
 
   <section>
-    <h2>Datos de validación</h2>
+    <h2>Evaluation</h2>
     <ul>
       <li>
-        <span class="name">validation_questions.csv</span>
+        <span class="name">validation_questions.csv <small>(100 questions with their expected document and page)</small></span>
         <span class="links">
-          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/validation_questions.csv" target="_blank" rel="noopener">Ver</a>
-          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/validation_questions.csv" target="_blank" rel="noopener">Descargar</a>
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/eval/validation_questions.csv" target="_blank" rel="noopener">View</a>
+          <a href="https://raw.githubusercontent.com/machinelearning-source/UdeC-knowledge/main/eval/validation_questions.csv" target="_blank" rel="noopener">Download</a>
+        </span>
+      </li>
+      <li>
+        <span class="name">Results summary <small>(retrieval and answer quality)</small></span>
+        <span class="links">
+          <a href="https://github.com/machinelearning-source/UdeC-knowledge/blob/main/eval/results/summary.md" target="_blank" rel="noopener">View</a>
         </span>
       </li>
     </ul>
   </section>
 
   <section class="note">
-    <h2>Nota sobre las URLs</h2>
-    <p>Todas las URLs de archivos de esta página son públicas y funcionan sin iniciar sesión.
-    Una URL de carpeta como <code>raw.githubusercontent.com/.../data/documents/</code> no es válida
-    y devuelve 404; para las carpetas usa las vistas de GitHub (<code>github.com/.../tree/main/...</code>).</p>
+    <h2>About the links</h2>
+    <p>Every file link on this page is public and works without signing in.
+    A folder URL such as <code>raw.githubusercontent.com/.../data/documents/</code> is not valid
+    and returns 404; for folders use the GitHub views (<code>github.com/.../tree/main/...</code>).</p>
   </section>
 
-  <footer>FastEmbed + FAISS + Groq · UdeC Knowledge Hub</footer>
+  <footer>KnowBot · Ask. Learn. Know. · FastEmbed + FAISS + Groq</footer>
 </main>
+<script>
+(async function () {
+  const repo = "machinelearning-source/UdeC-knowledge";
+  const branch = "main";
+  const list = document.getElementById("doc-list");
+  const status = document.getElementById("doc-status");
+  const esc = (value) => String(value).replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}/contents/data/documents?ref=${branch}`);
+    if (!response.ok) throw new Error("GitHub API " + response.status);
+    const files = (await response.json())
+      .filter((file) => file.type === "file" && file.name.toLowerCase().endsWith(".pdf"))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    if (!files.length) throw new Error("No documents");
+    list.innerHTML = files.map((file) => {
+      const encoded = file.path.split("/").map(encodeURIComponent).join("/");
+      const blob = `https://github.com/${repo}/blob/${branch}/${encoded}`;
+      const raw = `https://raw.githubusercontent.com/${repo}/${branch}/${encoded}`;
+      return `<li><span class="name">${esc(file.name)}</span><span class="links">` +
+        `<a href="${blob}" target="_blank" rel="noopener">View</a>` +
+        `<a href="${raw}" target="_blank" rel="noopener">Download</a></span></li>`;
+    }).join("");
+    status.textContent = `These are the ${files.length} documents KnowBot answers from, updated automatically from GitHub.`;
+  } catch (error) {
+    status.textContent = "The live list could not be loaded. Open the folder on GitHub to see every document.";
+  }
+})();
+</script>
 </body>
 </html>

@@ -32,17 +32,11 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-SECRETS_FILES = [
-    Path.home() / ".streamlit" / "secrets.toml",
-    Path(__file__).parent / ".streamlit" / "secrets.toml",
-]
-
-if not os.environ.get("GROQ_API_KEY") and any(path.exists() for path in SECRETS_FILES):
-    try:
-        for _secret_key, _secret_value in st.secrets.items():
-            os.environ.setdefault(_secret_key, str(_secret_value))
-    except Exception:
-        pass
+# Copy the secrets (GROQ_API_KEY on Streamlit Cloud) into the environment. Only when a
+# secrets.toml exists: reading st.secrets without one shows a "No secrets found" warning.
+if st.secrets.load_if_toml_exists():
+    for _secret_key, _secret_value in st.secrets.items():
+        os.environ.setdefault(_secret_key, str(_secret_value))
 
 
 @st.cache_resource(show_spinner="Loading the search engine (only once)...")

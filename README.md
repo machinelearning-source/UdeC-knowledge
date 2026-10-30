@@ -8,6 +8,10 @@
 
 Every answer is written only from the official documents, cites the fragments it used (`[1]`, `[2]`…) and shows the document and page of each citation. When the documents do not contain the answer, KnowBot says so instead of guessing.
 
+- App: <https://udec-knowledge.streamlit.app/>
+- Public catalog of the documents: <https://machinelearning-source.github.io/UdeC-knowledge/>
+- Repository: <https://github.com/machinelearning-source/UdeC-knowledge>
+
 ## Features
 
 - **Grounded answers with citations** – the model may only use the retrieved fragments; the cited document pages are shown as tags below each answer.
@@ -17,6 +21,7 @@ Every answer is written only from the official documents, cites the fragments it
 - **Live answers** – the answer is shown while it is being written.
 - **Always in English** – questions can be asked in English or Spanish; answers are always in English.
 - **User feedback** – 👍/👎 on every answer, saved to `logs/feedback.csv`.
+- **Automatic index rebuild** – when a PDF in `data/documents/` changes on GitHub, a workflow rebuilds the search index.
 - **Evaluation** – a 100-question validation set with retrieval and answer metrics (see [Evaluation](#evaluation)).
 
 ## How it works
@@ -59,9 +64,13 @@ KnowBot/
 │   ├── validation_questions.csv
 │   └── results/             # Metrics produced by evaluate.py
 ├── assets/                  # Logo and avatar (PNG + editable SVG)
+├── docs/index.html          # Public catalog page (GitHub Pages)
+├── .github/workflows/
+│   ├── rebuild-index.yml    # Rebuilds vector_store/ when the PDFs change
+│   └── keep-alive.yml       # Pings the Render deployment
 ├── .streamlit/config.toml   # Theme
 ├── requirements.txt
-└── render.yaml              # Render deployment
+└── render.yaml              # Alternative deployment on Render
 ```
 
 ## Getting started
@@ -136,9 +145,11 @@ The remaining incorrect answers are 42 (every postgraduate deadline of 2025–20
 
 ## Deployment
 
-The app is deployed on [Render](https://render.com/) with `render.yaml`: the build installs the requirements and rebuilds the index, and `GROQ_API_KEY` is set as an environment variable in the Render dashboard. A GitHub Actions workflow (`.github/workflows/keep-alive.yml`) pings the app every 10 minutes so the free instance does not sleep.
+The app runs on [Streamlit Community Cloud](https://udec-knowledge.streamlit.app/), which redeploys it on every push to `main`. `GROQ_API_KEY` is set in the app's **Settings → Secrets**. `render.yaml` keeps an alternative deployment on [Render](https://render.com/), and `.github/workflows/keep-alive.yml` pings that instance every 10 minutes so it does not sleep.
 
-On Render the file system is temporary, so `logs/feedback.csv` is reset on every deploy; download it or move it to a database for long-term analysis.
+When a PDF in `data/documents/` changes (or `core/ingestion.py` / `core/__init__.py`), the workflow `.github/workflows/rebuild-index.yml` runs `core/ingestion.py` and commits the new `vector_store/`.
+
+The hosting file system is temporary, so `logs/feedback.csv` is reset on every deploy; download it or move it to a database for long-term analysis.
 
 ## Limitations
 
