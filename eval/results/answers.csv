@@ -1,105 +1,190 @@
 id,question,verdict,reason,cites_expected_page,says_not_found,api_error,answer,sources
-42,"What are the key deadlines (registration, approval, evaluations, vacations, etc.) for graduate program activities for the years 2025‑2027?",incorrect,"The reference includes graduate program deadlines for 2026, so the answer incorrectly claims no information is available.",False,True,False,"The consulted official documents do not contain information about graduate‑program deadlines, approvals, evaluations or vacation periods for the years 2025‑2027. Therefore, the requested details cannot be provided based on the available fragments.",
-20,When does the Office of Academic Development publish the annual call for formative experiences?,incorrect,The answer states the wrong timing; the reference says the call is published in the third week of February each year.,False,False,False,The Office of Academic Development publishes the annual call for formative experiences within fifteen calendar days after the agreement is issued[1].,[1] PDF: Agreement 005.pdf (Page 12)
-51,What was the agenda for the Comisión Reglamento Estudiantil meeting held on 16 November 2021?,incorrect,"The reference provides the full agenda, but the answer claims no information is available.",False,True,False,The consulted official documents do not contain information about the agenda for the Student Regulation Committee meeting held on 16 November 2021.,
-84,Under what conditions may a student be simultaneously enrolled in two undergraduate programs at Universidad de Cundinamarca?,correct,Provides the required 50% credit completion and admission requirements without contradicting the reference,True,False,False,"A student may be simultaneously enrolled in two undergraduate programs when the following conditions are met:
+42,"What are the key deadlines (registration, approval, evaluations, vacations, etc.) for graduate program activities for the years 2025‑2027?",incorrect,"Reference includes 2026 graduate deadlines, so the answer incorrectly claims no information is available",False,True,False,"The consulted official documents do not contain information about the key deadlines for graduate‑level program activities (registration, approval, evaluations, vacations, etc.) for the years 2025‑2027. Therefore, I cannot provide those dates.",
+20,When does the Office of Academic Development publish the annual call for formative experiences?,correct,Provides the exact timing as stated in the reference,True,False,False,The Office of Academic Development publishes the annual call for formative experiences in the **third week of February** of each academic year[3].,[3] PDF: Agreement 005.pdf (Page 11)
+51,What was the agenda for the Comisión Reglamento Estudiantil meeting held on 16 November 2021?,correct,The answer lists all agenda items exactly as in the reference.,True,False,False,"The agenda for the **Student Regulations Commission** meeting held on 16 November 2021 was:
 
-1. The student has already completed at least fifty percent (50 %) of the academic credits of the first program in which they were originally enrolled.  
-2. The student fulfills the admission requirements of the second program, including the required admission test and any other criteria established by the university.  
+1. Call of the roll and verification of the quorum.  
+2. Reading of the agenda.  
+3. National anthem.  
+4. Explanation of the methodology.  
+5. Report on the project route – **Student Regulations Version 3** (including background, process stage, information analysis, inferences, conclusions).  
+6. Intervention of the deans.  
+7. Intervention of the students.  
+8. Closing.  
 
-These conditions are stipulated in the regulations governing simultaneous enrollment of undergraduate programs[2][5].",[2] PDF: Undergraduate Student Regulations.pdf (Page 3) | [5] PDF: Undergraduate Student Regulations.pdf (Page 3)
-7,"What are the first two phases of the Digital Learning methodology, including the design of the Digital Learning Plan (PAD) and the prior socialization of content?",correct,"The answer correctly identifies Phase 1 as Planning (design of the PAD) and Phase 2 as prior content socialization, matching the reference.",False,False,False,"The first phase is **Planning**, which incorporates the design of the Digital Learning Plan (PAD) as the tool for planning, organizing, communicating and monitoring the learning experience[1].  
+[2]",[2] PDF: Commission Report CA.pdf (Page 2)
+84,Under what conditions may a student be simultaneously enrolled in two undergraduate programs at Universidad de Cundinamarca?,partial,Includes correct 50% credit and admission requirements but adds incorrect faculty council approval not stated for simultaneity,True,False,False,"A student may be enrolled simultaneously in two undergraduate programs only when the following conditions are met:
 
-The second phase is **Prior socialization of the content**, which involves presenting the learning material to participants before the experience begins[6].",[1] PDF: Agreement 005.pdf (Page 3) | [6] PDF: Agreement 005.pdf (Page 10)
-10,"What safety, insurance, location, work‑plan, and deliverable requirements must be met for a formative experience to be approved?",incorrect,"The answer adds unrelated safety programs and details not present in the reference, and does not accurately reflect the listed requirements.",True,False,False,"The approval of a formative experience requires the following elements:
+1. **Completion of half of the credits of the first program** – the student must have already completed at least 50 % of the academic credits of the program in which he/she was originally enrolled[4].  
+2. **Admission requirements for the second program** – the student must satisfy the admission criteria of the second undergraduate program, including any required admission test or documentation[4].  
+3. **Formal approval process** – the simultaneous enrollment must be authorized by the Faculty Council after a study by the curricular committee of the academic program, in line with the university’s internationalization policy[4].  
 
-* **Safety** – The experience must be planned in accordance with the University’s Road‑Safety Policy, including the Safe‑Speed Management program, the Sleep‑and‑Fatigue Prevention program, the Distraction Prevention program and the Zero‑Tolerance program, as well as any other applicable safety documents [3].
+These three requirements together allow a student to be registered in two undergraduate programs at the same time.",[4] PDF: Undergraduate Student Regulations.pdf (Page 3)
+7,"What are the first two phases of the Digital Learning methodology, including the design of the Digital Learning Plan (PAD) and the prior socialization of content?",correct,Provides the first two phases exactly as described in the reference,True,False,False,"The Digital Learning methodology begins with the following two phases:
 
-* **Insurance** – Students must have an active student accident insurance policy and must be affiliated with a health‑care entity (EPS) at the time of the experience [4].
+1. **Phase 1 – Planning** – This phase starts the methodology by designing the Digital Learning Plan (PAD). The PAD is created for disciplinary, institutional or cultural learning fields and integrates the Multidimensional Learning Field (CMA) [3].
 
-* **Location** – The proposal must indicate the places to be visited, describe any climatic or other factors that could affect the activity, and certify that the experience cannot be carried out in Cundinamarca when the proposal states otherwise [3][4].
+2. **Phase 2 – Prior socialization of content** – In this phase the content that forms part of the Expected Learning Outcomes (REA) is organized. It includes the concepts, data, facts, principles and laws of a subject area, which will later be used to build and curate digital educational resources [4].",[3] PDF: Agreement 005.pdf (Page 4) | [4] PDF: Agreement 005.pdf (Page 4)
+10,"What safety, insurance, location, work‑plan, and deliverable requirements must be met for a formative experience to be approved?",correct,"Provides all required safety, insurance, location, work‑plan and deliverable details without contradicting the reference",True,False,False,"To obtain approval for a formative experience, the following elements must be satisfied:
 
-* **Work‑plan** – A detailed work plan and schedule must be submitted through the University’s application link, including the itinerary (point of departure and destination) and the planning of the route as required by the call [1][4][3].
+**1. Safety requirements**  
+- The route must not pass through zones classified as high‑risk for public order or personal security[3].  
+- The experience must comply with the University’s Road Safety Plan, which includes the Safe Speed Management program, the Sleep‑and‑Fatigue Prevention program, the Distraction Prevention program, the Zero‑Tolerance program and any other applicable documents or procedures[5].  
+- The itinerary must be planned on easily accessible roads, taking into account the availability of the university‑provided buses[2].  
+- The infrastructure of the visited sites must be verified and a suitable document on the condition of the roads and facilities must be delivered[2].  
 
-* **Deliverables** – The experience must specify the academic products to be delivered (impact, improvement and transformation) and present them in the format established by the University [1][4].",[1] PDF: Agreement 005.pdf (Page 7) | [3] PDF: Agreement 005.pdf (Page 8) | [4] PDF: Agreement 005.pdf (Page 7)
-69,Under what circumstances can Universidad de Cundinamarca issue a posthumous degree or a duplicate diploma?,correct,Provides both conditions exactly as stated in the reference,True,False,False,"Universidad de Cundinamarca may grant a **posthumous degree** when a student dies after having completed at least sixty percent (60 %) of the credits required for his or her learning pathway; the Academic Council must authorize the award and it will be delivered to an authorized family member[5].  
+**2. Insurance and health affiliation**  
+- Students (the “opportunity creators”) must have a valid student accident insurance policy and must be affiliated with a contributory or subsidized health‑insurance regime at the time of the experience[3].  
 
-The university may issue a **duplicate diploma** when the original diploma has been lost, when the graduate’s name has changed, or when the original diploma is deteriorated; the request must be made by the interested party and the applicable fee must be paid before the duplicate is issued[5].",[5] PDF: Undergraduate Student Regulations.pdf (Page 14)
-13,"What duties are assigned for handling, sharing, and archiving the committee’s minutes?",correct,"Answer includes all listed duties for drafting, sharing, and archiving minutes without contradiction",True,False,False,"The responsibilities for the committee’s minutes are:
+**3. Location requirements**  
+- All visited places must have the necessary facilities for the students (the “opportunity creators”)[2].  
+- The selected zones must be easily accessible and must not present high‑risk security conditions[2].  
+- Any climatological or other environmental factors that could affect the activity must be described[5].  
 
-* **Preparation and documentation** – the technical secretary must ensure the minutes are correctly written, documented and kept in proper custody [3].  
-* **Sharing** – the minutes must be distributed to the faculties and academic programs so that the decisions are known, and also sent to the campus directors, regional extensions, the finance office, the human‑talent office and the physical‑resources and general‑services office [1].  
-* **Archiving** – the committee must keep the session archive up‑to‑date and preserve the relevant documents for internal or external audit purposes [1].",[1] PDF: Agreement 005.pdf (Page 15) | [3] PDF: Agreement 005.pdf (Page 15)
-47,Who were the members of the delegated commission and the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021?,incorrect,"The reference provides the names of the commission members, but the answer claims the information was not found.",False,True,False,"The consulted official documents do not contain the names of the members of the delegated commission or the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021. Therefore, this information was not found in the provided fragments.",
-75,What is the statute of limitations for academic disciplinary actions and how are sanctions determined at the University of Cundinamarca?,incorrect,"The answer says no statute of limitations, but the reference states a three‑year limitation period",False,False,False,"The university classifies disciplinary offenses as **minor** or **serious** according to the nature of the conduct, its effects, the circumstances, the motives and the student’s academic, disciplinary and personal background; the classification determines which sanction may be applied[1].  
+**4. Work‑plan requirements**  
+- A detailed work plan and schedule must be submitted through the university’s application link indicated in the call[1][3].  
+- The plan must include:  
+  * The complete itinerary (starting point and destination)[1].  
+  * Total mileage to be covered[2].  
+  * Planning of schedules, defining stops and activities at each point of the route[2].  
+  * Description of the route according to the format established in the call[1].  
+  * A list of academic products to be delivered as a result of the experience (impact, improvement, transformation) following the university’s format[3].  
 
-Sanctions are imposed by the **Direction of Internal Control Disciplinary** in the first instance. Possible sanctions include **suspension for one or more academic periods**, **cancellation of enrollment** (loss of the university seat and a five‑year prohibition from enrolling in any program), and **expulsion** (loss of the right to belong to the university). The cancellation of enrollment and expulsion are also reviewed by the **Academic Council** in a second instance[6].  
+**5. Deliverable requirements**  
+- The experience must generate a set of academic products (the “impact, improvement, transformation” deliverables) that are described in the format established by the university and submitted together with the work plan[3].  
 
-All sanctions are recorded in the student’s academic record (except verbal warnings) and, when imposed, the student loses any university incentives or recognitions[1].  
+Meeting all of the above safety, insurance, location, work‑plan and deliverable conditions is necessary for the Committee of Formative Experiences to approve the formative experience[7].",[1] PDF: Agreement 005.pdf (Page 7) | [2] PDF: Agreement 005.pdf (Page 7) | [3] PDF: Agreement 005.pdf (Page 7) | [5] PDF: Agreement 005.pdf (Page 8) | [7] PDF: Agreement 005.pdf (Page 14)
+69,Under what circumstances can Universidad de Cundinamarca issue a posthumous degree or a duplicate diploma?,correct,Provides both posthumous degree criteria and duplicate diploma conditions as stated,True,False,False,"Universidad de Cundinamarca may grant a **posthumous degree** when a student who has died has successfully completed at least **sixty percent (60 %) of the credits** required for his or her learning pathway; the Academic Council must authorize the award and the diploma will be delivered to an authorized family member[3].  
 
-Procedurally, a student may file a **reconsideration appeal** to the Direction of Internal Control Disciplinary and an **appeal** to the Academic Council within ten (10) business days after notification; the appealed decision must be resolved within thirty (30) business days[3].  
+The university may issue a **duplicate diploma** when the original diploma has been **lost, the holder’s name has changed, or the original diploma is deteriorated**; the request must be made by the interested party and is granted only after the **payment of the established monetary fees**[3].",[3] PDF: Undergraduate Student Regulations.pdf (Page 14)
+13,"What duties are assigned for handling, sharing, and archiving the committee’s minutes?",correct,"Provides all listed duties for drafting, archiving, sharing, publishing, and follow‑up as described in the reference",True,False,False,"The duties assigned for handling, sharing and archiving the committee’s minutes are:
 
-The consulted documents do not specify a general “statute of limitations” (a time limit for initiating disciplinary actions) for academic disciplinary matters.",[1] PDF: Undergraduate Student Regulations.pdf (Page 21) | [3] PDF: Undergraduate Student Regulations.pdf (Page 20) | [6] PDF: Undergraduate Student Regulations.pdf (Page 21)
-8,What priority is given to transdisciplinary formative experiences in Cundinamarca and what budget limitations apply to their approval?,correct,Provides the priority for transdisciplinary experiences in Cundinamarca and correctly states they cannot be approved above the projected budget,False,False,False,"Transdisciplinary formative experiences that take place within the Department of Cundinamarca are given priority, and they are selected according to the ascending score obtained in the requirements evaluation. Their approval is limited by the budget planned for each regional unit: an experience may not exceed the allocated budget, and if it does, the Formative Experiences Committee must review the request again based on the available resources[3].",[3] PDF: Agreement 005.pdf (Page 18)
-65,What are the tuition refund percentages and request deadlines for students who withdraw before or after starting classes at Universidad de Cundinamarca?,correct,Provides the exact refund percentages and the two‑week request deadline as stated in the reference,True,False,False,"The university refunds tuition as follows:
+* **Drafting and documenting the minutes** – the technical secretariat must guarantee the formalities related to the drafting and documentation of the committee’s minutes and ensure they are correctly written [3].
 
-* **If the student has already registered but has not begun classes:** a refund of **50 %** of the tuition fees is granted.  
-* **If the student has not completed registration:** a refund of **75 %** of the tuition fees is granted.
+* **Ensuring proper custody and archiving** – the minutes must be kept in correct custody; the archive of the committee’s sessions must be kept up‑to‑date and the respective documents must be preserved for internal or external audit purposes [1][3].
 
-In both cases the refund must be requested **by submitting an official letter to the Vice‑Rectory of Administration and Finance within the first two weeks after the start of the corresponding academic period**; after this deadline the right to a refund is lost[1].",[1] PDF: Undergraduate Student Regulations.pdf (Page 6)
-28,"When and how are digital memories of formative experiences published, and what verification responsibilities do program coordinators have?",correct,"Provides the December publication timing and coordinators' verification duties as stated, without contradictions",True,False,False,"Digital memories of formative experiences are published in the first week of December, containing at least the collected and analysed data, impacts, improvements and learning derived from each experience and its contribution to the expected learning outcome[1]. In addition, at the end of each experience’s validity period, the dean of each faculty also publishes the digital memories for the experiences linked to the disciplinary, institutional or cultural learning fields[5].
+* **Sharing the minutes** – the minutes are to be shared with the faculties and academic programs so that the decisions taken are known [1].
 
-Program coordinators are responsible for verifying that the academic and legal requirements are met, confirming that the projected formative experiences are included in the program’s master document and in the PADs, and checking that the experiences are indeed recorded in the PAD within five business days of the relevant deadline[1][4].",[1] PDF: Agreement 005.pdf (Page 16) | [4] PDF: Agreement 005.pdf (Page 12) | [5] PDF: Agreement 005.pdf (Page 19)
-5,"What are the key responsibilities of the committee for planning, analyzing, publishing, and improving formative experiences?",partial,"Provides most key functions but omits several responsibilities such as applying improvements, publishing end‑of‑vigency results, and issuing internal regulations and procedures.",True,False,False,"The committee’s key responsibilities for formative experiences are:
+* **Publishing and communicating decisions** – the decisions taken by the committee and the approved formative experiences must be published and communicated to the Campus Directors, Extension Units, the Financial Directorate, the Human‑Talent Directorate and the Office of Physical Resources and General Services; copies of the schedule must also be sent to the units responsible for its application and control [1].
 
-1. **Approve, reject or modify each submitted formative experience** in accordance with the agreement [5].  
-2. **Supervise the development of the experiences** and ensure they align with the educational and curricular objectives of the academic programs [5].  
-3. **Establish and disclose the annual schedule** of approved formative experiences [5].  
-4. **Analyze the data** generated by the formative experiences to assess their impact and inform future actions [5].  
-5. **Publish and communicate the committee’s decisions** and the approved formative experiences to the campus directors, financial, human‑talent, facilities and other relevant units, and share the schedule with the entities responsible for implementation and control [6].  
+* **Following up on decisions** – the secretariat must follow up on the committee’s decisions, which includes monitoring the implementation of actions recorded in the minutes [1][3].",[1] PDF: Agreement 005.pdf (Page 15) | [3] PDF: Agreement 005.pdf (Page 15)
+47,Who were the members of the delegated commission and the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021?,correct,Provides all listed members matching the reference,True,False,False,"The delegated commission and the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021 were composed of the following members:
 
-These responsibilities cover the planning, analysis, publication and continuous improvement of formative experiences.",[5] PDF: Agreement 005.pdf (Page 14) | [6] PDF: Agreement 005.pdf (Page 15)
-12,What are the listed causes for canceling a formative experience according to Article 11?,correct,Provides all listed cancellation causes exactly as in Article 11,True,False,False,"The causes for canceling a formative experience listed in Article 11 are:
+- **Dra. Isabel Quintero Uribe** – Secretary General  
+- **Decana Aura Esther Alvarez Lara** – Dean  
+- **Decano Darwin Andrés Díaz Gómez** – Dean  
 
-1. It is not carried out on the dates approved in its schedule.  
+These three individuals are identified as the members of the delegated commission in the report dated 16 November 2021[3].",[3] PDF: Commission Report CA.pdf (Page 1)
+75,What is the statute of limitations for academic disciplinary actions and how are sanctions determined at the University of Cundinamarca?,incorrect,"Reference states a 3‑year prescription period, but answer claims no statute of limitations.",False,True,False,"The university’s regulations describe how disciplinary sanctions are defined and applied, but they do not specify a statutory time limit (statute of limitations) for initiating academic disciplinary actions. That information is not found in the consulted official documents.
+
+**How sanctions are determined and applied**
+
+1. **Classification of the infraction** – Disciplinary faults are classified as *minor* or *serious* according to the nature of the fault, its effects, the modalities and circumstances of the act, the determining motives, and the student’s academic, disciplinary and personal background[1].
+
+2. **Decision and execution** –  
+   * Once a disciplinary decision becomes final, the head of the Admissions and Registration Office must carry out the necessary procedures to enforce the sanction within fifteen (15) business days[2].  
+   * The sanction is recorded in the student’s academic record, except for a verbal warning[1].
+
+3. **Types of sanctions** – The regulations list several possible sanctions that may be imposed by the Internal Disciplinary Control Directorate (first instance) and, when applicable, confirmed by the Academic Council (second instance)[9]:
+   * **Suspension** – for one or more academic periods.  
+   * **Cancellation of enrollment** – the student loses the university seat and is barred from any academic program for five (5) years.  
+   * **Expulsion** – the student loses the right to belong to the university.  
+   * **Social or academic work** – the student may be required to perform community or academic service.
+
+4. **Appeal procedures** –  
+   * For sanctions listed in numerals 3, 4 and 5 (which include suspension, cancellation and expulsion), the student may file a *reconsideration* request before the Internal Disciplinary Control Directorate and an *appeal* before the Academic Council within ten (10) business days after notification[6].  
+   * The appealed decision must be resolved within thirty (30) business days from the filing date[6].  
+   * The Academic Council acts as the second instance and has ten (10) business days to consider the appeal after the General Secretariat forwards the request[6].
+
+5. **Consequences of sanctions** – All sanctions (except verbal warnings) are entered into the student’s academic record, and students who receive sanctions lose the right to any incentives or recognitions granted by the university[1].
+
+In summary, the university classifies disciplinary faults as minor or serious, records the sanction in the academic file, and enforces it within fifteen business days. Sanctions may include suspension, enrollment cancellation, expulsion, or mandatory social/academic work, and students have a ten‑day window to appeal, with the appeal to be resolved within thirty days. No specific statute of limitations for initiating disciplinary actions is provided in the available documents.",[1] PDF: Undergraduate Student Regulations.pdf (Page 21) | [2] PDF: Undergraduate Student Regulations.pdf (Page 21) | [6] PDF: Undergraduate Student Regulations.pdf (Page 20) | [9] PDF: Undergraduate Student Regulations.pdf (Page 21)
+8,What priority is given to transdisciplinary formative experiences in Cundinamarca and what budget limitations apply to their approval?,incorrect,"The answer adds unsupported details and misstates the budget rule, contradicting the reference.",False,False,False,"The Committee of Formative Experiences gives priority to transdisciplinary formative experiences that are carried out within the Department of Cundinamarca and that obtain the highest (ascending) evaluation scores; these are ranked before proposals from other regions[7].  
+
+Regarding the budget, a formative experience may not exceed the budget that has been planned for its regional unit. If the requested amount is higher than the allocated budget, the Committee of Formative Experiences may reopen the request and decide again based on the availability of resources[7].",[7] PDF: Agreement 005.pdf (Page 18)
+65,What are the tuition refund percentages and request deadlines for students who withdraw before or after starting classes at Universidad de Cundinamarca?,correct,Provides the exact refund percentages and the two‑week request deadline as stated in the reference,True,False,False,"The university refunds tuition fees according to the following percentages:
+
+* **If the student has already completed the registration but has not yet begun classes:** the refund is **50 % of the tuition fees** for that academic period.  
+* **If the student has not completed the registration:** the refund is **75 % of the tuition fees** for that academic period.
+
+**Request deadline:**  
+The refund request must be submitted by official letter to the Vice‑Rectory of Administration and Finance **within the first two (2) weeks after the start of the corresponding academic period**. Requests made after this two‑week window are not accepted and the right to the refund is lost[1].",[1] PDF: Undergraduate Student Regulations.pdf (Page 6)
+28,"When and how are digital memories of formative experiences published, and what verification responsibilities do program coordinators have?",incorrect,"Adds unsupported claim that deans publish memories at the end of the academic term, which contradicts the reference that specifies only the first week of December",True,False,False,"Digital memories of formative experiences are published in the first week of December. The dean of each faculty must make the digital memories available on the university’s institutional portal, showing at least the collected and analysed data, the impacts, the improvements and the learning derived from each experience and its contribution to the expected learning outcomes[1]. In addition, the deans are required to publish these digital memories at the end of the academic term, again through the institutional portal[7].
+
+Program coordinators have several verification duties:
+
+* Verify the academic, legal and academic requirements of each formative experience[1].  
+* Review and verify compliance with the provisions of the agreement for every formative experience[1].  
+* Verify and ensure that the projected formative experiences are included in the program’s master document and in the PADs (Program Academic Documents)[1][3].  
+* Ensure that the formative experiences are recorded by a curricular‑committee act, evidencing their alignment with the agreement[2].  
+
+These responsibilities guarantee that each formative experience is properly documented, approved and aligned with the university’s standards before it is carried out.",[1] PDF: Agreement 005.pdf (Page 16) | [2] PDF: Agreement 005.pdf (Page 16) | [3] PDF: Agreement 005.pdf (Page 16) | [7] PDF: Agreement 005.pdf (Page 19)
+5,"What are the key responsibilities of the committee for planning, analyzing, publishing, and improving formative experiences?",partial,"Provides some of the listed functions but omits key responsibilities such as issuing internal regulations and procedures, and adds unrelated details not in the reference.",True,False,False,"The committee’s core duties for planning, analyzing, publishing and improving formative experiences are:
+
+1. **Planning and coordination**  
+   * The chair must coordinate and lead the committee’s meetings, guarantee that the decisions taken are implemented, follow up the programmes’ requests and sign the minutes [1].  
+   * The technical secretariat must issue the session notices with the day’s agenda and the supporting documents, define the agenda and the list of matters to be treated, draft and keep the minutes, and ensure that the archive of the sessions is up‑to‑date for internal or external audits [1][2].  
+
+2. **Communication and publication**  
+   * The technical secretariat must share the minutes with the faculties and academic programmes, send a copy of the schedule to the units responsible for its application and control, and publish and communicate the committee’s decisions and the approved formative experiences to the campus directors, financial direction, human‑talent direction and the physical‑resources office [2].  
+   * It must also send email notifications about approved and rejected experiences within two business days, carry out the formal publication of approved experiences within three business days, and publish the committee’s decisions within five business days [3][4].  
+
+3. **Analysis and monitoring**  
+   * The committee has a decisive character: it must approve, reject or modify each submitted formative experience, supervise the development of the experiences to ensure alignment with educational and curricular objectives, and analyze data from the experiences to generate recommendations [9].  
+
+4. **Improvement and follow‑up**  
+   * By analysing the data and issuing recommendations, the committee contributes to the continuous improvement of formative experiences.  
+   * The technical secretariat is responsible for following up the committee’s decisions, ensuring that the schedule is known in a timely manner, and that any required adjustments are made [1][3].  
+
+Together, these responsibilities ensure that formative experiences are properly planned, evaluated, communicated, published and continuously improved.",[1] PDF: Agreement 005.pdf (Page 15) | [2] PDF: Agreement 005.pdf (Page 15) | [3] PDF: Agreement 005.pdf (Page 13) | [4] PDF: Agreement 005.pdf (Page 13) | [9] PDF: Agreement 005.pdf (Page 14)
+12,What are the listed causes for canceling a formative experience according to Article 11?,correct,The answer lists all six cancellation causes exactly as in Article 11,True,False,False,"The causes for canceling a formative experience listed in **Article 11** are:
+
+1. The experience is not carried out on the dates approved in its schedule.  
 2. Situations of public order occur.  
-3. The academic program requests it and a non‑conforming service report has been made.  
-4. The Knowledge and Learning Manager, without justified cause, does not carry out the formative experience.  
-5. The Knowledge and Learning Manager, with justified cause, informs that the formative experience will not take place less than ten calendar days before its scheduled date.  
+3. The academic program requests cancellation after a non‑conforming service report has been made.  
+4. The Knowledge and Learning Manager, without a justified cause, does not carry out the experience.  
+5. The Knowledge and Learning Manager, with a justified cause, informs that the experience will not take place less than ten (10) calendar days before its scheduled date.  
 6. The students (Opportunity Creators) have given deficient evaluations.  
 
-[2]",[2] PDF: Agreement 005.pdf (Page 11)
-56,What does Article 35 define about university exchange and what requirements are set out in Article 36 of Chapter VI?,partial,"Article 36 also requires submitting a request to the program director/coordinator with a certification of preliminary approval, which the answer omits",True,False,False,"Article 35 defines university exchange as the process by which a student takes academic credits of his/her learning pathway at a higher‑education institution different from the University of Cundinamarca, either in Colombia or abroad[2].  
+These six items are the complete set of cancellation grounds specified in Article 11 of the agreement [1][2].",[1] PDF: Agreement 005.pdf (Page 11) | [2] PDF: Agreement 005.pdf (Page 11)
+56,What does Article 35 define about university exchange and what requirements are set out in Article 36 of Chapter VI?,partial,Correctly states Article 35 and the first requirement of Article 36 but omits the rest of the required documents listed in Article 36,True,False,False,"Article 35 defines university exchange as the process by which a student takes academic credits of his/her learning pathway at a higher‑education institution different from the University of Cundinamarca, either in Colombia or abroad. The credits, seminars, courses, modules or learning cores completed at the other institution will be taken into account by the academic program to which the student belongs, except for the institutional learning field credits, which cannot be exchanged[2].  
 
-Article 36 establishes the requirements and criteria for university exchange: a student who wishes to study part of his/her program at another higher‑education institution must do so with an institution that has a current agreement (convention) with the University of Cundinamarca, either in Colombia or abroad[2].",[2] PDF: Undergraduate Student Regulations.pdf (Page 10)
-54,How many total contributions were recorded for version 3 of the student regulation?,incorrect,"Reference indicates a total contributions count for version 3, but the answer says the information is not present.",False,True,False,The consulted official documents do not contain information about the number of contributions recorded for version 3 of the student regulation.,
-9,What procedural actions and rejection criteria are applied during the subsanation stage of a formative experience request?,correct,Provides all procedural actions and rejection criteria as stated in the reference,True,False,False,"During the subsanation stage, the applicant must:
+Article 36 establishes the requirements for university exchange. A student who wishes to study part of his/her curriculum at another higher‑education institution that has a current agreement with the University of Cundinamarca must submit a formal request to the director or coordinator of the academic program, attaching:  
 
-* Formally correct any errors in the request and its annexes.  
-* Submit any missing documentation.  
-* Clarify any information provided in the request or annexes.  
+1. A certificate issued by the competent authority of the host institution confirming the student’s preliminary approval or admission to the study plan and the proposed term[3].",[2] PDF: Undergraduate Student Regulations.pdf (Page 10) | [3] PDF: Undergraduate Student Regulations.pdf (Page 10)
+54,How many total contributions were recorded for version 3 of the student regulation?,incorrect,"Reference indicates a total contributions count for version 3, but the answer claims the information is not present.",False,True,False,The consulted official documents do not contain information about the total number of contributions recorded for version 3 of the student regulation.,
+9,What procedural actions and rejection criteria are applied during the subsanation stage of a formative experience request?,correct,Provides all subsanation actions and rejection criteria as stated in the reference without contradiction,True,False,False,"During the **subsanation stage** of a formative‑experience request the following procedural actions are applied:
 
-If the request and annexes still do not meet the required conditions after subsanation, the application will be definitively rejected[3].
+1. **Correction of errors** – the applicant must formally correct any mistakes found in the request or its annexes.  
+2. **Submission of missing documentation** – any required documents that were not originally provided must be supplied.  
+3. **Clarification of information** – the applicant must clarify any unclear or incomplete information included in the request or its annexes.  
 
-The possible grounds for rejection are:
+These actions are required before the request can be accepted; if the request and annexes still do not meet the requirements after subsanation, the request is definitively rejected [3].
 
-1. Non‑compliance with the academic requirements established for participation.  
-2. Failure to subsanate the legal and technical requirements established for participation.  
-3. The formative experience interferes with the development of Institutional or Disciplinary Learning Fields managed by other Knowledge and Learning Managers.  
-4. The request is submitted outside the deadlines set in the agreement.  
-5. The request is not made through the application or channel provided by the university[5].",[3] PDF: Agreement 005.pdf (Page 9) | [5] PDF: Agreement 005.pdf (Page 9)
-31,What are the responsibilities and reporting deadlines for the Knowledge and Learning Manager after a formative experience?,correct,Provides the listed responsibilities and the 10‑day reporting deadline as stated in the reference,True,False,False,"The Knowledge and Learning Manager must:
+The **rejection criteria** that may be invoked during or after subsanation are:
 
-* Supervise, control, monitor and verify the Expected Learning Results (REA) of the experience.  
-* Review, enable and approve the formative experiences of the faculty.  
-* Respond promptly to requests from the Formative Experiences Committee, the Curriculum Committee, students and other entities involved in the experience.  
-* Ensure that the experience is recorded in the program master document and in the PADs.  
-* Deliver the results and evidence of the experience through the digital tool managed by the Academic Development Office.  
-* Communicate to the students whether the REA of the programmed experience was met or not.  
-* Carry out the experience using the learning‑field methodology and follow the activity schedule presented to the Formative Experiences Committee.  
-* Oversee all personnel attending the experience under the manager’s authority.  
+1. **Non‑compliance with academic requirements** established for participation in the agreement.  
+2. **Non‑subsanation of legal and technical requirements** established for participation in the agreement.  
+3. **Interruption of the development of Institutional Learning Fields or Disciplinary Learning Fields** that are being managed by other Knowledge and Learning Managers and used by other students.  
+4. **Submission of the request outside the times determined in the agreement**.  
+5. **Submission of the request through a channel other than the application or medium provided by the university**.  
 
-After the experience is completed, the manager must submit a digital report that includes the products of the experience, data collection, analysis, academic outputs, improvements, impacts, use of a second language and student evaluation. This report must be uploaded within ten (10) calendar days after the experience ends[1][3][5].",[1] PDF: Agreement 005.pdf (Page 19) | [3] PDF: Agreement 005.pdf (Page 16) | [5] PDF: Agreement 005.pdf (Page 17)
-71,What is the minimum number of students required for a university group and what is the procedure for a student to voluntarily withdraw after enrollment?,incorrect,"It misstates the withdrawal procedure, mixing cancellation rules with the separate voluntary withdrawal requirement of written notice to the direction or coordination",True,False,False,"The university requires that each academic group have **at least eight students**[3].  
+These criteria are listed as grounds for rejection of formative‑experience requests [4].",[3] PDF: Agreement 005.pdf (Page 9) | [4] PDF: Agreement 005.pdf (Page 9)
+31,What are the responsibilities and reporting deadlines for the Knowledge and Learning Manager after a formative experience?,correct,Provides the required ten‑day reporting deadline and all responsibilities listed in the reference without contradiction,True,False,False,"The Knowledge and Learning Manager has the following responsibilities after a formative experience:
 
-If a student wishes to **voluntarily withdraw after enrollment**, the cancellation of the academic registration can be requested within the first two weeks of the academic period. The request must be made by the student’s voluntary decision, submitted either as an email with a receipt (radicado) or as an official letter addressed to the Admissions and Registration Office[4].",[3] PDF: Undergraduate Student Regulations.pdf (Page 6) | [4] PDF: Undergraduate Student Regulations.pdf (Page 6)
+* **Prepare and submit the final report** – The manager must deliver, through the digital application administered by the Academic Development Office, a report that includes the products of the experience, the data collected, the analysis, the conclusions, the academic products obtained, the improvements and impacts achieved, the use of a second language, and the students’ evaluation of the experience [1][2][7].
+
+* **Submit the report within the prescribed time‑frame** – The report must be uploaded to the university’s digital tool **within ten (10) calendar days** after the experience ends [1].
+
+* **Provide the results and evidences** – In addition to the written report, the manager must supply the evidences of actions, behaviours, improvements, impacts and transformations that resulted from the experience, using the medium made available by the Academic Development Office [2][7].
+
+* **Communicate the fulfillment of the Expected Learning Outcome (REA)** – The manager must inform the participating students whether the REA was met or not [7].
+
+* **Ensure that all participants are under the manager’s authority** – All personnel attending the experience are under the responsibility of the Knowledge and Learning Manager [7].
+
+* **Follow the digital registration procedure** – The report and evidences must be recorded in the “formative experiences” application as required by the university [7].
+
+These duties must be carried out in accordance with the university’s regulations and the procedural guidelines established for formative experiences.",[1] PDF: Agreement 005.pdf (Page 19) | [2] PDF: Agreement 005.pdf (Page 19) | [7] PDF: Agreement 005.pdf (Page 17)
+71,What is the minimum number of students required for a university group and what is the procedure for a student to voluntarily withdraw after enrollment?,correct,Provides the 8‑student minimum and the written notice procedure as stated,True,False,False,"The university requires that each academic group be formed with **a minimum of eight (8) students**[5][7].  
+
+If a student wishes to **voluntarily withdraw after enrollment**, the student must submit a written request to the university’s direction or coordination office, indicating the decision to withdraw[5].",[5] PDF: Undergraduate Student Regulations.pdf (Page 6) | [7] PDF: Undergraduate Student Regulations.pdf (Page 6)

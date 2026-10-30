@@ -1,6 +1,6 @@
 # KnowBot evaluation results
 
-Generated on 2026-10-30 11:01 with `python eval/evaluate.py`.
+Generated on 2026-10-30 11:42 with `python eval/evaluate.py`.
 Validation set: 100 questions (`eval/validation_questions.csv`).
 
 ## Retrieval
@@ -21,19 +21,17 @@ The first-version page column comes from the original validation run, whose exac
 
 ## Answers
 
-Run on 2026-10-29 before the keyword search, the Spanish translation, the complete-answer rule and the neighbor fragments were added. The problem questions were graded again on 2026-10-30 (answers_retest_2026-10-30*.csv). A full re-run is needed to reflect the current version.
-
 20 questions sampled at random (seed 7), answered by KnowBot and graded by an LLM judge against the text of the expected page.
 
 | Verdict | Questions | Share |
 |---|---|---|
-| Correct | 10 | 50% |
-| Partial | 2 | 10% |
-| Incorrect | 8 | 40% |
+| Correct | 12 | 60% |
+| Partial | 3 | 15% |
+| Incorrect | 5 | 25% |
 
-Correct or partial (useful answers): 60%.
-The answer cites the expected page in 60% of the sampled questions.
-The answer says the information was not found in 20% of the sampled questions (every question of the set has an answer in the documents, so these are retrieval misses).
+Correct or partial (useful answers): 75%.
+The answer cites the expected page in 80% of the sampled questions.
+The answer says the information was not found in 15% of the sampled questions (every question of the set has an answer in the documents, so these are retrieval misses).
 API errors after retries: 0.
 
 An LLM judge is a fast approximation of a human review; the per-question reasons are in `answers.csv`.
