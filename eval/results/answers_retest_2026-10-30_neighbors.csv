@@ -1,0 +1,89 @@
+id,question,verdict,reason,cites_expected_page,says_not_found,api_error,answer,sources
+5,"What are the key responsibilities of the committee for planning, analyzing, publishing, and improving formative experiences?",partial,Includes most key functions but omits duties like issuing internal regulations and procedures and adds unrelated details,True,False,False,"The committee’s core duties for planning, analyzing, publishing and improving formative experiences are:
+
+1. **Planning and coordination**  
+   * The chair must **coordinate and direct the committee meetings**, ensure that decisions are implemented, follow up on program requests and sign the minutes [1].  
+   * The technical secretariat must **issue the call for each session with the day’s agenda and the supporting documentation**, define the agenda and the list of matters to be treated, and **draft, document and keep custody of the minutes** [1][2].  
+
+2. **Communication and publication**  
+   * The technical secretariat must **share the minutes with the faculties and academic programs**, keep the session archive updated for internal or external audits, and **send a copy of the schedule to the units responsible for its application and control** [2].  
+   * It must also **publish and communicate the committee’s decisions and the approved formative experiences** to the campus directors, financial direction, human‑talent direction and physical‑resources office, and **send the schedule to the corresponding dependencies** [2].  
+   * Specific timelines are established:  
+     – **Communication of approved and rejected experiences by email within 2 business days** [3].  
+     – **Formal publication of approved experiences within 3 business days** [3].  
+     – **Publication of the committee’s decisions within 5 business days** [4].  
+
+3. **Analysis and supervision**  
+   * The committee has a **decisive character**: it must **approve, deny or modify each submitted formative experience** [9].  
+   * It must **supervise the development of the experiences**, ensuring alignment with the educational and curricular objectives of the academic programs [9].  
+   * It is responsible for **establishing and disseminating the annual schedule of approved formative experiences** [9].  
+   * It must **analyze data from the formative experiences** to generate recommendations and improvements [9].  
+
+4. **Continuous improvement**  
+   * By **monitoring the implementation of decisions**, **communicating outcomes**, and **analyzing experience data**, the committee can **issue recommendations for improvement according to available resources** [9].  
+   * The technical secretariat’s role in **updating the archive, sharing minutes and sending schedules** supports ongoing review and refinement of the process [2].  
+
+Together, these responsibilities ensure that formative experiences are properly planned, evaluated, publicly communicated, and continuously improved.",[1] PDF: Agreement 005.pdf (Page 15) | [2] PDF: Agreement 005.pdf (Page 15) | [3] PDF: Agreement 005.pdf (Page 13) | [4] PDF: Agreement 005.pdf (Page 13) | [9] PDF: Agreement 005.pdf (Page 14)
+56,What does Article 35 define about university exchange and what requirements are set out in Article 36 of Chapter VI?,correct,The answer accurately states Article 35's definition and Article 36's requirement as given in the reference,True,False,False,"Article 35 defines university exchange as the process by which a student takes academic credits of his/her learning path at another higher‑education institution that is different from the University of Cundinamarca, either in Colombia or abroad[2].  
+
+Article 36 establishes the requirements and criteria for university exchange. The student who wishes to study part of his/her program at another higher‑education institution that has a current agreement with the University of Cundinamarca must submit a formal request to the director or coordinator of the academic program, attaching:  
+
+1. A certificate issued by the competent authority of the host institution, confirming the student’s preliminary approval or admission to the study plan and the proposed term[3].  
+
+These documents are required for the exchange request to be considered[3].",[2] PDF: Undergraduate Student Regulations.pdf (Page 10) | [3] PDF: Undergraduate Student Regulations.pdf (Page 10)
+10,"What safety, insurance, location, work‑plan, and deliverable requirements must be met for a formative experience to be approved?",correct,"Provides all required safety, insurance, location, work‑plan and deliverable details from the reference without contradiction",True,False,False,"To obtain approval for a formative experience the following elements must be satisfied:
+
+**1. Safety requirements**  
+* The route must avoid zones classified as high‑risk for public order or personal security [3].  
+* The experience must be planned in areas that are easily accessible for the university fleet (buses) [2].  
+* A road‑safety plan must follow the University’s Road Safety Policy and include the applicable risk‑management programs: Safe Speed Management, Sleep‑and‑Fatigue Prevention, Distraction Prevention, Zero‑Tolerance, and any other relevant documents [5].  
+* The infrastructure of the visited sites must be verified and a suitable document on the condition of the roads and facilities must be provided [2].  
+
+**2. Insurance requirements**  
+* Students (the “opportunity creators”) must be covered by a valid student accident insurance policy [3].  
+* Students must have current health‑insurance affiliation with a recognized health‑promoting entity (EPS) [3].  
+
+**3. Location requirements**  
+* The selected zones must be of easy access for the university’s vehicles [2].  
+* Visited places must have the necessary facilities for the students [2].  
+* Any climatological or other factors that could affect the activity must be described [5].  
+* The experience may not be carried out in Cundinamarca when the proposal expressly states that it cannot be [3].  
+
+**4. Work‑plan requirements**  
+* A complete itinerary must be planned according to the university‑approved format, including:  
+  * Work plan and schedule [1][2].  
+  * Starting point and destination [1][2].  
+  * Total kilometre count [2].  
+  * Detailed schedule with stops and activities for each point of the route [2].  
+* The plan must be entered through the university’s application link indicated in the call [3].  
+* Detailed information about the experience must be provided following the guide for completing the request [5].  
+
+**5. Deliverable requirements**  
+* A list of academic products to be delivered as a result of the experience (impact, improvement, transformation) must be prepared according to the university‑established format [3].  
+
+All these conditions are evaluated by the Committee of Formative Experiences, which may approve, reject or modify the proposal based on compliance with the above requirements [7].",[1] PDF: Agreement 005.pdf (Page 7) | [2] PDF: Agreement 005.pdf (Page 7) | [3] PDF: Agreement 005.pdf (Page 7) | [5] PDF: Agreement 005.pdf (Page 8) | [7] PDF: Agreement 005.pdf (Page 14)
+20,When does the Office of Academic Development publish the annual call for formative experiences?,correct,Answer matches the reference stating the call is published in the third week of February,True,False,False,The Office of Academic Development publishes the annual call for formative experiences in the third week of February of each academic year[3].,[3] PDF: Agreement 005.pdf (Page 11)
+47,Who were the members of the delegated commission and the academic council session that produced the Student Regulation Project V3 report dated 16 November 2021?,correct,Provides all listed members matching the reference,True,False,False,"The **Delegated Commission** that prepared the Student Regulation Project V3 report (dated 16 November 2021) was composed of:
+
+- Dr. Isabel Quintero Uribe – Secretary General  
+- Dean Aura Esther Alvarez Lara  
+- Dean Darwin Andrés Díaz Gómez  
+
+These three officials are listed as the members of the delegated commission in the report [3].
+
+The same three officials also participated in the **Academic Council session** that approved the report, as the session heading (“SESIÓN CONSEJO ACADÉMICO”) includes the same names under the commission heading [3].",[3] PDF: Commission Report CA.pdf (Page 1)
+51,What was the agenda for the Comisión Reglamento Estudiantil meeting held on 16 November 2021?,correct,The answer lists all agenda items exactly as in the reference.,True,False,False,"The agenda for the **Student Regulations Commission** meeting held on 16 November 2021 was:
+
+1. Call of the roll and verification of the quorum.  
+2. Reading of the agenda.  
+3. National anthem.  
+4. Explanation of the methodology.  
+5. Report on the project route – **Student Regulations Version 3** (including background, process stage, information analysis, inferences, conclusions).  
+6. Intervention of the deans.  
+7. Intervention of the students.  
+8. Closing.  
+
+[2]",[2] PDF: Commission Report CA.pdf (Page 2)
+71,What is the minimum number of students required for a university group and what is the procedure for a student to voluntarily withdraw after enrollment?,correct,Provides the 8‑student minimum and the written notice procedure as stated,True,False,False,"The university requires that each academic group be formed with **a minimum of eight (8) students**[5][7].  
+
+If a student wishes to **voluntarily withdraw after enrollment**, the student must submit a written request to the university’s direction or coordination office, indicating the decision to withdraw[5].",[5] PDF: Undergraduate Student Regulations.pdf (Page 6) | [7] PDF: Undergraduate Student Regulations.pdf (Page 6)

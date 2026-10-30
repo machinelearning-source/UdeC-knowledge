@@ -62,8 +62,8 @@ ARTICLE_CHUNKS_PER_NUMBER = 2
 KEYWORD_HITS = 2
 MAX_FRAGMENTS = 10
 TRANSLATE_QUERIES = True
-# Next fragment added after the first regulation hits (0 = off); helps lists cut between fragments.
-NEIGHBOR_HITS = int(os.environ.get("KNOWBOT_NEIGHBOR_HITS", "0"))
+# Next fragment added after the first regulation hits (0 = off): keeps lists cut between fragments whole.
+NEIGHBOR_HITS = int(os.environ.get("KNOWBOT_NEIGHBOR_HITS", "2"))
 TRANSLATION_PROMPT = """Translate the user's question into Spanish, using the formal vocabulary of Colombian university regulations and academic calendars.
 Keep names, numbers, dates and article numbers. If the question is already in Spanish, return it unchanged.
 Return only the translated question."""
