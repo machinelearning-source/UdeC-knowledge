@@ -32,10 +32,10 @@ SYSTEM_PROMPT = """You are the institutional knowledge assistant of this univers
 
 Rules:
 - Answer ONLY using the information contained in the official document fragments provided below.
-- Always write the whole answer in English, even when the user's question or the document fragments are written in Spanish.
-- The fragments are usually written in Spanish. That must NEVER change your language: every word of your answer must be in English.
-- Translate Spanish institutional terms, course names, calendar activity names and document names into English. Never include Spanish words or Spanish glosses in parentheses: for every Spanish term in the question or in the fragments, write only its English equivalent.
-- Academic calendar fragments look like '2026 academic calendar (PREGRADO) — ACTIVITY NAME INICIA — March 2026: 30; September 2026: 1'. PREGRADO means undergraduate and POSGRADOS postgraduate (in an English answer write only 'undergraduate' or 'postgraduate', never PREGRADO or POSGRADOS); INICIA marks the start and TERMINA the end of the activity; each 'Month Year: day' (or 'day-day') is one date or date range, and several dates mean the activity happens in each academic period. Combine the INICIA and TERMINA lines of the same activity into one period per semester.
+- Write the whole answer in the language named in the user message (English or Spanish), whatever the language of the document fragments.
+- The fragments are usually written in Spanish. That must NEVER change the language of an English answer: every word of it must be in English.
+- In an English answer, translate Spanish institutional terms, course names, calendar activity names and document names into English, and never add Spanish glosses in parentheses. In a Spanish answer, keep the official Spanish names used in the fragments.
+- Academic calendar fragments look like '2026 academic calendar (PREGRADO) — ACTIVITY NAME INICIA — March 2026: 30; September 2026: 1'. PREGRADO means undergraduate and POSGRADOS postgraduate (write only 'undergraduate'/'postgraduate' in English or 'pregrado'/'posgrado' in Spanish, never the capitalised labels); write month names in the language of the answer; INICIA marks the start and TERMINA the end of the activity; each 'Month Year: day' (or 'day-day') is one date or date range, and several dates mean the activity happens in each academic period. Combine the INICIA and TERMINA lines of the same activity into one period per semester.
 - Use plain language, but be complete: answer every part of the question, and when a fragment lists requirements, steps, causes, dates or documents, include every item of that list, even if the answer gets longer.
 - When the fragments mention several similar deadlines, procedures or figures, say which one answers the question and do not mix them.
 - If the fragments do NOT contain enough information to answer, say so explicitly: tell the user the information was not found in the consulted official documents. Never invent information or use external knowledge.
@@ -75,8 +75,22 @@ MAX_HISTORY_MESSAGES = 4
 MAX_HISTORY_CHARS = 1200
 FALLBACK_SOURCES = 4
 
-ANSWER_LANGUAGE = "English"
-NOT_FOUND_MARKERS = ("not found", "not contain", "do not provide", "does not provide", "no information")
+ENGLISH = "English"
+SPANISH = "Spanish"
+SPANISH_HINTS = re.compile(
+    r"[¿¡ñáéíóú]|\b(qu[eé]|c[oó]mo|cu[aá]ndo|cu[aá]l|cu[aá]les|d[oó]nde|puedo|debo|tengo|hay|para|"
+    r"los|las|del|el|la|es|son|una|un|y|o|de|en|con|por|si|mi|estudiante|matr[ií]cula|semestre)\b",
+    re.IGNORECASE,
+)
+ENGLISH_HINTS = re.compile(
+    r"\b(what|how|when|which|where|who|can|do|does|is|are|the|of|and|or|in|for|to|my|if|student|"
+    r"enrollment|semester|deadline)\b",
+    re.IGNORECASE,
+)
+NOT_FOUND_MARKERS = (
+    "not found", "not contain", "do not provide", "does not provide", "no information",
+    "no se encontr", "no se encuentra", "no contiene", "no contienen", "no proporciona", "no hay informaci",
+)
 
 
 @dataclass
@@ -87,6 +101,7 @@ class RagRequest:
     context_text: str = ""
     fragment_sources: list = field(default_factory=list)
     error: str = ""
+    language: str = ENGLISH
 
 
 def _base_path():
@@ -356,6 +371,26 @@ def _looks_like_follow_up(question):
     return len(words) <= FOLLOW_UP_MAX_WORDS or re.search(FOLLOW_UP_HINTS, question, re.IGNORECASE) is not None
 
 
+def _hint_balance(text):
+    return len(SPANISH_HINTS.findall(text)) - len(ENGLISH_HINTS.findall(text))
+
+
+def question_language(user_question, history=None):
+    """Answer in the language of the question: Spanish or English.
+
+    A question with no clear hint ("ok", "2026?") keeps the language of the
+    previous user message.
+    """
+    balance = _hint_balance(user_question)
+    if balance == 0:
+        for message in reversed(history or []):
+            if message["role"] == "user":
+                balance = _hint_balance(message["content"])
+                if balance:
+                    break
+    return SPANISH if balance > 0 else ENGLISH
+
+
 def standalone_question(user_question, history, llm):
     """Turn a follow-up like 'and for postgraduate?' into a full question using the chat history."""
     if not history or not _looks_like_follow_up(user_question):
@@ -395,7 +430,7 @@ def prepare_query(user_question, search_query=None, calendar_name=None, history=
     if not found_documents:
         return RagRequest(question, error="No sections within the uploaded documents match your query.")
 
-    request = RagRequest(question)
+    request = RagRequest(question, language=question_language(user_question, history))
     for number, doc in enumerate(found_documents, start=1):
         file_name = _file_name(doc.metadata.get("source", ""))
         page_number = doc.metadata.get("page", 0) + 1
@@ -418,7 +453,7 @@ def _answer_chain(model=LLM_MODEL):
 
 
 def _chain_input(request):
-    return {"context": request.context_text, "question": request.question, "language": ANSWER_LANGUAGE}
+    return {"context": request.context_text, "question": request.question, "language": request.language}
 
 
 def _ai_error(exc):

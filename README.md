@@ -19,7 +19,7 @@ Every answer is written only from the official documents, cites the fragments it
 - **Reliable calendar dates** – the calendar PDF is read cell by cell, and calendar activities are looked up by their official name instead of by similarity only.
 - **Follow-up questions** – "And for postgraduate students?" is rewritten into a full question using the conversation.
 - **Live answers** – the answer is shown while it is being written.
-- **Always in English** – questions can be asked in English or Spanish; answers are always in English.
+- **Bilingual** – questions can be asked in English or Spanish, and KnowBot answers in the language of the question (a short follow-up such as "2026?" keeps the language of the previous question). The interface is in English.
 - **User feedback** – 👍/👎 on every answer, saved to `logs/feedback.csv`.
 - **Automatic index rebuild** – when a PDF in `data/documents/` changes on GitHub, a workflow rebuilds the search index.
 - **Evaluation** – a 100-question validation set with retrieval and answer metrics (see [Evaluation](#evaluation)).

@@ -440,7 +440,7 @@ with st.sidebar:
             "3. **Retrieval:** calendar activities are matched by their official name, and "
             "FAISS + MMR finds the most similar chunks.\n"
             "4. **Generation:** the Groq model `openai/gpt-oss-120b` (or `openai/gpt-oss-20b` when "
-            "its daily quota is used up) writes the answer using only those chunks, always in English.\n\n"
+            "its daily quota is used up) writes the answer using only those chunks, in the language of the question (English or Spanish).\n\n"
             "Every answer cites the document and page it came from and says clearly when the "
             "information is not in the indexed documents."
         )
