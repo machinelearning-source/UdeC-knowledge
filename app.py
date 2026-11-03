@@ -58,16 +58,17 @@ def _image_as_data_uri(path):
     return f"data:image/png;base64,{encoded}"
 
 
-NAVY_DARK = "#071a33"
-NAVY = "#0b2a4f"
-BLUE = "#0e4a80"
-CYAN = "#22d3ee"
-CYAN_DARK = "#0891b2"
-INK = "#1e293b"
-PAGE_BG = "#eef4f9"
-SURFACE = "#f5f9fc"
-BORDER = "rgba(11, 42, 79, 0.14)"
-SOFT_TEXT = "#a5d8f0"
+NAVY_DARK = "#153325"
+NAVY = "#00482b"
+BLUE = "#007a3d"
+CYAN = "#79c000"
+CYAN_DARK = "#5e9e00"
+SECONDARY = "#ffde30"
+INK = "#282827"
+PAGE_BG = "#f6f4ec"
+SURFACE = "#fbfbf9"
+BORDER = "rgba(21, 51, 37, 0.16)"
+SOFT_TEXT = "#d5f466"
 BRAND_GRADIENT = f"linear-gradient(100deg, {NAVY_DARK} 0%, {NAVY} 55%, {BLUE} 100%)"
 
 CALENDAR_YEAR = "2026"
@@ -235,7 +236,7 @@ st.markdown(
         border-radius: 20px;
         padding: 26px 34px;
         color: #ffffff;
-        box-shadow: 0 12px 28px rgba(7, 26, 51, 0.25);
+        box-shadow: 0 12px 28px rgba(21, 51, 37, 0.25);
         margin-bottom: 6px;
     }}
     .kb-hero img {{height: 120px; display: block;}}
@@ -260,7 +261,7 @@ st.markdown(
         border-radius: 16px;
         border: 1px solid {BORDER};
         background: #ffffff;
-        box-shadow: 0 6px 18px rgba(7, 26, 51, 0.08);
+        box-shadow: 0 6px 18px rgba(21, 51, 37, 0.08);
     }}
 
     .stButton > button,
@@ -269,7 +270,7 @@ st.markdown(
         border: 2px solid {NAVY} !important;
         border-radius: 12px;
         font-weight: 700;
-        box-shadow: 0 3px 10px rgba(7, 26, 51, 0.18);
+        box-shadow: 0 3px 10px rgba(21, 51, 37, 0.18);
         transition: all 0.15s ease;
     }}
     .stButton > button,
@@ -304,7 +305,7 @@ st.markdown(
         border: 1px solid {BORDER};
         border-left: 6px solid {CYAN};
         border-radius: 14px;
-        box-shadow: 0 4px 14px rgba(7, 26, 51, 0.06);
+        box-shadow: 0 4px 14px rgba(21, 51, 37, 0.06);
         padding: 4px 10px;
         margin-bottom: 8px;
         color: {INK};
@@ -328,13 +329,13 @@ st.markdown(
     .kb-stats {{display: flex; gap: 12px; flex-wrap: wrap;}}
     .kb-stat {{
         background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(34, 211, 238, 0.35);
+        border: 1px solid rgba(121, 192, 0, 0.45);
         border-radius: 14px;
         padding: 8px 16px;
         text-align: center;
         min-width: 104px;
     }}
-    .kb-stat b {{display: block; font-size: 1.6rem; line-height: 1.15; color: {CYAN};}}
+    .kb-stat b {{display: block; font-size: 1.6rem; line-height: 1.15; color: {SECONDARY};}}
     .kb-stat span {{font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; color: {SOFT_TEXT};}}
 
     [data-testid="stChatMessage"] [data-testid="stPopover"] button {{
@@ -366,7 +367,7 @@ st.markdown(
     }}
 
     .kb-sources {{display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 4px;}}
-    .kb-sources-label {{font-size: 0.78rem; font-weight: 700; color: #5b6b80;}}
+    .kb-sources-label {{font-size: 0.78rem; font-weight: 700; color: #4f5d53;}}
     .kb-tag {{
         background: {SURFACE};
         border: 1px solid {BORDER};
