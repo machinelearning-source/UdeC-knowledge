@@ -61,14 +61,12 @@ def _image_as_data_uri(path):
 NAVY_DARK = "#153325"
 NAVY = "#00482b"
 BLUE = "#007a3d"
-CYAN = "#79c000"
-CYAN_DARK = "#5e9e00"
 SECONDARY = "#ffde30"
 INK = "#282827"
 PAGE_BG = "#f6f4ec"
 SURFACE = "#fbfbf9"
 BORDER = "rgba(21, 51, 37, 0.16)"
-SOFT_TEXT = "#d5f466"
+SOFT_TEXT = "#ffe97a"
 BRAND_GRADIENT = f"linear-gradient(100deg, {NAVY_DARK} 0%, {NAVY} 55%, {BLUE} 100%)"
 
 CALENDAR_YEAR = "2026"
@@ -214,25 +212,25 @@ st.markdown(
     [data-testid="stSidebarContent"] {{
         background: {SURFACE} !important;
     }}
-    [data-testid="stSidebar"] {{border-right: 4px solid {CYAN};}}
+    [data-testid="stSidebar"] {{border-right: 4px solid {SECONDARY};}}
     [data-testid="stSidebar"] * {{color: {NAVY};}}
     [data-testid="stSidebar"] h4 {{color: {NAVY}; font-weight: 800;}}
     .kb-brand {{
         background: {BRAND_GRADIENT};
-        border-left: 5px solid {CYAN};
+        border-left: 5px solid {SECONDARY};
         border-radius: 12px;
         padding: 14px 16px;
         margin-bottom: 18px;
     }}
     [data-testid="stSidebar"] .kb-brand h2 {{margin: 0; font-size: 1.45rem; color: #ffffff;}}
-    [data-testid="stSidebar"] .kb-brand h2 span {{color: {CYAN};}}
+    [data-testid="stSidebar"] .kb-brand h2 span {{color: {SECONDARY};}}
     [data-testid="stSidebar"] .kb-brand p {{
         margin: 4px 0 0; font-size: 0.78rem; letter-spacing: 3px; color: {SOFT_TEXT};
     }}
 
     .kb-hero {{
         background: {BRAND_GRADIENT};
-        border-bottom: 7px solid {CYAN};
+        border-bottom: 7px solid {SECONDARY};
         border-radius: 20px;
         padding: 26px 34px;
         color: #ffffff;
@@ -241,14 +239,14 @@ st.markdown(
     }}
     .kb-hero img {{height: 120px; display: block;}}
     .kb-hero h1 {{color: #ffffff; font-size: 2.6rem; margin: 0;}}
-    .kb-hero h1 span {{color: {CYAN};}}
+    .kb-hero h1 span {{color: {SECONDARY};}}
     .kb-hero p {{margin: 4px 0 0; color: {SOFT_TEXT}; letter-spacing: 4px; font-weight: 600;}}
 
     .kb-tagline {{color: {NAVY}; font-weight: 600; font-size: 0.95rem; margin: 10px 0 18px;}}
 
     .kb-card-head {{
         background: {BRAND_GRADIENT};
-        border-left: 5px solid {CYAN};
+        border-left: 5px solid {SECONDARY};
         border-radius: 12px;
         padding: 10px 14px;
         color: #ffffff;
@@ -282,7 +280,7 @@ st.markdown(
     .stButton > button:hover,
     [data-testid="stSidebar"] .stButton > button:hover {{
         background: {BLUE} !important;
-        border-color: {CYAN} !important;
+        border-color: {SECONDARY} !important;
     }}
 
     [data-testid="stSelectbox"] div[data-baseweb="select"] > div {{
@@ -303,7 +301,7 @@ st.markdown(
     [data-testid="stChatMessage"] {{
         background: #ffffff;
         border: 1px solid {BORDER};
-        border-left: 6px solid {CYAN};
+        border-left: 6px solid {SECONDARY};
         border-radius: 14px;
         box-shadow: 0 4px 14px rgba(21, 51, 37, 0.06);
         padding: 4px 10px;
@@ -391,7 +389,7 @@ st.markdown(
     .kb-footer {{
         margin-top: 26px;
         padding-top: 10px;
-        border-top: 3px solid {CYAN};
+        border-top: 3px solid {SECONDARY};
         color: {NAVY};
         font-size: 0.8rem;
         font-weight: 700;

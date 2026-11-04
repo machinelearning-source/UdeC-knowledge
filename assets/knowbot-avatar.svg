@@ -15,9 +15,9 @@
       <stop offset="1" stop-color="#7F8B9B"/>
     </linearGradient>
     <radialGradient id="eye" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#F4FFD9"/>
-      <stop offset="0.45" stop-color="#D5F466"/>
-      <stop offset="1" stop-color="#5E9E00"/>
+      <stop offset="0" stop-color="#FFF8D6"/>
+      <stop offset="0.45" stop-color="#FFE97A"/>
+      <stop offset="1" stop-color="#E0B800"/>
     </radialGradient>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="6" result="b"/>
@@ -27,18 +27,18 @@
 
   <!-- Fondo azul noche con aro cian -->
   <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
-  <circle cx="256" cy="256" r="244" fill="none" stroke="#79C000" stroke-width="8" opacity="0.85"/>
+  <circle cx="256" cy="256" r="244" fill="none" stroke="#FFDE30" stroke-width="8" opacity="0.85"/>
 
   <!-- Antena -->
   <rect x="249" y="92" width="14" height="60" rx="7" fill="url(#metalSide)"/>
-  <circle cx="256" cy="86" r="20" fill="#D5F466" filter="url(#glow)"/>
+  <circle cx="256" cy="86" r="20" fill="#FFE97A" filter="url(#glow)"/>
   <circle cx="250" cy="80" r="6" fill="#FFFFFF" opacity="0.9"/>
 
   <!-- Orejas -->
   <rect x="88" y="228" width="40" height="96" rx="18" fill="url(#metalSide)"/>
   <rect x="384" y="228" width="40" height="96" rx="18" fill="url(#metalSide)"/>
-  <circle cx="108" cy="276" r="8" fill="#79C000" filter="url(#glow)"/>
-  <circle cx="404" cy="276" r="8" fill="#79C000" filter="url(#glow)"/>
+  <circle cx="108" cy="276" r="8" fill="#FFDE30" filter="url(#glow)"/>
+  <circle cx="404" cy="276" r="8" fill="#FFDE30" filter="url(#glow)"/>
 
   <!-- Cabeza metálica -->
   <rect x="120" y="146" width="272" height="250" rx="80" fill="url(#metal)"/>
@@ -46,7 +46,7 @@
 
   <!-- Visor -->
   <rect x="148" y="200" width="216" height="118" rx="58" fill="#0E2A1B"/>
-  <rect x="148" y="200" width="216" height="118" rx="58" fill="none" stroke="#79C000" stroke-width="3" opacity="0.5"/>
+  <rect x="148" y="200" width="216" height="118" rx="58" fill="none" stroke="#FFDE30" stroke-width="3" opacity="0.5"/>
 
   <!-- Ojos -->
   <g filter="url(#glow)">
@@ -65,7 +65,7 @@
   <g transform="translate(256 438)">
     <path d="M-66 -12 Q-33 -28 0 -9 L0 28 Q-33 9 -66 24 Z" fill="#F4F6F9"/>
     <path d="M66 -12 Q33 -28 0 -9 L0 28 Q33 9 66 24 Z" fill="#C9D1DB"/>
-    <line x1="0" y1="-9" x2="0" y2="28" stroke="#79C000" stroke-width="4"/>
+    <line x1="0" y1="-9" x2="0" y2="28" stroke="#FFDE30" stroke-width="4"/>
     <g stroke="#6E9B4E" stroke-width="3" stroke-linecap="round">
       <line x1="-52" y1="-3" x2="-14" y2="4"/>
       <line x1="-52" y1="9" x2="-14" y2="16"/>
