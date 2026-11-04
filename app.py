@@ -80,7 +80,7 @@ FEEDBACK_FIELDS = ["timestamp", "rating", "question", "answer", "sources"]
 WELCOME_MESSAGE = {
     "role": "assistant",
     "content": (
-        "🤖 **Welcome to KnowBot!**\n\n"
+        "**Welcome to KnowBot!**\n\n"
         "Ask. Learn. Know.\n\n"
         "I can help you with:\n\n"
         "- Academic regulations\n"
@@ -440,8 +440,8 @@ with st.sidebar:
             "2. **Embeddings:** FastEmbed (multilingual MiniLM) runs locally.\n"
             "3. **Retrieval:** calendar activities are matched by their official name, and "
             "FAISS + MMR finds the most similar chunks.\n"
-            "4. **Generation:** the Groq model `openai/gpt-oss-120b` (or `openai/gpt-oss-20b` when "
-            "its daily quota is used up) writes the answer using only those chunks, in the language of the question (English or Spanish).\n\n"
+            "4. **Answer:** KnowBot writes the answer using only those chunks, in the language "
+            "of the question (English or Spanish).\n\n"
             "Every answer cites the document and page it came from and says clearly when the "
             "information is not in the indexed documents."
         )
@@ -624,11 +624,9 @@ def _render_sources(sources):
     )
 
 
-def _save_feedback(index):
-    """Append the 👍/👎 rating of one answer to logs/feedback.csv."""
-    rating = st.session_state.get(f"feedback_{index}")
-    if rating is None:
-        return
+def _save_feedback(index, rating):
+    """Append the rating (helpful / not helpful) of one answer to logs/feedback.csv."""
+    st.session_state[f"feedback_{index}"] = rating
     message = st.session_state.messages[index]
     FEEDBACK_PATH.parent.mkdir(exist_ok=True)
     is_new_file = not FEEDBACK_PATH.exists()
@@ -639,7 +637,7 @@ def _save_feedback(index):
         writer.writerow(
             {
                 "timestamp": datetime.now().isoformat(timespec="seconds"),
-                "rating": "up" if rating == 1 else "down",
+                "rating": rating,
                 "question": message.get("question", ""),
                 "answer": message["content"],
                 "sources": " | ".join(message.get("sources", [])),
@@ -649,7 +647,13 @@ def _save_feedback(index):
 
 
 def _render_feedback(index):
-    st.feedback("thumbs", key=f"feedback_{index}", on_change=_save_feedback, args=(index,))
+    """Two text buttons to rate an answer; after a rating only a short thank-you remains."""
+    if f"feedback_{index}" in st.session_state:
+        st.caption("Thanks for your feedback.")
+        return
+    helpful, not_helpful, _ = st.columns([1, 1.3, 3.5])
+    helpful.button("Helpful", key=f"feedback_up_{index}", on_click=_save_feedback, args=(index, "up"))
+    not_helpful.button("Not helpful", key=f"feedback_down_{index}", on_click=_save_feedback, args=(index, "down"))
 
 
 def _write_live(chunks):
@@ -726,6 +730,6 @@ if prompt:
     st.rerun()
 
 st.markdown(
-    '<div class="kb-footer">KnowBot · FastEmbed + FAISS + Groq · UI v3.0</div>',
+    '<div class="kb-footer">KnowBot · Ask. Learn. Know. · UI v3.0</div>',
     unsafe_allow_html=True,
 )

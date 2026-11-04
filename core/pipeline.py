@@ -458,15 +458,15 @@ def _chain_input(request):
     return {"context": request.context_text, "question": request.question, "language": request.language}
 
 
-def _ai_error(exc):
+def _service_error(exc):
     """Explain a Groq failure in plain words; a rate limit (HTTP 429) only needs a short wait."""
     if "429" in str(exc) or "rate limit" in str(exc).lower():
         limit = "daily limit, tokens per day" if "tokens per day" in str(exc) else "limit per minute"
         return (
-            f"Error: the AI service (Groq) has reached its usage limit for now (HTTP 429, {limit}). "
+            f"Error: the answer service has reached its usage limit for now (HTTP 429, {limit}). "
             "Please try again in a few minutes."
         )
-    return f"Error: the AI service could not answer ({exc})"
+    return f"Error: the answer service could not answer ({exc})"
 
 
 def stream_answer(request):
@@ -484,7 +484,7 @@ def stream_answer(request):
             return
         except Exception as exc:
             if started or model == FALLBACK_LLM_MODEL or not _is_daily_limit(exc):
-                yield f"\n\n{_ai_error(exc)}"
+                yield f"\n\n{_service_error(exc)}"
                 return
             print(f"[WARNING] {model} reached its daily limit; answering with {FALLBACK_LLM_MODEL}")
 
@@ -500,7 +500,7 @@ def cited_sources(answer, fragment_sources):
     Falls back to the first retrieved fragments when the answer cites nothing,
     and returns nothing when the answer says the information was not found.
     """
-    if answer.startswith("Error:") or "Error: the AI service" in answer:
+    if answer.startswith("Error:") or "Error: the answer service" in answer:
         return []
     numbers = []
     for match in CITATION_PATTERN.finditer(answer):
@@ -523,13 +523,13 @@ def query_rag_system(user_question, search_query=None, calendar_name=None, histo
         answer = _answer_chain().invoke(_chain_input(request))
     except Exception as exc:
         if not _is_daily_limit(exc):
-            return _ai_error(exc), []
+            return _service_error(exc), []
         try:
             answer = _answer_chain(FALLBACK_LLM_MODEL).invoke(_chain_input(request))
         except Exception as fallback_exc:
-            return _ai_error(fallback_exc), []
+            return _service_error(fallback_exc), []
     if not answer.strip():
-        return "Error: the AI service returned an empty answer.", []
+        return "Error: the answer service returned an empty answer.", []
     answer = normalize_citations(answer)
     return answer, cited_sources(answer, request.fragment_sources)
 
