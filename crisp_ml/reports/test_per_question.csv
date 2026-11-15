@@ -1,0 +1,21 @@
+question_id,question,expected,rank_selected_model,rank_knowbot_baseline,rank_vector_search,top1_selected_model
+5,"What are the key responsibilities of the committee for planning, analyzing, publishing, and improving formative experiences?",Agreement 005.pdf p.14,3,2,2,Agreement 005.pdf p.15
+9,What procedural actions and rejection criteria are applied during the subsanation stage of a formative experience request?,Agreement 005.pdf p.9,1,2,2,Agreement 005.pdf p.9
+19,What voting rule is used to decide matters according to this fragment?,Agreement 005.pdf p.15,9,4,4,Undergraduate Student Regulations.pdf p.2
+25,"What legal and technical requirements must be satisfied for a formative experience, and which bodies evaluate and approve them?",Agreement 005.pdf p.7,1,1,1,Agreement 005.pdf p.7
+28,"When and how are digital memories of formative experiences published, and what verification responsibilities do program coordinators have?",Agreement 005.pdf p.16,1,1,1,Agreement 005.pdf p.16
+29,"What safeguards protect students' right to education and work during a formative experience, and what documentation from the curricular committee must be attached?",Agreement 005.pdf p.6,7,6,4,Agreement 005.pdf p.17
+33,What academic requirements must be met for a formative experience and which office evaluates them?,Agreement 005.pdf p.9,1,1,1,Agreement 005.pdf p.9
+41,What is the purpose and process of phases 4 and 5 in the collaborative and co‑creative learning model described in the document?,Agreement 005.pdf p.4,1,1,1,Agreement 005.pdf p.4
+44,"What are the main dates in the 2026 academic calendar for processes such as homologation, academic registration, class start, and period closure?",Academic Calendar 2026.pdf p.2,1,1,1,Academic Calendar 2026.pdf p.2
+45,"How many participants attended each type of meeting (dialogue encounters, counseling, work tables, curricular committee, others) according to the attendance report?",Commission Report CA.pdf p.22,8,2,31,Agreement 005.pdf p.12
+50,"What are the participant numbers for each site (Zipaquirá, Girardot, Ubaté, Soacha, Chía, Facatativá, Fusagasugá) in the attendance report version 3?",Commission Report CA.pdf p.23,1,1,1,Commission Report CA.pdf p.23
+56,What does Article 35 define about university exchange and what requirements are set out in Article 36 of Chapter VI?,Undergraduate Student Regulations.pdf p.10,13,1,26,Agreement 005.pdf p.1
+67,What are the requirements and steps for a student to be granted reentry into a program at Universidad de Cundinamarca?,Undergraduate Student Regulations.pdf p.7,3,9,8,Undergraduate Student Regulations.pdf p.10
+72,"What duties must undergraduate students fulfill according to the University of Cundinamarca regulations, including their right to protest?",Undergraduate Student Regulations.pdf p.16,1,1,1,Undergraduate Student Regulations.pdf p.16
+74,"What actions does the Academic Council take to facilitate access for applicants with functional diversity during the selection process, and does the university reserve spots after admission?",Undergraduate Student Regulations.pdf p.4,1,1,1,Undergraduate Student Regulations.pdf p.4
+75,What is the statute of limitations for academic disciplinary actions and how are sanctions determined at the University of Cundinamarca?,Undergraduate Student Regulations.pdf p.15,3,4,2,Undergraduate Student Regulations.pdf p.21
+76,What is the assimilation process for recognizing foreign program equivalences and what criteria does the Faculty Council use for this process?,Undergraduate Student Regulations.pdf p.9,1,1,1,Undergraduate Student Regulations.pdf p.9
+83,What types of discriminatory conduct are prohibited under Universidad de Cundinamarca's disciplinary regulations?,Undergraduate Student Regulations.pdf p.18,5,5,3,Undergraduate Student Regulations.pdf p.15
+89,What circumstances lead to the loss of student status at Universidad de Cundinamarca?,Undergraduate Student Regulations.pdf p.3,1,1,1,Undergraduate Student Regulations.pdf p.3
+90,What happens if a student fails to present the scheduled proficiency test without at least two business days notice?,Undergraduate Student Regulations.pdf p.10,2,1,1,Undergraduate Student Regulations.pdf p.19

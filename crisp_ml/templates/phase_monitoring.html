@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Monitoring and Maintenance{% endblock %}
+{% block content %}
+<h1>6. Monitoring and Maintenance</h1>
+<p class="lead">What is watched, how drift and degradation are detected, who acts and when, and a working log of the model in operation.</p>
+
+<h2>Monitoring indicators</h2>
+<div class="table-wrap"><table>
+  <tr><th>Indicator</th><th>How it is computed</th><th>Alert threshold</th></tr>
+  <tr><td>Latency</td><td>Median and 95th percentile of <code>latency_ms</code></td><td>Median above 3,000 ms</td></tr>
+  <tr><td>Errors</td><td>Rows with an error / all rows</td><td>Any server error</td></tr>
+  <tr><td>Model confidence</td><td>Mean top probability; share of predictions with top probability below 0.30</td><td>More than 40% low-confidence predictions</td></tr>
+  <tr><td>Agreement with KnowBot's order</td><td>Share of questions where both put the same page first</td><td>A sudden change of more than 20 points between two reviews</td></tr>
+  <tr><td>Document drift</td><td>Population Stability Index (PSI) between the documents ranked first in operation and the documents of the training questions</td><td>PSI above 0.25</td></tr>
+  <tr><td>User feedback</td><td>Share of "yes, the first fragment was right"</td><td>Below 70% with at least 30 answers</td></tr>
+  <tr><td>Quality on labeled data</td><td>MRR and Hit@1 on newly labeled questions</td><td>MRR below KnowBot's order on the same questions</td></tr>
+</table></div>
+
+<h2>Detecting data drift and performance degradation</h2>
+<ul class="tight">
+  <li><strong>Input drift:</strong> question length, share of date questions, and the documents that come first are compared with the training data. A new topic (for example a question about postgraduate fees) shows up as lower confidence and a document shift.</li>
+  <li><strong>Corpus change:</strong> a new or changed PDF (the 2027 calendar) changes the candidates. KnowBot's index workflow already rebuilds the index when a PDF changes; that event triggers a re-run of <code>build_dataset.py</code> and <code>train.py</code>.</li>
+  <li><strong>Performance:</strong> labels arrive from feedback and from team review. Every month, the newly labeled questions are scored with the model and with KnowBot's order.</li>
+</ul>
+
+<h2>Review frequency, responsibilities and retraining criteria</h2>
+<div class="table-wrap"><table>
+  <tr><th>Activity</th><th>Frequency</th><th>Responsible</th></tr>
+  <tr><td>Check the monitoring page and alerts</td><td>Weekly during the semester</td><td>KnowBot team member on duty</td></tr>
+  <tr><td>Label new questions from feedback and logs</td><td>Monthly</td><td>KnowBot team</td></tr>
+  <tr><td>Full evaluation on new labeled questions</td><td>Every semester, and after any document change</td><td>Model owner (team lead)</td></tr>
+  <tr><td>Approve switching from shadow mode to the model order</td><td>When retraining criteria are met</td><td>Team lead with the project director</td></tr>
+</table></div>
+<p><strong>Retrain when:</strong> a document is added or changed; 50 or more new labeled questions are available; an alert stays active for two weekly reviews; or MRR on new labeled questions falls below KnowBot's order.</p>
+
+<h2>Risks, quality controls and update procedure</h2>
+<ul class="tight">
+  <li><strong>Risk:</strong> a wrong page ranked first with high confidence. <strong>Control:</strong> shadow mode until a new test confirms a gain, and the gradual switch only above probability 0.5.</li>
+  <li><strong>Risk:</strong> training and serving compute features differently. <strong>Control:</strong> one shared module (<code>knowbot/features.py</code>) and the full pipeline saved in one file.</li>
+  <li><strong>Risk:</strong> silent errors. <strong>Control:</strong> every prediction and error is logged, plus a health endpoint.</li>
+  <li><strong>Update procedure:</strong> (1) rebuild the dataset; (2) retrain with the same split rules and keep a new held-out test set; (3) compare with the current model and with KnowBot's order; (4) update <code>model_card.json</code> and the version in the repository; (5) deploy; (6) watch the indicators for one week.</li>
+</ul>
+
+<h2>Monitoring test</h2>
+<p>Predictions logged by this running app. Rows marked <span class="badge sim">simulated</span> come from the button below, which replays the 20 test questions through the live model: they are <strong>simulated operational data</strong>, not real users. Rows from the demo form are marked <span class="badge info">demo</span>.</p>
+<form method="post" action="{{ url_for('simulate') }}"><button type="submit">Run simulated traffic (20 test questions)</button></form>
+
+{% if indicators.rows %}
+<div class="grid" style="margin-top:14px">
+  <div class="stat"><div class="value">{{ indicators.rows }}</div><div class="label">logged predictions ({% for source, count in indicators.by_source.items() %}{{ source }}: {{ count }}{% if not loop.last %}, {% endif %}{% endfor %})</div></div>
+  {% if indicators.median_latency_ms is defined %}
+  <div class="stat"><div class="value">{{ '%.0f'|format(indicators.median_latency_ms) }} ms</div><div class="label">median latency (p95 {{ '%.0f'|format(indicators.p95_latency_ms) }} ms)</div></div>
+  <div class="stat"><div class="value">{{ '%.2f'|format(indicators.mean_top_probability) }}</div><div class="label">mean top probability; {{ '%.0f'|format(indicators.low_confidence_share * 100) }}% below 0.30</div></div>
+  <div class="stat"><div class="value">{{ '%.0f'|format(indicators.agreement_with_knowbot_order * 100) }}%</div><div class="label">same first page as KnowBot's order</div></div>
+  <div class="stat"><div class="value">{{ '%.3f'|format(indicators.document_psi) }}</div><div class="label">document PSI vs. training (alert above 0.25)</div></div>
+  <div class="stat"><div class="value">{{ indicators.errors }}</div><div class="label">errors</div></div>
+  {% endif %}
+  {% if indicators.feedback_rows is defined %}<div class="stat"><div class="value">{{ '%.0f'|format(indicators.useful_share * 100) }}%</div><div class="label">"first fragment was right" ({{ indicators.feedback_rows }} answers)</div></div>{% endif %}
+</div>
+{% if indicators.alerts %}<div class="warn"><strong>Alerts:</strong><ul class="tight">{% for alert in indicators.alerts %}<li>{{ alert }}</li>{% endfor %}</ul></div>{% elif indicators.median_latency_ms is defined %}<p><span class="badge good">No alerts</span></p>{% endif %}
+{% if indicators.top_document_share %}<p class="excerpt">Documents ranked first: {% for document, share in indicators.top_document_share.items() %}{{ document }} {{ '%.0f'|format(share * 100) }}%{% if not loop.last %}; {% endif %}{% endfor %}.</p>{% endif %}
+
+<h3>Latest log rows</h3>
+<div class="table-wrap"><table>
+  <tr><th>Time (UTC)</th><th>Source</th><th class="num">Chars</th><th class="num">Candidates</th><th class="num">Top prob.</th><th>Top page</th><th class="num">Same as KnowBot</th><th class="num">Latency ms</th><th>Error</th></tr>
+  {% for row in log %}<tr><td>{{ row.timestamp }}</td><td><span class="badge {{ 'sim' if row.source == 'simulated' else 'info' }}">{{ row.source }}</span></td><td class="num">{{ row.question_chars }}</td><td class="num">{{ row.candidates|int if row.candidates != '' else '' }}</td><td class="num">{{ row.top_probability }}</td><td>{{ row.top_document }}{% if row.top_page != '' %} p.{{ row.top_page|int }}{% endif %}</td><td class="num">{{ ('yes' if row.agrees_with_knowbot_order|int == 1 else 'no') if row.agrees_with_knowbot_order != '' else '' }}</td><td class="num">{{ row.latency_ms }}</td><td>{{ row.error }}</td></tr>{% endfor %}
+</table></div>
+{% else %}
+<p class="note">No predictions logged yet. Use the button above or the demo.</p>
+{% endif %}
+<p class="excerpt">On the hosting service the log lives on a temporary disk and is reset when the app restarts; for long-term monitoring it would be moved to a database.</p>
+
+<div class="next"><a class="button secondary" href="{{ url_for('phase', slug='deployment') }}">← 5. Model Deployment</a><a class="button" href="{{ url_for('demo') }}">Try the model →</a></div>
+{% endblock %}

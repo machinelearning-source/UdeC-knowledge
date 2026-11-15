@@ -1,0 +1,31 @@
+{
+  "questions": 100,
+  "duplicate_questions": 0,
+  "missing_question_fields": 0,
+  "questions_per_document": {
+    "Undergraduate Student Regulations.pdf": 45,
+    "Agreement 005.pdf": 41,
+    "Commission Report CA.pdf": 11,
+    "Academic Calendar 2026.pdf": 3
+  },
+  "indexed_fragments": 290,
+  "duplicate_fragments": 0,
+  "questions_whose_page_is_not_indexed": [],
+  "raw_rows": 3190,
+  "duplicate_candidate_rows_removed": 0,
+  "rows": 3190,
+  "positive_rows": 277,
+  "positive_rate": 0.0868,
+  "missing_bm25_rank": 1579,
+  "questions_with_expected_page_in_candidates": 94,
+  "questions_without_expected_page_in_candidates": [
+    47,
+    63,
+    78,
+    85,
+    87,
+    92
+  ],
+  "train_cv_questions": 80,
+  "test_questions": 20
+}

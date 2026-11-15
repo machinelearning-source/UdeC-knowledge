@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Thank you{% endblock %}
+{% block content %}
+<h1>Thank you for your feedback</h1>
+<p>It was saved and will be used to label new questions for the next training round.</p>
+<p><a class="button" href="{{ url_for('demo') }}">Ask another question</a> <a class="button secondary" href="{{ url_for('phase', slug='monitoring') }}">See the monitoring page</a></p>
+{% endblock %}

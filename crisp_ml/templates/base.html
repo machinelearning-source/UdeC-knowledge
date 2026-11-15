@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}KnowBot Re-ranker{% endblock %} · CRISP-ML</title>
+<link rel="icon" href="{{ url_for('static', filename='knowbot-avatar.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top">
+  <div class="bar">
+    <a href="{{ url_for('overview') }}"><img src="{{ url_for('static', filename='knowbot-logo.png') }}" alt="KnowBot - Ask. Learn. Know."></a>
+    <div class="name">KnowBot Re-ranker<small>A Machine Learning project documented with the six CRISP-ML phases</small></div>
+  </div>
+</header>
+<nav class="phases">
+  <ul>
+    <li><a href="{{ url_for('overview') }}" class="{{ 'active' if request.endpoint == 'overview' }}">Overview</a></li>
+    {% for slug, title in phases %}
+    <li><a href="{{ url_for('phase', slug=slug) }}" class="{{ 'active' if slug_active == slug or (request.view_args and request.view_args.get('slug') == slug) }}">{{ title }}</a></li>
+    {% endfor %}
+    <li><a href="{{ url_for('demo') }}" class="demo {{ 'active' if request.endpoint == 'demo' }}">Try the model</a></li>
+  </ul>
+</nav>
+<main>
+{% block content %}{% endblock %}
+</main>
+<footer>KnowBot · Ask. Learn. Know. · Universidad de Cundinamarca · Systems and Computing Engineering · {{ current_year }}</footer>
+</body>
+</html>

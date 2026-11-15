@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Business and Data Understanding{% endblock %}
+{% block content %}
+<h1>1. Business and Data Understanding</h1>
+<p class="lead">What problem the model solves, for whom, with which data, and how success is measured.</p>
+
+<h2>The approved problem and its context</h2>
+<p>The University of Cundinamarca publishes its rules in long PDF documents: the Undergraduate Student Regulations, Agreement 005 of 2025 (formative experiences), the report of the Student Regulations Commission and the 2026 academic calendar. Finding one fact, such as a deadline or a requirement, means reading dozens of pages. KnowBot, the approved project, is a chatbot that answers these questions in English or Spanish and cites the document and page of every fact.</p>
+<p>KnowBot works in two steps: it <strong>retrieves</strong> up to ten fragments of the documents and a language model <strong>writes the answer</strong> using only those fragments. The KnowBot evaluation showed that the main cause of wrong or "not found" answers is retrieval: the page that answers the question is often retrieved but not ranked first, or not retrieved at all. With exact page matching, the first fragment was from the expected page in only 46% of the 100 validation questions.</p>
+
+<h2>Stakeholders and beneficiaries</h2>
+<div class="table-wrap"><table>
+  <tr><th>Stakeholder</th><th>Interest</th></tr>
+  <tr><td>Undergraduate students (main beneficiaries)</td><td>Correct answers about registration, homologation, cancellations, degree options and calendar dates, with the page to verify them.</td></tr>
+  <tr><td>Teachers and program coordinators</td><td>Fewer repeated questions; answers that point to the official rule.</td></tr>
+  <tr><td>Admissions and Registration office, Faculty of Engineering</td><td>Consistent information; less misinformation about deadlines.</td></tr>
+  <tr><td>KnowBot development team</td><td>A measurable, maintainable improvement to retrieval that runs without extra API costs.</td></tr>
+</table></div>
+
+<h2>Business objectives and Machine Learning objectives</h2>
+<div class="table-wrap"><table>
+  <tr><th>Business objective</th><th>Machine Learning objective</th></tr>
+  <tr><td>More KnowBot answers cite the page that actually answers the question.</td><td>Rank the candidate fragments of a question so that a fragment from the expected page is first (maximize mean reciprocal rank, MRR).</td></tr>
+  <tr><td>Fewer "information not found" answers when the information exists.</td><td>Put the expected page among the first three fragments (Hit@3), since only the first fragments always reach the language model.</td></tr>
+  <tr><td>No extra cost or delay for users.</td><td>A light model that scores about 40 fragments in milliseconds on a CPU, without external API calls.</td></tr>
+</table></div>
+
+<h2>Questions the model answers and learning task</h2>
+<ul class="tight">
+  <li>Given a question and one candidate fragment: <em>is this fragment from the page that answers the question?</em> (probability between 0 and 1)</li>
+  <li>Given all candidates of a question: <em>in which order should they be sent to the language model?</em> (sorted by that probability)</li>
+</ul>
+<p><strong>Learning task:</strong> supervised binary classification used for ranking (pointwise learning to rank). Each row is a (question, fragment) pair; the target variable <code>label</code> is 1 when the fragment comes from the expected document and page, otherwise 0.</p>
+
+<h2>Data sources</h2>
+<div class="table-wrap"><table>
+  <tr><th>Source</th><th>Content</th><th class="num">Size</th></tr>
+  <tr><td><code>validation_questions.csv</code></td><td>Questions written by the KnowBot team about the four documents, each labeled with the document and page that answer it.</td><td class="num">{{ quality.questions }} questions</td></tr>
+  <tr><td>KnowBot FAISS index</td><td>Fragments of the four PDFs (about 1,000 characters each; one line per activity for the calendar) with their multilingual embeddings, document name and page.</td><td class="num">{{ quality.indexed_fragments }} fragments</td></tr>
+  <tr><td>Derived dataset</td><td>For each question, the candidate fragments of KnowBot's searches with 23 features and the target.</td><td class="num">{{ "{:,}".format(quality.rows) }} rows</td></tr>
+</table></div>
+<h3>Questions per document</h3>
+<div class="table-wrap"><table>
+  <tr><th>Expected document</th><th class="num">Questions</th></tr>
+  {% for document, count in quality.questions_per_document.items() %}<tr><td>{{ document }}</td><td class="num">{{ count }}</td></tr>{% endfor %}
+</table></div>
+
+<h2>Data quality, relevance and sufficiency</h2>
+<ul class="tight">
+  <li><strong>Completeness:</strong> {{ quality.missing_question_fields }} missing values in the questions; every expected page exists in the index ({{ quality.questions_whose_page_is_not_indexed|length }} questions point to a page that is not indexed).</li>
+  <li><strong>Duplicates:</strong> {{ quality.duplicate_questions }} duplicated questions and {{ quality.duplicate_fragments }} duplicated fragments.</li>
+  <li><strong>Relevance:</strong> the questions are the kind students ask, and they were already used to evaluate KnowBot, so the labels and the business metric are the same.</li>
+  <li><strong>Class imbalance:</strong> only {{ '%.1f'|format(quality.positive_rate * 100) }}% of the rows are positive ({{ quality.positive_rows }} of {{ "{:,}".format(quality.rows) }}). Models use class weights and are judged by ranking metrics, not accuracy.</li>
+  <li><strong>Coverage ceiling:</strong> for {{ quality.questions_without_expected_page_in_candidates|length }} questions (ids {{ quality.questions_without_expected_page_in_candidates|join(', ') }}) no candidate comes from the expected page, so no re-ranker can fix them; they are kept and count as misses.</li>
+  <li><strong>Sufficiency:</strong> {{ quality.questions }} questions is a small sample. The calendar has only {{ quality.questions_per_document['Academic Calendar 2026.pdf'] }} questions, so results for it are not reliable. This limits how complex the models can be and makes the variation between folds large; it is reported with every result.</li>
+</ul>
+
+<h2>Feasibility, limitations and risks</h2>
+<div class="two">
+  <div class="card"><h3>Technical feasibility</h3><p>All features are computed locally from the existing index: vector similarity, BM25 keyword scores and exact calendar and article matches. The models are scikit-learn classifiers that train in seconds on a laptop and need no GPU. The model only re-orders fragments, so it can be added to KnowBot without changing the documents, the index or the language model.</p></div>
+  <div class="card"><h3>Organizational feasibility</h3><p>The documents are public, the labels were written by the team, and no personal data is used. The team knows the four documents, reviews the model's errors and maintains the KnowBot repository.</p></div>
+</div>
+<div class="warn"><strong>Limitations and risks.</strong> Small labeled set (risk of overfitting and of noisy model selection); labels mark one page even when a neighbouring page also answers; questions were written by the team, so real student questions may be phrased differently (distribution shift); when the documents change (a new calendar), features and labels must be rebuilt; a model that ranks a wrong page first with high confidence could make KnowBot cite the wrong rule.</div>
+
+<h2>Success criteria (set before modeling)</h2>
+<ol class="tight">
+  <li><strong>Model selection:</strong> the learned model with the highest mean validation MRR over grouped 5-fold cross-validation on the 80 training questions.</li>
+  <li><strong>Business success:</strong> the selected model has a higher cross-validated MRR than KnowBot's current order, and does not lower Hit@1.</li>
+  <li><strong>Generalization:</strong> the final MRR on the 20 held-out test questions is reported once and compared with both baselines.</li>
+  <li><strong>Operation:</strong> median prediction latency below 3 seconds on the hosting service, with no external API calls.</li>
+</ol>
+
+<div class="next"><a class="button secondary" href="{{ url_for('overview') }}">← Overview</a><a class="button" href="{{ url_for('phase', slug='data') }}">2. Data Engineering →</a></div>
+{% endblock %}

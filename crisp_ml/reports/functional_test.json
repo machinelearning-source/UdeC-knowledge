@@ -1,0 +1,92 @@
+{
+  "url": "https://knowbot-reranker.onrender.com",
+  "tested_at": "2026-11-15T03:00:18+00:00",
+  "questions_sent": 100,
+  "successful_responses": 100,
+  "errors": [],
+  "deployment_fidelity": {
+    "questions_with_same_first_page_as_local_model": 97,
+    "questions_with_same_top5_as_local_model": 89,
+    "note": "Differences come from floating-point differences between CPUs, which change which fragments sit at the edge of the 25 nearest candidates and reorder near ties."
+  },
+  "deployed_metrics_all_100": {
+    "questions": 100,
+    "mrr_at_5": 0.826,
+    "hit_at_1": 0.78,
+    "hit_at_3": 0.88,
+    "hit_at_5": 0.9
+  },
+  "deployed_metrics_test_20": {
+    "questions": 20,
+    "mrr_at_5": 0.635,
+    "hit_at_1": 0.55,
+    "hit_at_3": 0.75,
+    "hit_at_5": 0.8
+  },
+  "local_metrics_test_20": {
+    "questions": 20,
+    "mrr_at_5": 0.631,
+    "hit_at_1": 0.55,
+    "hit_at_3": 0.7,
+    "hit_at_5": 0.8
+  },
+  "latency_ms_server": {
+    "median": 354.6,
+    "p95": 533.3,
+    "max": 630.5
+  },
+  "latency_ms_round_trip": {
+    "median": 542.6,
+    "p95": 876.5
+  },
+  "spanish_questions": [
+    {
+      "question_id": 9,
+      "status": 200,
+      "rank_spanish": 1,
+      "rank_english": 1
+    },
+    {
+      "question_id": 33,
+      "status": 200,
+      "rank_spanish": 1,
+      "rank_english": 1
+    },
+    {
+      "question_id": 67,
+      "status": 200,
+      "rank_spanish": 2,
+      "rank_english": 3
+    },
+    {
+      "question_id": 72,
+      "status": 200,
+      "rank_spanish": 2,
+      "rank_english": 1
+    },
+    {
+      "question_id": 74,
+      "status": 200,
+      "rank_spanish": 1,
+      "rank_english": 1
+    },
+    {
+      "question_id": 89,
+      "status": 200,
+      "rank_spanish": null,
+      "rank_english": 1
+    }
+  ],
+  "invalid_inputs": [
+    {
+      "input": "empty question",
+      "status": 400,
+      "error": "Write a question."
+    },
+    {
+      "input": "501 characters",
+      "status": 400,
+      "error": "The question is longer than 500 characters."
+    }
+  ]
+}

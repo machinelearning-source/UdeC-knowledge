@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Model Deployment{% endblock %}
+{% block content %}
+<h1>5. Model Deployment</h1>
+<p class="lead">How the selected model is saved, served and used, and how it will be integrated into KnowBot.</p>
+
+<h2>Saved artifacts</h2>
+<div class="table-wrap"><table>
+  <tr><th>File</th><th>Content</th></tr>
+  <tr><td><code>models/reranker.joblib</code></td><td>The complete scikit-learn pipeline: imputers, log transform, scalers, one-hot encoder (all fitted on the 80 training questions) and the {{ card.model.replace('_', ' ') }} classifier. Loading it restores preprocessing and model together, so they can never get out of sync.</td></tr>
+  <tr><td><code>models/model_card.json</code></td><td>Model type, hyperparameters, feature list, training size, selection criterion, validation and test metrics, seed, scikit-learn version ({{ card.scikit_learn_version }}) and training date ({{ card.trained_at }}).</td></tr>
+  <tr><td><code>vector_store/</code></td><td>The KnowBot FAISS index ({{ quality.indexed_fragments }} fragments), needed to generate the candidates and features of a new question.</td></tr>
+  <tr><td><code>knowbot/</code></td><td>Feature code shared by training and serving (<code>features.py</code>), so a question is processed the same way in both.</td></tr>
+</table></div>
+
+<h2>Demonstration</h2>
+<p>The <a href="{{ url_for('demo') }}">Try the model</a> page accepts a new question in English or Spanish and shows the five fragments the model ranks first, with their probability, next to KnowBot's current order. The same function is available as a JSON API.</p>
+
+<h3>Inputs and outputs</h3>
+<div class="table-wrap"><table>
+  <tr><th>Interface</th><th>Input</th><th>Output</th></tr>
+  <tr><td>Web form <code>/demo</code></td><td>Question text, 1–500 characters</td><td>Top 5 fragments by the model and by KnowBot's order: document, page, probability, cosine similarity, BM25 score, excerpt; latency</td></tr>
+  <tr><td>API <code>POST /api/rerank</code></td><td><code>{"question": "When does online registration take place in 2026?"}</code></td><td>JSON with <code>reranked</code>, <code>knowbot_order</code>, <code>candidates</code>, <code>top_probability</code>, <code>latency_ms</code>, <code>model</code>; HTTP 400 with <code>error</code> for an empty or too long question</td></tr>
+  <tr><td><code>GET /health</code></td><td>—</td><td><code>status</code> and whether the model has finished loading</td></tr>
+</table></div>
+<pre>curl -X POST {{ request.host_url }}api/rerank -H "Content-Type: application/json" \
+     -d '{"question": "What is the minimum number of students required to open an academic group?"}'</pre>
+
+<h3>Dependencies and execution</h3>
+<p>Python 3.12; Flask, gunicorn, scikit-learn, pandas, numpy, joblib, matplotlib, faiss-cpu, fastembed (ONNX embeddings on CPU) and langchain-community (to read the FAISS index). Exact versions are in <code>requirements.txt</code>. No API key is needed.</p>
+<pre>python -m venv .venv
+.venv\Scripts\activate            # Windows  (source .venv/bin/activate on macOS/Linux)
+pip install -r requirements.txt
+python scripts/build_dataset.py   # Phase 2: rebuild the dataset (optional, already included)
+python scripts/train.py           # Phases 3-4: retrain and re-evaluate (optional, already included)
+python app.py                     # open http://127.0.0.1:5000</pre>
+<p>In production the app runs with <code>gunicorn app:app</code>. The first request after a restart waits while the embedding model loads (about 10–30 seconds); the page shows a notice until then.</p>
+
+<h2>Hosting: why Render and not Streamlit</h2>
+<p>KnowBot itself is not moved: it remains deployed on <a href="https://udec-knowledge.streamlit.app/">Streamlit Community Cloud</a>, which hosts only Streamlit applications. The re-ranker is a separate Flask service, so it is deployed on Render, which runs Python web services on its free plan and builds them directly from the GitHub repository through <code>render.yaml</code> (build command, <code>gunicorn</code> start command and <code>/health</code> check), so the deployment is versioned and reproducible.</p>
+<div class="table-wrap"><table>
+  <tr><th></th><th>KnowBot (chatbot)</th><th>Re-ranker (this project)</th></tr>
+  <tr><td>Framework</td><td>Streamlit</td><td>Flask + gunicorn</td></tr>
+  <tr><td>Hosting</td><td>Streamlit Community Cloud</td><td>Render (free web service: 512 MB RAM, 0.1 CPU)</td></tr>
+  <tr><td>Purpose</td><td>Answer students' questions</td><td>Document the six phases and serve the model (demo and API)</td></tr>
+</table></div>
+<h3>Fitting in 512 MB of memory</h3>
+<p>Loaded as usual, the multilingual embedding model made the app use about 740 MB, above the 512 MB of the free instance. Two changes in <code>knowbot/embeddings.py</code> bring it to about 355 MB without changing any result:</p>
+<div class="table-wrap"><table>
+  <tr><th>Part</th><th>Problem</th><th>Change</th></tr>
+  <tr><td>Vocabulary table (250,002 &times; 384)</td><td>183 MB in float16, expanded by onnxruntime to float32</td><td>Moved out of the ONNX graph into a memory-mapped file; only the rows of the question's tokens are read</td></tr>
+  <tr><td>Tokenizer</td><td>About 250 MB with <code>tokenizer.json</code></td><td>The model's original SentencePiece file, a few MB, with the same token ids</td></tr>
+</table></div>
+<p>Both were checked against the standard model: identical token ids on 400 texts (the 100 questions, the 290 fragments and edge cases) and a maximum difference of 0.0 between the vectors of the 100 questions, so the features, the model and every reported metric are unchanged.</p>
+<p>Keeping the two services apart lets the model run in shadow mode without any risk to the chatbot students use. Limitations of the free plan: the service sleeps after about 15 minutes without traffic, so the first visit can take about a minute to wake it up, and the files in <code>logs/</code> are reset on every restart, so the monitoring shown in Phase 6 demonstrates the procedure rather than a long history.</p>
+
+<h2>User instructions</h2>
+<ol class="tight">
+  <li>Open <a href="{{ url_for('demo') }}">Try the model</a>.</li>
+  <li>Write a question about the regulations, Agreement 005, the Commission report or the 2026 calendar, or click an example.</li>
+  <li>Read the left column (model) and compare it with the right column (KnowBot's current order). The probability shows how sure the model is; below 0.30 it is unsure.</li>
+  <li>Answer "Was the first fragment the right one?" to send feedback.</li>
+</ol>
+
+<h2>Integration plan into KnowBot (the information system of Activity 2)</h2>
+<ol class="tight">
+  <li><strong>Shadow mode (now):</strong> KnowBot calls the re-ranker after its retrieval step and logs both orders, but keeps sending its own order to the language model. This is the safe option, because the test set did not confirm a gain.</li>
+  <li><strong>Collect labels:</strong> the feedback buttons of KnowBot and of this demo, plus questions reviewed by the team, become new labeled questions.</li>
+  <li><strong>Retrain and re-test:</strong> with at least 200 labeled questions, repeat Phases 2–4. If the model beats KnowBot's order on a new test set, switch it on.</li>
+  <li><strong>Gradual switch:</strong> use the model order for the first fragments only when its top probability is at least 0.5, otherwise keep KnowBot's order.</li>
+</ol>
+<p>Technically, the integration is one function call in KnowBot's <code>retrieve_documents</code>: the candidates are already there; the re-ranker adds the features, scores them and returns the new order.</p>
+
+<h2>Monitoring, incident reporting and user feedback</h2>
+<ul class="tight">
+  <li><strong>Prediction log:</strong> every prediction is written to <code>logs/predictions.csv</code> (time, source, question length, number of candidates, top probability, top document and page, agreement with KnowBot's order, latency, error). The prediction log stores the length of the question, not its text; the feedback form stores the question, because it is needed to label it.</li>
+  <li><strong>Feedback:</strong> the yes/no answer and an optional comment go to <code>logs/feedback.csv</code>.</li>
+  <li><strong>Incidents:</strong> errors are logged with the input length and shown on the monitoring page. Users report problems through the feedback comment or to the KnowBot team through the GitHub issues of the repository. An incident is reviewed within one week; a wrong deadline or requirement shown first is handled first.</li>
+  <li><strong>Health check:</strong> <code>/health</code> returns whether the model is loaded and can be checked by the hosting service or an external monitor.</li>
+</ul>
+
+<div class="next"><a class="button secondary" href="{{ url_for('phase', slug='evaluation') }}">← 4. Model Evaluation</a><a class="button" href="{{ url_for('phase', slug='monitoring') }}">6. Monitoring and Maintenance →</a></div>
+{% endblock %}

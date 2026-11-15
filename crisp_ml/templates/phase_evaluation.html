@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}Model Evaluation{% endblock %}
+{% block content %}
+<h1>4. Model Evaluation</h1>
+<p class="lead">Metrics, cross-validation comparison, overfitting and risk analysis, the team's assessment of the errors, model selection and the final result on the independent test set.</p>
+
+<h2>Metrics and why</h2>
+<div class="table-wrap"><table>
+  <tr><th>Metric</th><th>Definition</th><th>Why</th></tr>
+  <tr><td><strong>MRR</strong> (selection metric)</td><td>Mean of 1 / position of the first fragment from the expected page (0 if absent)</td><td>KnowBot reads the fragments in order; the earlier the right page, the better the answer. One number that rewards first place most.</td></tr>
+  <tr><td>Hit@1, Hit@3</td><td>Share of questions with the expected page first / in the first three</td><td>Easy to explain to stakeholders: "how often the right page is on top".</td></tr>
+  <tr><td>Page ±1 at rank 1</td><td>Like Hit@1 but the neighbouring page also counts</td><td>A rule can start at the end of one page and continue on the next.</td></tr>
+  <tr><td>PR-AUC, ROC-AUC</td><td>Classification quality over all rows</td><td>With {{ '%.1f'|format(quality.positive_rate * 100) }}% positives, accuracy would be misleading; PR-AUC focuses on the rare positives.</td></tr>
+</table></div>
+
+<h2>Cross-validation comparison</h2>
+<p>Grouped 5-fold cross-validation by question on the 80 training questions. Best setting of each model:</p>
+<div class="table-wrap"><table>
+  <tr><th>Model</th><th class="num">MRR</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">Page ±1 @1</th><th class="num">ROC-AUC</th><th class="num">PR-AUC</th></tr>
+  {% for row in best %}
+  <tr class="{{ 'highlight' if row.model == card.model }}"><td>{{ row.model.replace('_', ' ') }}</td><td class="num">{{ '%.3f'|format(row.mrr_mean) }} ± {{ '%.3f'|format(row.mrr_std) }}</td><td class="num">{{ '%.1f'|format(row.hit_at_1_mean * 100) }}%</td><td class="num">{{ '%.1f'|format(row.hit_at_3_mean * 100) }}%</td><td class="num">{{ '%.1f'|format(row.near_hit_at_1_mean * 100) }}%</td><td class="num">{{ '%.3f'|format(row.roc_auc_mean) }}</td><td class="num">{{ '%.3f'|format(row.pr_auc_mean) }}</td></tr>
+  {% endfor %}
+</table></div>
+<figure><img src="{{ url_for('report_file', name='cv_comparison.png') }}" alt="Bar chart comparing MRR, Hit@1, Hit@3 and page ±1 at rank 1 for the five rankings"><figcaption>Mean over the five validation folds; error bars are one standard deviation.</figcaption></figure>
+
+<h2>Overfitting, underfitting and bias</h2>
+<figure><img src="{{ url_for('report_file', name='fit_gap.png') }}" alt="Training vs validation MRR for the three models"><figcaption>Training vs. validation MRR of the best setting of each model.</figcaption></figure>
+<ul class="tight">
+  <li><strong>Random Forest and Gradient Boosting overfit:</strong> deep trees reach a training MRR far above validation (selected model: {{ '%.3f'|format(test.selected_model_on_training_data.mrr) }} on its training data vs {{ '%.3f'|format(card.cv_validation_mrr_mean) }} in validation). Larger leaves (5 samples) and shallow boosting were the best settings, which confirms that the data favors simple models.</li>
+  <li><strong>Logistic Regression does not overfit</strong> (training and validation MRR are close) but cannot use interactions; with this little data it is almost as good.</li>
+  <li><strong>High variance between folds:</strong> the standard deviation of MRR (about 0.14) is larger than the gap between the best models and KnowBot's order. With 16 questions per fold, one question moves MRR by several points.</li>
+  <li><strong>Bias by document:</strong> the calendar has 3 questions in total and the Commission report 11, so the model mostly learned from the two regulations. Results for those two documents are less reliable.</li>
+  <li><strong>Label bias:</strong> labels mark one page; when the neighbouring page also answers, the model is counted wrong (see "Page ±1").</li>
+</ul>
+
+<h2>Model selection</h2>
+<div class="card">
+  <p>By the criterion fixed in Phase 1 (highest mean validation MRR), the selected model is <strong>{{ card.model.replace('_', ' ') }}</strong> <code>{{ card.params|tojson }}</code> with validation MRR {{ '%.3f'|format(card.cv_validation_mrr_mean) }}. In cross-validation it is above KnowBot's order in MRR and Hit@1, so success criterion 2 is met in validation, but by less than one standard deviation.</p>
+</div>
+
+<h2>Final performance on the independent test set</h2>
+<p>{{ quality.test_questions }} questions held out from the start, evaluated once after the model was selected and refitted on the 80 training questions.</p>
+<div class="table-wrap"><table>
+  <tr><th>Ranking</th><th class="num">MRR</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">Hit@5</th><th class="num">Page ±1 @1</th><th class="num">PR-AUC</th></tr>
+  {% for key, label in [('vector_baseline', 'Vector search only'), ('knowbot_baseline', 'KnowBot order'), ('selected_model', 'Selected model')] %}
+  {% set m = test[key] %}
+  <tr class="{{ 'highlight' if key == 'selected_model' }}"><td>{{ label }}</td><td class="num">{{ '%.3f'|format(m.mrr) }}</td><td class="num">{{ '%.0f'|format(m.hit_at_1 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.hit_at_3 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.hit_at_5 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.near_hit_at_1 * 100) }}%</td><td class="num">{{ '%.3f'|format(m.pr_auc) }}</td></tr>
+  {% endfor %}
+</table></div>
+<div class="warn"><strong>Result:</strong> on the test questions the selected model does <strong>not</strong> beat KnowBot's current order (MRR {{ '%.3f'|format(test.selected_model.mrr) }} vs {{ '%.3f'|format(test.knowbot_baseline.mrr) }}); it ties plain vector search in Hit@1 and Hit@3. The validation gain did not generalize. Each test question is worth 5 points of Hit@1, so the gap (one question at rank 1) is within the noise of this sample, but the honest conclusion is that the improvement is <strong>not confirmed</strong>. That is why Phase 5 deploys the model in shadow mode: it runs and is logged next to KnowBot's order, without replacing it, until more labeled questions confirm a gain.</div>
+
+<h3>By document (selected model, test set)</h3>
+<div class="table-wrap"><table>
+  <tr><th>Expected document</th><th class="num">Questions</th><th class="num">MRR</th><th class="num">Hit@1</th><th class="num">Hit@3</th></tr>
+  {% for row in test.selected_model_by_document %}<tr><td>{{ row.document }}</td><td class="num">{{ row.questions }}</td><td class="num">{{ '%.3f'|format(row.mrr) }}</td><td class="num">{{ '%.0f'|format(row.hit_at_1 * 100) }}%</td><td class="num">{{ '%.0f'|format(row.hit_at_3 * 100) }}%</td></tr>{% endfor %}
+</table></div>
+
+<h3>Per question (position of the first fragment from the expected page)</h3>
+<div class="table-wrap"><table>
+  <tr><th>Id</th><th>Question</th><th>Expected</th><th class="num">Model</th><th class="num">KnowBot</th><th class="num">Vector</th></tr>
+  {% for row in per_question %}<tr><td>{{ row.question_id }}</td><td>{{ row.question }}</td><td>{{ row.expected }}</td><td class="num">{{ row.rank_selected_model|int if row.rank_selected_model == row.rank_selected_model else '—' }}</td><td class="num">{{ row.rank_knowbot_baseline|int if row.rank_knowbot_baseline == row.rank_knowbot_baseline else '—' }}</td><td class="num">{{ row.rank_vector_search|int if row.rank_vector_search == row.rank_vector_search else '—' }}</td></tr>{% endfor %}
+</table></div>
+<p class="excerpt">"—" means no candidate comes from the expected page.</p>
+
+<h3>What the model relies on</h3>
+<figure><img src="{{ url_for('report_file', name='feature_importance.png') }}" alt="Permutation importance of each feature"><figcaption>Permutation importance on the test set: how much average precision drops when one feature is shuffled. The page-level features dominate.</figcaption></figure>
+
+<h2>Assessment of the errors by the creator team</h2>
+{% if review %}
+<p>{{ review.reviewers }}, {{ review.date }}. {{ review.scope }}</p>
+<div class="table-wrap"><table>
+  <tr><th>Question</th><th>Model's first page</th><th>Judgment</th><th>Could mislead</th><th class="num">Rank of labeled page</th></tr>
+  {% for c in review.cases %}<tr><td>{{ c.question_id }}. {{ c.question }}</td><td>{{ c.model_first_page }}</td><td>{{ c.judgment }}</td><td>{{ c.could_mislead }}</td><td class="num">{{ c.rank_of_labeled_page }}</td></tr>{% endfor %}
+</table></div>
+<h3>Conclusions</h3>
+<ul class="tight">{% for item in review.conclusions %}<li>{{ item }}</li>{% endfor %}</ul>
+{% endif %}
+
+<div class="next"><a class="button secondary" href="{{ url_for('phase', slug='modeling') }}">← 3. Model Engineering</a><a class="button" href="{{ url_for('phase', slug='deployment') }}">5. Model Deployment →</a></div>
+{% endblock %}

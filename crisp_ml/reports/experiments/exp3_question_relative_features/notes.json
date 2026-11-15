@@ -1,0 +1,6 @@
+{
+  "title": "Experiment 3: + per-question z-scores (final)",
+  "features": 23,
+  "change": "Added z-scores of cosine, BM25 and page similarity inside each question, so scores are comparable between easy and hard questions.",
+  "finding": "Random Forest and Logistic Regression pass KnowBot's order in validation MRR (0.594 and 0.590 vs 0.585) and Hit@1 (0.500 vs 0.438). Random Forest is selected by the pre-set criterion."
+}

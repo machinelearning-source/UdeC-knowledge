@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+<h1>Learning to rank KnowBot's sources</h1>
+<p class="lead">KnowBot is a Retrieval-Augmented Generation (RAG) chatbot that answers questions about the official documents of the University of Cundinamarca. Its answers are only as good as the fragments it retrieves. This project trains a Machine Learning model that re-ranks the retrieved fragments so that the page that answers the question comes first.</p>
+
+<div class="grid">
+  <div class="stat"><div class="value">{{ quality.questions }}</div><div class="label">labeled questions (expected document and page)</div></div>
+  <div class="stat"><div class="value">{{ quality.indexed_fragments }}</div><div class="label">indexed fragments from 4 official PDFs</div></div>
+  <div class="stat"><div class="value">{{ "{:,}".format(quality.rows) }}</div><div class="label">(question, fragment) pairs in the dataset</div></div>
+  <div class="stat"><div class="value">{{ card.model.replace('_', ' ') }}</div><div class="label">selected model (grouped 5-fold cross-validation)</div></div>
+</div>
+
+<h2>Results on the independent test set</h2>
+<p>{{ quality.test_questions }} questions that were never used for training, tuning or model selection.</p>
+<div class="table-wrap"><table>
+  <tr><th>Ranking</th><th class="num">MRR</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">Page ±1 at rank 1</th></tr>
+  {% for key, label in [('vector_baseline', 'Vector search only (FAISS)'), ('knowbot_baseline', 'KnowBot order before this project'), ('selected_model', 'Re-ranker (selected model)')] %}
+  {% set m = test[key] %}
+  <tr class="{{ 'highlight' if key == 'selected_model' }}"><td>{{ label }}</td><td class="num">{{ '%.3f'|format(m.mrr) }}</td><td class="num">{{ '%.0f'|format(m.hit_at_1 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.hit_at_3 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.near_hit_at_1 * 100) }}%</td></tr>
+  {% endfor %}
+</table></div>
+<p class="note">MRR (mean reciprocal rank) is 1 when the expected page is always first, 0.5 when it is second, and so on. Hit@k is the share of questions with the expected page among the first k fragments.</p>
+
+<h2>The six CRISP-ML phases</h2>
+<div class="grid">
+  {% for slug, title in phases %}
+  <a class="card" href="{{ url_for('phase', slug=slug) }}" style="text-decoration:none;color:inherit"><strong>{{ title }}</strong></a>
+  {% endfor %}
+  <a class="card" href="{{ url_for('demo') }}" style="text-decoration:none;color:inherit"><strong>Try the model</strong><br><span class="excerpt">Ask a question and compare the re-ranked fragments with KnowBot's order.</span></a>
+</div>
+
+<h2>Links</h2>
+<ul class="tight">
+  <li>KnowBot chatbot: <a href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">udec-knowledge.streamlit.app</a></li>
+  <li>KnowBot repository: <a href="https://github.com/machinelearning-source/UdeC-knowledge" target="_blank" rel="noopener">machinelearning-source/UdeC-knowledge</a></li>
+  <li>This project's repository (code, scripts, data, model, reports): <a href="https://github.com/Oscar69bello/knowbot-crisp-ml" target="_blank" rel="noopener">Oscar69bello/knowbot-crisp-ml</a></li>
+</ul>
+{% endblock %}

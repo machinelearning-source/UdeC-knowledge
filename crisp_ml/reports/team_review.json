@@ -1,0 +1,85 @@
+{
+  "reviewers": "KnowBot creator team (Oscar Javier Bello Daza, Mariana León Triana, Luis Orlando Ramírez Mosquera, Luis Alberto Rebolledo Ariza)",
+  "date": "2026-11-14",
+  "scope": "The 9 of 20 test questions where the model's first page is not the labeled page: does that page answer the question, and could the mistake mislead a student with a wrong rule, date or requirement?",
+  "cases": [
+    {
+      "question_id": 5,
+      "question": "Functions of the formative experiences committee",
+      "model_first_page": "Agreement 005, p. 15",
+      "judgment": "Partial: next article, same committee",
+      "could_mislead": "No",
+      "rank_of_labeled_page": 3
+    },
+    {
+      "question_id": 19,
+      "question": "Voting rule for decisions",
+      "model_first_page": "Student Regulations, p. 2",
+      "judgment": "Incorrect; the question itself is ambiguous",
+      "could_mislead": "No (probability 0.45)",
+      "rank_of_labeled_page": 9
+    },
+    {
+      "question_id": 29,
+      "question": "Safeguards and committee record to attach",
+      "model_first_page": "Agreement 005, p. 17",
+      "judgment": "Incorrect: student duties instead",
+      "could_mislead": "Yes: omits a required document",
+      "rank_of_labeled_page": 7
+    },
+    {
+      "question_id": 45,
+      "question": "Attendance by type of meeting",
+      "model_first_page": "Agreement 005, p. 12",
+      "judgment": "Incorrect: another table with numbers",
+      "could_mislead": "Yes: unrelated figures",
+      "rank_of_labeled_page": 8
+    },
+    {
+      "question_id": 56,
+      "question": "Articles 35 and 36 on exchange",
+      "model_first_page": "Agreement 005, p. 1",
+      "judgment": "Incorrect",
+      "could_mislead": "No (probability 0.30)",
+      "rank_of_labeled_page": 13
+    },
+    {
+      "question_id": 67,
+      "question": "Requirements for re-entry",
+      "model_first_page": "Student Regulations, p. 10",
+      "judgment": "Incorrect: another procedure",
+      "could_mislead": "Yes: wrong requirements",
+      "rank_of_labeled_page": 3
+    },
+    {
+      "question_id": 75,
+      "question": "Limitation period and sanctions",
+      "model_first_page": "Student Regulations, p. 21",
+      "judgment": "Partial: answers how sanctions are graded",
+      "could_mislead": "No",
+      "rank_of_labeled_page": 3
+    },
+    {
+      "question_id": 83,
+      "question": "Prohibited discriminatory conduct",
+      "model_first_page": "Student Regulations, p. 15",
+      "judgment": "Incorrect: general definition only",
+      "could_mislead": "No",
+      "rank_of_labeled_page": 5
+    },
+    {
+      "question_id": 90,
+      "question": "Proficiency test not taken",
+      "model_first_page": "Student Regulations, p. 19",
+      "judgment": "Incorrect: disciplinary procedure",
+      "could_mislead": "Yes: the real outcome is a 0.0 grade",
+      "rank_of_labeled_page": 2
+    }
+  ],
+  "conclusions": [
+    "2 of the 9 errors are partial answers and 4 could mislead a student.",
+    "In 8 of the 9 cases the labeled page is still among the first 10 fragments, which KnowBot sends to the language model, so the information remains available to the answer.",
+    "The two lowest-confidence cases (probability 0.30 and 0.45) are not harmful, which supports a probability threshold of 0.5 for a future switch.",
+    "Together with the test results, this confirms the deployment in shadow mode and retraining with more questions, starting with answers that sit next to similar procedures (re-entry, exchange, proficiency tests)."
+  ]
+}

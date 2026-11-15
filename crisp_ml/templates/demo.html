@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Try the model{% endblock %}
+{% block content %}
+<button type="button" class="side-toggle" onclick="document.body.classList.toggle('side-open')" aria-label="Open quick actions">›</button>
+<aside class="side-panel" aria-label="Quick actions">
+  <button type="button" class="side-close" onclick="document.body.classList.remove('side-open')" aria-label="Close quick actions">‹</button>
+  <div class="side-brand"><strong>Know<span>Bot</span></strong><small>ASK. LEARN. KNOW.</small></div>
+  <h3>Quick actions</h3>
+  <button type="button" class="side-action" onclick="location.reload()">↻ Reload page</button>
+  <a class="side-action" href="{{ url_for('demo') }}">＋ New conversation</a>
+  <details class="side-about">
+    <summary class="side-action">ⓘ About</summary>
+    <p><strong>About the re-ranker</strong><br>This demo scores the fragments that KnowBot retrieves for a question:</p>
+    <ol class="tight">
+      <li><strong>Candidates:</strong> the 25 closest fragments by meaning, the 15 best keyword matches and the exact calendar and article matches.</li>
+      <li><strong>Features:</strong> 23 measures of how well each fragment matches the question and its page.</li>
+      <li><strong>Model:</strong> a Random Forest gives each fragment the probability that it comes from the page that answers the question.</li>
+      <li><strong>Result:</strong> the five best fragments, next to KnowBot's current order, with document and page.</li>
+    </ol>
+  </details>
+</aside>
+
+<h1>Try the model</h1>
+<p class="lead">Ask a question about the University of Cundinamarca documents. The model scores KnowBot's candidate fragments and shows the five it ranks first, next to KnowBot's current order.</p>
+{% if not ready %}<div class="warn">The model is still loading after a restart (about 10–30 seconds). Your first question may take longer.</div>{% endif %}
+
+<div class="card">
+  <strong>Quick questions</strong> <span class="excerpt">· open a menu, choose an option, then confirm it</span>
+  <div class="quick-menus">
+    {% for menu in quick %}
+    <details class="quick">
+      <summary>{{ menu.title }}</summary>
+      <form method="post" action="{{ url_for('demo') }}">
+        <input type="hidden" name="quick" value="{{ menu.name }}">
+        <span class="excerpt">{{ menu.options|length }} options</span>
+        <select name="option" required>
+          <option value="" disabled selected>{{ menu.choose }}</option>
+          {% for option in menu.options %}<option value="{{ option }}">{{ option }}</option>{% endfor %}
+        </select>
+        <button type="submit">{{ menu.button }}</button>
+      </form>
+    </details>
+    {% endfor %}
+  </div>
+</div>
+
+<form method="post" action="{{ url_for('demo') }}" class="card">
+  <label for="question"><strong>Question</strong> (English or Spanish, up to 500 characters)</label>
+  <textarea id="question" name="question" rows="3" maxlength="500" required spellcheck="false">{{ question }}</textarea>
+  <div class="examples"><span class="excerpt">Examples from the test set:</span><br>
+    {% for example in examples %}<button type="button" onclick="document.getElementById('question').value=this.textContent">{{ example }}</button>{% endfor %}
+  </div>
+  <p><button type="submit">Rank the fragments</button></p>
+</form>
+
+{% if error %}<div class="warn">{{ error }}</div>{% endif %}
+
+{% if result %}
+<div class="card answer">
+  <h2>Answer</h2>
+  <p class="excerpt">Question: {{ result.question }}</p>
+  {% if result.answer %}<div class="answer-text">{{ result.answer|simple_markdown }}</div>
+  <p class="excerpt">Written from the ten fragments the model ranked first; [1] to [5] are the first five, listed on the left below.</p>
+  {% else %}<div class="warn">{{ result.answer_error }}</div>{% endif %}
+</div>
+<p>{{ result.candidates }} candidate fragments scored by the {{ result.model.replace('_', ' ') }} model in {{ '%.0f'|format(result.latency_ms) }} ms.
+{% if result.top_probability < 0.3 %}<span class="badge bad">Low confidence ({{ result.top_probability }})</span>{% else %}<span class="badge good">Top probability {{ result.top_probability }}</span>{% endif %}</p>
+<div class="two">
+  <div>
+    <h2>Re-ranked by the model</h2>
+    {% for item in result.reranked %}
+    <div class="card"><strong>{{ item.rank }}. {{ item.document }}, page {{ item.page }}</strong> <span class="badge info">p = {{ item.probability }}</span><br>
+      <span class="excerpt">{{ item.excerpt }}…</span></div>
+    {% endfor %}
+  </div>
+  <div>
+    <h2>KnowBot's current order</h2>
+    {% for item in result.knowbot_order %}
+    <div class="card"><strong>{{ item.rank }}. {{ item.document }}, page {{ item.page }}</strong> <span class="badge info">cosine {{ item.cosine }}</span><br>
+      <span class="excerpt">{{ item.excerpt }}…</span></div>
+    {% endfor %}
+  </div>
+</div>
+<form method="post" action="{{ url_for('feedback') }}" class="card">
+  <input type="hidden" name="question" value="{{ result.question }}">
+  <strong>Was the first fragment of the model the right one?</strong>
+  <p><label><input type="radio" name="useful" value="yes" required> Yes</label> &nbsp; <label><input type="radio" name="useful" value="no"> No</label></p>
+  <input type="text" name="comment" maxlength="500" placeholder="Optional comment (which page should be first?)">
+  <p><button type="submit" class="secondary">Send feedback</button></p>
+</form>
+{% endif %}
+{% endblock %}

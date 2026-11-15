@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Data Engineering{% endblock %}
+{% block content %}
+<h1>2. Data Engineering</h1>
+<p class="lead">How the questions and the index become a clean modeling table, and how it is split without leakage. Script: <code>scripts/build_dataset.py</code>.</p>
+
+<h2>Selected sources and why</h2>
+<ul class="tight">
+  <li><strong>Validation questions:</strong> the only source with ground truth (expected document and page). Old Spanish file names were mapped to the current English ones.</li>
+  <li><strong>KnowBot index:</strong> the same {{ quality.indexed_fragments }} fragments and embedding model (paraphrase-multilingual-MiniLM-L12-v2) that KnowBot uses, so the model learns on exactly what it will re-rank.</li>
+  <li><strong>Not used:</strong> the language model translation step of KnowBot (it needs a paid or rate-limited API and is not reproducible) and the answers of the language model (they are a consequence of retrieval, not an input).</li>
+</ul>
+
+<h2>Candidate generation</h2>
+<p>For each question, the candidates are the union of the 25 fragments closest by meaning (cosine similarity), the 15 best BM25 keyword matches, and the exact calendar-activity and article matches KnowBot already uses. This reproduces KnowBot's searches, gives {{ "{:,}".format(quality.raw_rows) }} rows (about 32 per question) and contains the expected page for {{ quality.questions_with_expected_page_in_candidates }} of {{ quality.questions }} questions.</p>
+
+<h2>Features and justification</h2>
+<div class="table-wrap"><table>
+  <tr><th>Feature</th><th>Meaning</th><th>Why it can help</th></tr>
+  <tr><td><code>cosine</code>, <code>cosine_rank</code>, <code>cosine_gap</code>, <code>cosine_z</code></td><td>Similarity of meaning between question and fragment, its rank among the {{ quality.indexed_fragments }} fragments, distance to the best one, and its z-score inside the question</td><td>Main signal of vector search</td></tr>
+  <tr><td><code>bm25</code>, <code>bm25_rank</code>, <code>bm25_relative</code>, <code>bm25_z</code></td><td>Keyword score, rank, share of the best score, z-score inside the question</td><td>Exact names and terms that vectors miss</td></tr>
+  <tr><td><code>word_overlap</code></td><td>Share of question words that appear in the fragment</td><td>Simple lexical evidence</td></tr>
+  <tr><td><code>calendar_match</code>, <code>article_match</code></td><td>The fragment is the calendar activity or the article the question names</td><td>Exact lookups are almost always right</td></tr>
+  <tr><td><code>is_calendar_chunk</code>, <code>calendar_question</code>, <code>calendar_question_and_chunk</code></td><td>Calendar fragment; question asks for a date; both</td><td>Date questions belong to the calendar</td></tr>
+  <tr><td><code>page_candidates</code>, <code>page_max_cosine</code>, <code>page_max_cosine_z</code>, <code>page_bm25_sum</code></td><td>How many candidates come from the same page and how strong that page is overall</td><td>An answer page is usually hit by several fragments</td></tr>
+  <tr><td><code>document_share</code></td><td>Share of the candidates that come from the same document</td><td>The right document tends to dominate the list</td></tr>
+  <tr><td><code>knowbot_rank</code></td><td>Position in KnowBot's current order</td><td>Lets the model correct the existing order instead of starting from zero</td></tr>
+  <tr><td><code>chunk_chars</code>, <code>page_position</code>, <code>question_words</code></td><td>Fragment length, page / last page of the document, question length</td><td>Short calendar lines and front-matter pages behave differently</td></tr>
+  <tr><td><code>document</code></td><td>Document name (categorical)</td><td>Different documents have different structures</td></tr>
+</table></div>
+
+<h2>Data before processing</h2>
+<p>First rows of <code>data/raw_candidates.csv</code> (fragment text omitted):</p>
+<div class="table-wrap"><table>
+  <tr>{% for column in raw_columns %}<th>{{ column }}</th>{% endfor %}</tr>
+  {% for row in raw_sample %}<tr>{% for column in raw_columns %}<td>{{ row[column] }}</td>{% endfor %}</tr>{% endfor %}
+</table></div>
+<h3>Distribution of some raw features</h3>
+<div class="table-wrap"><table>
+  <tr><th></th>{% for column in describe.columns %}<th class="num">{{ column }}</th>{% endfor %}</tr>
+  {% for index, row in describe.iterrows() %}<tr><td>{{ index }}</td>{% for value in row %}<td class="num">{{ value }}</td>{% endfor %}</tr>{% endfor %}
+</table></div>
+
+<h2>Cleaning: missing values, duplicates, inconsistencies and outliers</h2>
+<div class="table-wrap"><table>
+  <tr><th>Issue</th><th>Found</th><th>Treatment and justification</th></tr>
+  <tr><td>Missing values</td><td>{{ "{:,}".format(quality.missing_bm25_rank) }} rows have no <code>bm25_rank</code> (the fragment shares no word with the question)</td><td>Not an error: the rank is undefined. Imputed with a constant rank of 300, after the last of the {{ quality.indexed_fragments }} fragments, which means "not found by keywords". The imputer is fitted on training folds only.</td></tr>
+  <tr><td>Duplicates</td><td>{{ quality.duplicate_questions }} duplicated questions, {{ quality.duplicate_fragments }} duplicated fragments, {{ quality.duplicate_candidate_rows_removed }} duplicated (question, fragment) rows</td><td>Checked and rule kept in the pipeline: the same fragment can be found by several searches, and it is kept once per question.</td></tr>
+  <tr><td>Inconsistencies</td><td>Expected document names used the old Spanish file names; pages are 0-based in the index and 1-based in the labels</td><td>Names mapped to the current files; index pages shifted by one. After this, {{ quality.questions_whose_page_is_not_indexed|length }} labels point to a page that does not exist.</td></tr>
+  <tr><td>Outliers and skew</td><td>BM25 scores, ranks and fragment lengths are heavy-tailed (calendar lines are about 100 characters, regulation fragments about 1,000)</td><td>Kept, because they are real, and compressed with <code>log1p</code> before scaling, so a few extreme values do not dominate a linear model.</td></tr>
+  <tr><td>Class imbalance</td><td>{{ '%.1f'|format(quality.positive_rate * 100) }}% positive rows</td><td>Class weights in every model; ranking metrics instead of accuracy.</td></tr>
+</table></div>
+
+<h2>Encoding, scaling and normalization</h2>
+<ul class="tight">
+  <li><code>bm25</code>, <code>bm25_rank</code>, <code>cosine_rank</code>, <code>chunk_chars</code>, <code>knowbot_rank</code>, <code>page_bm25_sum</code>: constant imputation (300 for missing ranks), <code>log1p</code>, standardization.</li>
+  <li>Other numeric features: median imputation (a safeguard; there are no other missing values), standardization.</li>
+  <li><code>document</code>: one-hot encoding, ignoring unseen categories.</li>
+  <li>Per-question z-scores (<code>cosine_z</code>, <code>bm25_z</code>, <code>page_max_cosine_z</code>) are computed from the candidates of the same question only. They use no label and no other question, so they do not leak information.</li>
+</ul>
+<p>All of this is a scikit-learn <code>ColumnTransformer</code> inside the model pipeline. It is fitted only on the training data of each fold, and on the 80 training questions for the final model.</p>
+
+<h2>Data after processing</h2>
+<p>The same first rows after the fitted preprocessing of the selected model ({{ processed.columns|length }} columns):</p>
+<div class="table-wrap"><table>
+  <tr>{% for column in processed.columns %}<th class="num">{{ column }}</th>{% endfor %}</tr>
+  {% for row in processed.rows %}<tr>{% for value in row %}<td class="num">{{ value }}</td>{% endfor %}</tr>{% endfor %}
+</table></div>
+
+<h2>Partitions and leakage prevention</h2>
+<ul class="tight">
+  <li><strong>Unit of splitting = question.</strong> All candidates of a question always stay in the same partition. Splitting rows at random would put fragments of the same question in training and test.</li>
+  <li><strong>Test set:</strong> {{ split.test_question_ids|length }} questions (20%), stratified by expected document, seed {{ split.seed }}: ids {{ split.test_question_ids|join(', ') }}. They are used once, after model selection.</li>
+  <li><strong>Training and validation:</strong> the other {{ split.train_cv_question_ids|length }} questions, with grouped 5-fold cross-validation (GroupKFold by question) for model comparison and tuning.</li>
+  <li><strong>Preprocessing:</strong> fitted inside each training fold (pipeline), never on validation or test rows.</li>
+</ul>
+
+<div class="next"><a class="button secondary" href="{{ url_for('phase', slug='business') }}">← 1. Business and Data Understanding</a><a class="button" href="{{ url_for('phase', slug='modeling') }}">3. Model Engineering →</a></div>
+{% endblock %}

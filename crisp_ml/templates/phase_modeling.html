@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Model Engineering{% endblock %}
+{% block content %}
+<h1>3. Model Engineering</h1>
+<p class="lead">Which algorithms were compared, why, how they were tuned, and what each experiment taught. Script: <code>scripts/train.py</code>; models and preprocessing: <code>knowbot/model.py</code>.</p>
+
+<h2>Algorithms and why they suit the problem</h2>
+<div class="table-wrap"><table>
+  <tr><th>Model</th><th>Why it was chosen</th><th>Configuration</th></tr>
+  <tr><td>Vector search order (baseline)</td><td>What FAISS alone returns: the reference any model must beat.</td><td>Sort by cosine similarity.</td></tr>
+  <tr><td>KnowBot order (baseline)</td><td>The ranking KnowBot uses today: exact matches, best vector hit, two best keyword hits, rest of the vector hits.</td><td>Hand-written rules, no training.</td></tr>
+  <tr><td>Logistic Regression</td><td>Linear, stable with few examples, gives calibrated probabilities and readable coefficients. A strong reference with a small dataset.</td><td>L2 penalty, class weights "balanced", max 2,000 iterations.</td></tr>
+  <tr><td>Random Forest</td><td>Captures interactions (for example "date question AND calendar fragment") and non-linear thresholds without scaling; robust to noisy labels by averaging many trees.</td><td>300 trees, class weights "balanced_subsample".</td></tr>
+  <tr><td>Gradient Boosting (histogram-based)</td><td>Usually the strongest model on tabular data; included to check if a more flexible model pays off with this little data.</td><td>200 iterations, L2 regularization 1.0, class weights "balanced".</td></tr>
+</table></div>
+<p>All three learned models use the same preprocessing pipeline (Phase 2), the same 23 features, seed 42 and the same folds, so their results are directly comparable. Each predicts the probability that a fragment comes from the expected page; candidates are then sorted by that probability.</p>
+
+<h2>Validation and hyperparameter tuning</h2>
+<p>Grid search with grouped 5-fold cross-validation on the 80 training questions (GroupKFold by question: no question is in training and validation at the same time). Each setting is scored by the mean validation MRR over the 5 folds. The test questions are not used.</p>
+<div class="table-wrap"><table>
+  <tr><th>Model</th><th>Hyperparameters</th><th class="num">Train MRR</th><th class="num">Validation MRR (mean ± std)</th><th class="num">Validation Hit@1</th></tr>
+  {% for row in grid %}
+  <tr class="{{ 'highlight' if row.model == card.model and row.params == (card.params|tojson) }}"><td>{{ row.model.replace('_', ' ') }}</td><td><code>{{ row.params }}</code></td><td class="num">{{ '%.3f'|format(train_rows.get((row.model, row.params), 0)) if (row.model, row.params) in train_rows else '—' }}</td><td class="num">{{ '%.3f'|format(row.mrr_mean) }} ± {{ '%.3f'|format(row.mrr_std) }}</td><td class="num">{{ '%.1f'|format(row.hit_at_1_mean * 100) }}%</td></tr>
+  {% endfor %}
+</table></div>
+
+<h2>Experiment log</h2>
+<p>The features grew in three recorded experiments. Each used the same split, folds and grid; decisions were based only on cross-validation results.</p>
+{% for experiment in experiments %}
+<div class="card">
+  <h3>{{ experiment.notes.title or experiment.name }}</h3>
+  <p><strong>Change:</strong> {{ experiment.notes.change }} ({{ experiment.notes.features }} features)</p>
+  <div class="table-wrap"><table>
+    <tr><th>Model (best setting)</th><th class="num">MRR</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">Page ±1 @1</th><th class="num">PR-AUC</th></tr>
+    {% for row in experiment.rows %}<tr><td>{{ row.model.replace('_', ' ') }}</td><td class="num">{{ '%.3f'|format(row.mrr_mean) }}</td><td class="num">{{ '%.1f'|format(row.hit_at_1_mean * 100) }}%</td><td class="num">{{ '%.1f'|format(row.hit_at_3_mean * 100) }}%</td><td class="num">{{ '%.1f'|format(row.near_hit_at_1_mean * 100) }}%</td><td class="num">{{ '%.3f'|format(row.pr_auc_mean) }}</td></tr>{% endfor %}
+  </table></div>
+  <p><strong>Finding:</strong> {{ experiment.notes.finding }}</p>
+</div>
+{% endfor %}
+
+<h2>How domain knowledge shaped the model</h2>
+<ul class="tight">
+  <li><strong>Exact lookups first:</strong> calendar activities and article numbers are matched by their official names, because the 71 calendar lines are almost identical for a vector model.</li>
+  <li><strong>Keywords next to vectors:</strong> questions quote Spanish institutional names that vectors blur, so BM25 features were added.</li>
+  <li><strong>Pages, not fragments:</strong> an answer usually spans several fragments of one page, which led to the page-vote features (Experiment 2), the most important ones in the final model.</li>
+  <li><strong>Compare within a question:</strong> similarity values depend on how a question is phrased, which led to the per-question z-scores (Experiment 3).</li>
+  <li><strong>Split by question:</strong> the model will meet new questions, never new fragments of a known question, so every split is by question.</li>
+</ul>
+
+<h2>Selected configuration</h2>
+<div class="card">
+  <p><strong>{{ card.model.replace('_', ' ')|capitalize }}</strong> with <code>{{ card.params|tojson }}</code>, validation MRR {{ '%.3f'|format(card.cv_validation_mrr_mean) }} ± {{ '%.3f'|format(card.cv_validation_mrr_std) }}, refitted on {{ card.trained_on_questions }} questions ({{ "{:,}".format(card.training_rows) }} rows). Criterion: {{ card.selection_criterion }}.</p>
+</div>
+
+<div class="next"><a class="button secondary" href="{{ url_for('phase', slug='data') }}">← 2. Data Engineering</a><a class="button" href="{{ url_for('phase', slug='evaluation') }}">4. Model Evaluation →</a></div>
+{% endblock %}

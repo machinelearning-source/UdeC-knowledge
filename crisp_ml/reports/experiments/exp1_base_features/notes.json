@@ -1,0 +1,6 @@
+{
+  "title": "Experiment 1: base features",
+  "features": 15,
+  "change": "Vector, keyword, exact-match, calendar, length and position features.",
+  "finding": "Learned models beat plain vector search but not KnowBot's order (validation MRR 0.553 vs 0.585). Each fragment is judged alone, without knowing how it compares with the other candidates of the question."
+}

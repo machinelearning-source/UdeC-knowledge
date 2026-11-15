@@ -1,0 +1,84 @@
+{
+  "selected_model": {
+    "mrr": 0.6577945665445665,
+    "hit_at_1": 0.55,
+    "hit_at_3": 0.75,
+    "hit_at_5": 0.8,
+    "near_hit_at_1": 0.6,
+    "near_hit_at_3": 0.75,
+    "roc_auc": 0.9076691729323308,
+    "pr_auc": 0.517399315064927
+  },
+  "vector_baseline": {
+    "mrr": 0.6764526468155501,
+    "hit_at_1": 0.55,
+    "hit_at_3": 0.75,
+    "hit_at_5": 0.85,
+    "near_hit_at_1": 0.6,
+    "near_hit_at_3": 0.75,
+    "roc_auc": 0.6416541353383459,
+    "pr_auc": 0.20573667636960544
+  },
+  "knowbot_baseline": {
+    "mrr": 0.7238888888888889,
+    "hit_at_1": 0.6,
+    "hit_at_3": 0.75,
+    "hit_at_5": 0.9,
+    "near_hit_at_1": 0.65,
+    "near_hit_at_3": 0.75,
+    "roc_auc": 0.6716791979949874,
+    "pr_auc": 0.20664012774712948
+  },
+  "selected_model_on_training_data": {
+    "mrr": 0.8739583333333334,
+    "hit_at_1": 0.8375,
+    "hit_at_3": 0.9125,
+    "hit_at_5": 0.925,
+    "near_hit_at_1": 0.8625,
+    "near_hit_at_3": 0.9375,
+    "roc_auc": 0.9978000045360731,
+    "pr_auc": 0.9735990338905898
+  },
+  "selected_model_by_document": [
+    {
+      "document": "Agreement 005.pdf",
+      "questions": 8,
+      "mrr": 0.6984126984126984,
+      "hit_at_1": 0.625,
+      "hit_at_3": 0.75,
+      "hit_at_5": 0.75,
+      "near_hit_at_1": 0.75,
+      "near_hit_at_3": 0.75
+    },
+    {
+      "document": "Academic Calendar 2026.pdf",
+      "questions": 1,
+      "mrr": 1.0,
+      "hit_at_1": 1.0,
+      "hit_at_3": 1.0,
+      "hit_at_5": 1.0,
+      "near_hit_at_1": 1.0,
+      "near_hit_at_3": 1.0
+    },
+    {
+      "document": "Commission Report CA.pdf",
+      "questions": 2,
+      "mrr": 0.5625,
+      "hit_at_1": 0.5,
+      "hit_at_3": 0.5,
+      "hit_at_5": 0.5,
+      "near_hit_at_1": 0.5,
+      "near_hit_at_3": 0.5
+    },
+    {
+      "document": "Undergraduate Student Regulations.pdf",
+      "questions": 9,
+      "mrr": 0.6048433048433048,
+      "hit_at_1": 0.4444444444444444,
+      "hit_at_3": 0.7777777777777778,
+      "hit_at_5": 0.8888888888888888,
+      "near_hit_at_1": 0.4444444444444444,
+      "near_hit_at_3": 0.7777777777777778
+    }
+  ]
+}

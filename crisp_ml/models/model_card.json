@@ -1,0 +1,52 @@
+{
+  "model": "random_forest",
+  "params": {
+    "n_estimators": 300,
+    "max_depth": null,
+    "min_samples_leaf": 5
+  },
+  "features": [
+    "cosine",
+    "cosine_rank",
+    "cosine_gap",
+    "bm25",
+    "bm25_rank",
+    "bm25_relative",
+    "word_overlap",
+    "calendar_match",
+    "article_match",
+    "is_calendar_chunk",
+    "calendar_question",
+    "calendar_question_and_chunk",
+    "chunk_chars",
+    "page_position",
+    "question_words",
+    "knowbot_rank",
+    "page_candidates",
+    "page_max_cosine",
+    "page_bm25_sum",
+    "document_share",
+    "cosine_z",
+    "bm25_z",
+    "page_max_cosine_z",
+    "document"
+  ],
+  "trained_on_questions": 80,
+  "training_rows": 2550,
+  "selection_criterion": "highest mean validation MRR over 5 grouped folds",
+  "cv_validation_mrr_mean": 0.5943142441386443,
+  "cv_validation_mrr_std": 0.16206025299313437,
+  "test_metrics": {
+    "mrr": 0.6577945665445665,
+    "hit_at_1": 0.55,
+    "hit_at_3": 0.75,
+    "hit_at_5": 0.8,
+    "near_hit_at_1": 0.6,
+    "near_hit_at_3": 0.75,
+    "roc_auc": 0.9076691729323308,
+    "pr_auc": 0.517399315064927
+  },
+  "seed": 42,
+  "scikit_learn_version": "1.9.1",
+  "trained_at": "2026-11-14T17:53:02+00:00"
+}

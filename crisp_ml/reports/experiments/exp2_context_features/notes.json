@@ -1,0 +1,6 @@
+{
+  "title": "Experiment 2: + context features",
+  "features": 20,
+  "change": "Added KnowBot's own rank, page votes (candidates from the same page, best similarity of the page, total keyword score of the page) and the document share.",
+  "finding": "Hit@1 above the baseline (0.462 vs 0.438) and PR-AUC more than doubled, but MRR still slightly below (0.579 vs 0.585)."
+}
