@@ -8,7 +8,6 @@ from datetime import datetime
 from pathlib import Path
 
 import streamlit as st
-import streamlit.components.v1 as components
 
 from core.calendar_names import CALENDAR_OFFICIAL_NAMES
 from core.pipeline import (
@@ -480,13 +479,13 @@ def _avatar_for(role):
 
 
 def _suggest(question, search_query=None, calendar_name=None):
-    """Put a quick question in the chat box; it is asked when the user sends it."""
+    """Ask a quick question confirmed with its button; the answer is written right away."""
     st.session_state.suggestion = {
         "question": question,
         "search_query": search_query,
         "calendar_name": calendar_name,
     }
-    st.session_state.fill_chat_input = True
+    st.session_state.ask_suggestion = True
 
 
 def _suggest_category():
@@ -515,83 +514,72 @@ def _suggest_calendar():
         st.session_state.chosen_activity = None
 
 
-def _fill_chat_input(text):
-    """Write text into the chat box (st.chat_input has no value parameter in Streamlit 1.39).
-
-    A zero-height component runs a script in the page that sets the box's value
-    the way React expects and focuses it, so the user can edit and send it.
-    """
-    components.html(
-        f"""
-        <script>
-        const text = {json.dumps(text)};
-        const page = window.parent.document;
-        function fill(attempts) {{
-            const box = page.querySelector('[data-testid="stChatInput"] textarea');
-            if (!box) {{
-                if (attempts > 0) setTimeout(() => fill(attempts - 1), 100);
-                return;
-            }}
-            const setValue = Object.getOwnPropertyDescriptor(
-                window.parent.HTMLTextAreaElement.prototype, "value"
-            ).set;
-            setValue.call(box, text);
-            box.dispatchEvent(new Event("input", {{ bubbles: true }}));
-            box.focus();
-        }}
-        fill(30);
-        </script>
-        """,
-        height=0,
-    )
-
-
 def _render_suggestions():
-    """Quick questions under the welcome message: choosing an option writes it in the chat box.
+    """Quick questions under the welcome message: open a menu, choose an option, confirm it.
 
-    The question is asked only when the user sends it, so it can be edited first.
-    Each selector starts empty and is emptied again, so the first option and a
-    repeated option also work.
+    The confirm button asks the question at once. Each selector starts empty and is
+    emptied again after asking, so the first option and a repeated option also work.
     """
     category_column, course_column, calendar_column, _ = st.columns([1.15, 1.2, 1.1, 1.3], gap="small")
 
     with category_column:
         with st.popover(":material/school: Student categories"):
-            st.caption(f"{len(STUDENT_CATEGORIES)} student situations · choose one, then send it")
+            st.caption(f"{len(STUDENT_CATEGORIES)} student situations · choose one, then ask")
             st.selectbox(
                 "Choose a student category",
                 STUDENT_CATEGORIES,
                 index=None,
                 placeholder="Choose a student situation…",
                 key="chosen_category",
-                on_change=_suggest_category,
                 label_visibility="collapsed",
+            )
+            st.button(
+                "Ask about this category",
+                key="ask_category",
+                type="primary",
+                use_container_width=True,
+                on_click=_suggest_category,
+                disabled=st.session_state.get("chosen_category") is None,
             )
 
     with course_column:
         with st.popover(":material/bookmark: Course homologation"):
-            st.caption(f"{len(HOMOLOGATION_COURSES)} courses · choose one, then send it")
+            st.caption(f"{len(HOMOLOGATION_COURSES)} courses · choose one, then ask")
             st.selectbox(
                 "Choose a course",
                 HOMOLOGATION_COURSES,
                 index=None,
                 placeholder="Choose a course…",
                 key="chosen_course",
-                on_change=_suggest_course,
                 label_visibility="collapsed",
+            )
+            st.button(
+                "Ask about this course",
+                key="ask_course",
+                type="primary",
+                use_container_width=True,
+                on_click=_suggest_course,
+                disabled=st.session_state.get("chosen_course") is None,
             )
 
     with calendar_column:
         with st.popover(":material/calendar_month: Academic calendar"):
-            st.caption(f"{len(CALENDAR_ACTIVITIES)} activities of 2026 · choose one, then send it")
+            st.caption(f"{len(CALENDAR_ACTIVITIES)} activities of 2026 · choose one, then ask")
             st.selectbox(
                 "Choose an academic calendar activity",
                 CALENDAR_ACTIVITIES,
                 index=None,
                 placeholder="Choose an activity…",
                 key="chosen_activity",
-                on_change=_suggest_calendar,
                 label_visibility="collapsed",
+            )
+            st.button(
+                "Ask about this date",
+                key="ask_calendar",
+                type="primary",
+                use_container_width=True,
+                on_click=_suggest_calendar,
+                disabled=st.session_state.get("chosen_activity") is None,
             )
 
 
@@ -687,10 +675,10 @@ for index, message in enumerate(st.session_state.messages):
 
 prompt = st.chat_input("Ask KnowBot your question...")
 suggestion = st.session_state.get("suggestion") or {}
-if st.session_state.pop("fill_chat_input", False) and suggestion:
-    _fill_chat_input(suggestion["question"])
+if st.session_state.pop("ask_suggestion", False) and suggestion:
+    prompt = suggestion["question"]
 
-# A sent suggestion keeps its search hints (the official calendar name); an edited one is a typed question.
+# A quick question keeps its search hints (the official calendar name).
 search_query, calendar_name = prompt, None
 if prompt and prompt.strip() == suggestion.get("question"):
     search_query = suggestion.get("search_query") or prompt
