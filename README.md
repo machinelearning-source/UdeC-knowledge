@@ -12,6 +12,14 @@ Every answer is written only from the official documents, cites the fragments it
 - Public catalog of the documents: <https://machinelearning-source.github.io/UdeC-knowledge/>
 - Repository: <https://github.com/machinelearning-source/UdeC-knowledge>
 
+## CRISP-ML activity: KnowBot Re-ranker
+
+The folder [`crisp_ml/`](crisp_ml/) contains the Machine Learning activity built on KnowBot: a model that re-ranks the fragments KnowBot retrieves so that the page that answers the question comes first, developed through the six CRISP-ML phases (business and data understanding, data engineering, model engineering, evaluation, deployment, monitoring and maintenance).
+
+- Flask application with the six phases and the model demo: <https://knowbot-reranker.onrender.com>
+- Code, data, model, reports and instructions: [`crisp_ml/README.md`](crisp_ml/README.md)
+- The folder keeps the history of the activity's own repository, <https://github.com/Oscar69bello/knowbot-crisp-ml>, so both show the same code and results.
+
 ## Features
 
 - **Grounded answers with citations** – each answer may only use the retrieved fragments; the cited document pages are shown as tags below each answer.
