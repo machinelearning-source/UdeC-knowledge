@@ -28,8 +28,10 @@ csrf = CSRFProtect()
 def init_desk(app):
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     database_url = os.environ.get("DATABASE_URL", "sqlite:///" + os.path.join(root, "instance", "knowbot_desk.db"))
-    if database_url.startswith("postgres://"):
-        database_url = "postgresql://" + database_url[len("postgres://"):]
+    # Name the installed driver (psycopg2) explicitly: recent SQLAlchemy versions default to psycopg 3.
+    for prefix in ("postgres://", "postgresql://"):
+        if database_url.startswith(prefix):
+            database_url = "postgresql+psycopg2://" + database_url[len(prefix):]
     os.makedirs(os.path.join(root, "instance"), exist_ok=True)
     app.config.update(
         SQLALCHEMY_DATABASE_URI=database_url,
