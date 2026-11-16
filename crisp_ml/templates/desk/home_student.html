@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "desk/_rows.html" import inquiry_table %}
+{% block title %}KnowBot Desk{% endblock %}
+{% block content %}
+<h1>Hello, {{ current_user.name }}</h1>
+<p class="lead">Ask a formal question about the regulations, Agreement 005 or the 2026 calendar. The model suggests the page that answers it, an advisor checks that page and answers you, and you rate the answer to close the inquiry.</p>
+{% include "desk/_nav.html" %}
+<p><a class="button" href="{{ url_for('desk.new_inquiry') }}">New inquiry</a></p>
+<h2>My inquiries</h2>
+{{ inquiry_table(inquiries, show_student=False) }}
+<div class="note">For a quick answer without an account, use the <a href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">KnowBot chatbot</a>. Use KnowBot Desk when you need an answer reviewed by an advisor and a record of it.</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<h1>Create a student account</h1>
+<p class="lead">New accounts have the Student role. Advisor and Coordinator roles are granted only by a coordinator.</p>
+<form method="post" class="card form-grid">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="name">Full name</label><input id="name" name="name" value="{{ form.name }}" required maxlength="120">
+  <label for="email">Email</label><input id="email" name="email" type="email" value="{{ form.email }}" required maxlength="160" autocomplete="username">
+  <label for="password">Password (at least 8 characters, letters and numbers)</label><input id="password" name="password" type="password" required minlength="8" autocomplete="new-password">
+  <label for="confirm">Repeat the password</label><input id="confirm" name="confirm" type="password" required minlength="8" autocomplete="new-password">
+  <p><button type="submit">Create account</button></p>
+  <p class="excerpt">Already registered? <a href="{{ url_for('desk.login') }}">Sign in</a>.</p>
+</form>
+{% endblock %}

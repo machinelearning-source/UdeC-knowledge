@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit inquiry' if editing else 'New inquiry' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Edit inquiry' if editing else 'New inquiry' }}</h1>
+{% include "desk/_nav.html" %}
+<form method="post" class="card form-grid">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="title">Title (5 to 120 characters)</label><input id="title" name="title" value="{{ form.title }}" required minlength="5" maxlength="120">
+  <label for="category_id">Category</label>
+  <select id="category_id" name="category_id" required><option value="">Choose…</option>{% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if form.category_id == c.id }}>{{ c.name }}</option>{% endfor %}</select>
+  <label for="question">Question (15 to 500 characters, English or Spanish)</label>
+  <textarea id="question" name="question" rows="4" required minlength="15" maxlength="500" spellcheck="false">{{ form.question }}</textarea>
+  <p class="excerpt">When you send it, the Machine Learning model ranks the pages of the official documents and suggests the one that answers it. If it is not confident, the inquiry goes to the coordinator.</p>
+  <p><button type="submit">{{ 'Save changes' if editing else 'Send inquiry' }}</button>
+  {% if editing %}<a class="button secondary" href="{{ url_for('desk.inquiry', inquiry_id=item.id) }}">Cancel</a>{% endif %}</p>
+</form>
+{% endblock %}

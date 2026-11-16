@@ -1,0 +1,13 @@
+<nav class="desk-nav">
+  <a href="{{ url_for('desk.home') }}" class="{{ 'active' if request.endpoint == 'desk.home' }}">Dashboard</a>
+  <a href="{{ url_for('desk.inquiries') }}" class="{{ 'active' if request.endpoint == 'desk.inquiries' }}">{{ 'My inquiries' if current_user.role == 'student' else 'All inquiries' }}</a>
+  {% if current_user.role == 'student' %}<a href="{{ url_for('desk.new_inquiry') }}" class="{{ 'active' if request.endpoint == 'desk.new_inquiry' }}">New inquiry</a>{% endif %}
+  {% if current_user.role in ('advisor', 'coordinator') %}
+  <a href="{{ url_for('desk.reports') }}" class="{{ 'active' if request.endpoint == 'desk.reports' }}">Reports</a>
+  <a href="{{ url_for('desk.inferences') }}" class="{{ 'active' if request.endpoint == 'desk.inferences' }}">Model history</a>
+  {% endif %}
+  {% if current_user.role == 'coordinator' %}
+  <a href="{{ url_for('desk.users') }}" class="{{ 'active' if request.endpoint == 'desk.users' }}">Users and roles</a>
+  <a href="{{ url_for('desk.categories') }}" class="{{ 'active' if request.endpoint == 'desk.categories' }}">Categories</a>
+  {% endif %}
+</nav>

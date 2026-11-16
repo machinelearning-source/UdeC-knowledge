@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% from "desk/_rows.html" import inquiry_table %}
+{% block title %}KnowBot Desk{% endblock %}
+{% block content %}
+<h1>{{ current_user.role_name }} dashboard</h1>
+<p class="lead">Take an inquiry, check the page suggested by the model, confirm or correct it, and answer. Inquiries where the model is unsure (top probability below 0.30) are escalated to the coordinator.</p>
+{% include "desk/_nav.html" %}
+<div class="grid">
+  <div class="stat"><div class="value">{{ indicators.by_status['New'] }}</div><div class="label">new inquiries in the queue</div></div>
+  <div class="stat"><div class="value">{{ indicators.by_status['Escalated'] }}</div><div class="label">escalated (model unsure or advisor request)</div></div>
+  <div class="stat"><div class="value">{{ indicators.by_status['In progress'] }}</div><div class="label">in progress</div></div>
+  <div class="stat"><div class="value">{{ '%.0f%%'|format(indicators.model_accuracy * 100) if indicators.model_accuracy is not none else '—' }}</div><div class="label">model's page confirmed by advisors ({{ indicators.model_right }} of {{ indicators.model_checked }})</div></div>
+</div>
+<h2>My inquiries in progress</h2>
+{{ inquiry_table(mine) }}
+<h2>Queue: new inquiries</h2>
+{{ inquiry_table(queue) }}
+<h2>Escalated inquiries {% if current_user.role != 'coordinator' %}<span class="excerpt">(handled by the coordinator)</span>{% endif %}</h2>
+{{ inquiry_table(escalated) }}
+{% endblock %}

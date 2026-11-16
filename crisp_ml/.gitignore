@@ -4,3 +4,4 @@ __pycache__/
 .fastembed_cache/
 logs/
 .env
+instance/

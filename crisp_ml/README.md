@@ -49,6 +49,7 @@ crisp_ml/
 │   ├── model.py                # Preprocessing pipeline, models, grid and ranking metrics
 │   ├── predict.py              # Loads the saved model and re-ranks a new question
 │   └── monitoring.py           # Prediction and feedback logs, monitoring indicators
+├── desk/                       # KnowBot Desk: models, business rules, routes (auth, inquiries, admin, reports)
 ├── scripts/
 │   ├── build_dataset.py        # Phase 2: dataset, cleaning, question-level split
 │   └── train.py                # Phases 3-4: cross-validation, tuning, selection, test
@@ -106,6 +107,37 @@ The response contains the five best fragments by the model (`reranked`) and by K
 - the tokenizer runs on the model's original SentencePiece file instead of `tokenizer.json`, which takes about 250 MB in memory; the token ids are the same.
 
 Both changes were checked against the standard model: identical token ids on 400 texts and a maximum difference of 0.0 between the vectors of the 100 questions.
+
+## KnowBot Desk: the intelligent web information system
+
+The application also contains **KnowBot Desk** (`desk/`), a private system that manages academic inquiries and uses the model inside that process. The homepage presents the PGC documentation (title, problem and justification, objectives, reference framework, methodology and schedule, references); operational modules require an account.
+
+| Role | Functions |
+|---|---|
+| Student (every new registration) | Create, edit and delete own inquiries until they are taken; read the answer; rate it to close the inquiry |
+| Advisor | Take new inquiries, check the pages suggested by the model, confirm or correct the source page, answer; reports and model history |
+| Coordinator | Everything an advisor does, plus escalated inquiries, users and roles, categories and the export of confirmed questions |
+
+Workflow: the student creates an inquiry → the re-ranker scores the pages and the inference is stored (date, user, result, model version) → below a probability of 0.30 the inquiry is escalated to the coordinator, otherwise it goes to the advisors with the suggested page → the advisor confirms or corrects the page and answers → the student rates and closes it. The confirmed page is the actual outcome compared with the prediction in *Reports*.
+
+### Database setup
+
+- **Production:** PostgreSQL. Set `DATABASE_URL` (on Render, a free Postgres in the same region, linked with *Add variable → Datastore URL*). Tables and the default categories are created at start-up.
+- **Local:** without `DATABASE_URL`, a SQLite file is created in `instance/knowbot_desk.db`.
+- Configuration example without secrets: [`.env.example`](.env.example). Required: `DATABASE_URL`, `SECRET_KEY`.
+
+### Test accounts
+
+- Local: `python scripts/create_accounts.py` creates one account per role with random passwords in `instance/test_accounts.txt` (not committed).
+- Server: set `DESK_COORDINATOR_PASSWORD`, `DESK_ADVISOR_PASSWORD` and `DESK_STUDENT_PASSWORD`; the accounts `coordinator@`, `advisor@` and `student@knowbot-desk.test` are created at start-up. Credentials are given privately to the instructor.
+
+### Tests
+
+```bash
+python -m unittest tests.test_desk -v
+```
+
+The tests cover public and protected routes, registration with the student role and hashed passwords, role permissions enforced on the server, the complete workflow with the model, and input validation.
 
 ## Methodology summary
 

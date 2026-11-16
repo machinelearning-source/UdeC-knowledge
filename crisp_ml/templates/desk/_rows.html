@@ -1,0 +1,18 @@
+{% macro inquiry_table(items, show_student=True) %}
+{% if items %}
+<div class="table-wrap"><table>
+  <tr><th>#</th><th>Title</th>{% if show_student %}<th>Student</th>{% endif %}<th>Category</th><th>Status</th><th>Model suggestion</th><th>Updated (UTC)</th></tr>
+  {% for i in items %}
+  <tr>
+    <td>{{ i.id }}</td>
+    <td><a href="{{ url_for('desk.inquiry', inquiry_id=i.id) }}">{{ i.title }}</a></td>
+    {% if show_student %}<td>{{ i.student.name }}</td>{% endif %}
+    <td>{{ i.category.name }}</td>
+    <td><span class="status {{ i.status }}">{{ i.status_name }}</span></td>
+    <td>{% if i.suggested_page %}{{ i.suggested_document }}, p. {{ i.suggested_page }} <span class="excerpt">({{ '%.2f'|format(i.suggested_probability) }})</span>{% else %}<span class="excerpt">none</span>{% endif %}</td>
+    <td>{{ i.updated_at.strftime('%Y-%m-%d %H:%M') }}</td>
+  </tr>
+  {% endfor %}
+</table></div>
+{% else %}<p class="excerpt">Nothing here yet.</p>{% endif %}
+{% endmacro %}

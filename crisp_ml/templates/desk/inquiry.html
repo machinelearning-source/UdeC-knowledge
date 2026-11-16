@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Inquiry {{ item.id }}{% endblock %}
+{% block content %}
+<h1>Inquiry #{{ item.id }}: {{ item.title }}</h1>
+{% include "desk/_nav.html" %}
+<div class="card">
+  <p><span class="status {{ item.status }}">{{ item.status_name }}</span> · {{ item.category.name }} · asked by {{ item.student.name }} on {{ item.created_at.strftime('%Y-%m-%d %H:%M') }} UTC{% if item.advisor %} · advisor: {{ item.advisor.name }}{% endif %}</p>
+  <p><strong>Question:</strong> {{ item.question }}</p>
+  {% if rules.can_edit(user, item) %}
+  <p class="inline"><a class="button secondary small" href="{{ url_for('desk.edit_inquiry', inquiry_id=item.id) }}">Edit</a>
+    <form method="post" action="{{ url_for('desk.delete_inquiry', inquiry_id=item.id) }}" onsubmit="return confirm('Delete this inquiry?')"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="small danger">Delete</button></form></p>
+  {% endif %}
+</div>
+
+{% if item.answer %}
+<div class="card answer">
+  <h2>Answer</h2>
+  <div class="answer-text">{{ item.answer|simple_markdown }}</div>
+  <p class="excerpt">Source confirmed by {{ item.advisor.name if item.advisor else 'the advisor' }}: <strong>{{ item.source_document }}, page {{ item.source_page }}</strong>.
+  {% if user.role != 'student' and item.model_was_right is not none %}The model's first page was {{ 'confirmed' if item.model_was_right else 'corrected' }}.{% endif %}</p>
+  {% if item.rating %}<p>Student rating: <strong>{{ item.rating }}/5</strong>{% if item.rating_comment %} · “{{ item.rating_comment }}”{% endif %}</p>{% endif %}
+</div>
+{% endif %}
+
+{% if rules.can_rate(user, item) %}
+<form method="post" action="{{ url_for('desk.rate_inquiry', inquiry_id=item.id) }}" class="card form-grid">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <strong>Was this answer useful? Rate it to close the inquiry.</strong>
+  <div class="inline">{% for n in range(1, 6) %}<label><input type="radio" name="rating" value="{{ n }}" required style="width:auto"> {{ n }}</label>{% endfor %}</div>
+  <input name="comment" maxlength="500" placeholder="Optional comment">
+  <p><button type="submit">Rate and close</button></p>
+</form>
+{% endif %}
+
+{% if user.role in ('advisor', 'coordinator') %}
+<div class="card">
+  <h2>Model suggestion</h2>
+  {% if latest and not latest.error %}
+  <p>The re-ranker ({{ latest.model_version }}) scored the candidate fragments of the official documents for this question. The page it put first is <strong>{{ latest.top_document }}, page {{ latest.top_page }}</strong>, with probability <strong>{{ '%.2f'|format(latest.top_probability) }}</strong>. Decision: <strong>{{ latest.decision }}</strong>.</p>
+  <p class="excerpt"><strong>Meaning:</strong> the probability that the fragment comes from the page that answers the question. <strong>Use:</strong> it pre-selects the source the advisor checks first; at 0.50 or more the suggestion is usually right, below 0.30 the inquiry is escalated. <strong>Limitations:</strong> on the test set the model put the right page first in 55% of the questions and within the first three in 75%, so the advisor must always confirm or correct the page; Spanish questions are somewhat weaker.</p>
+  {% elif latest and latest.error %}
+  <div class="warn">The model could not run for this inquiry ({{ latest.error }}). Review it manually.</div>
+  {% else %}<p class="excerpt">No prediction yet.</p>{% endif %}
+  {% if rules.can_take(user, item) %}
+  <form method="post" action="{{ url_for('desk.take_inquiry', inquiry_id=item.id) }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Take this inquiry</button></form>
+  {% endif %}
+  {% if user.role == 'advisor' and item.status in ('new', 'in_progress') %}
+  <form method="post" action="{{ url_for('desk.escalate_inquiry', inquiry_id=item.id) }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="secondary small">Send to the coordinator</button></form>
+  {% endif %}
+</div>
+
+{% if rules.can_answer(user, item) %}
+<form method="post" action="{{ url_for('desk.answer_inquiry', inquiry_id=item.id) }}" class="card form-grid">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <h2>Answer the student</h2>
+  <strong>1. Confirm the page that supports the answer</strong>
+  <div class="ranking">
+    {% for r in ranking %}
+    <label class="{{ 'top' if loop.first }}"><input type="radio" name="source" value="{{ r.document }}|{{ r.page }}" {{ 'checked' if loop.first and latest.top_probability >= rules.SUGGEST_FROM }} required style="width:auto">
+      <strong>{{ r.rank }}. {{ r.document }}, page {{ r.page }}</strong> <span class="badge info">p = {{ r.probability }}</span><br><span class="excerpt">{{ r.excerpt }}…</span></label>
+    {% endfor %}
+    <label><input type="radio" name="source" value="other" style="width:auto"> <strong>Another page</strong> (the model's pages are not right)
+      <span class="inline"><input name="other_document" placeholder="Document, e.g. Undergraduate Student Regulations" maxlength="120"><input name="other_page" type="number" min="1" placeholder="Page" style="max-width:110px"></span></label>
+  </div>
+  <strong>2. Write the answer</strong>
+  <textarea name="answer" rows="6" minlength="20" maxlength="4000" required placeholder="Answer with the rule, the requirements or the dates, and cite the page."></textarea>
+  <p class="excerpt">The confirmed page is stored as the actual outcome and compared with the model's prediction in Reports; it also becomes a new labeled question for retraining.</p>
+  <p><button type="submit">Send answer</button></p>
+</form>
+{% endif %}
+
+{% if item.inferences %}
+<h2>Inference history of this inquiry</h2>
+<div class="table-wrap"><table>
+  <tr><th>Date (UTC)</th><th>User</th><th>Result</th><th class="num">Probability</th><th>Decision</th><th>Model version</th><th class="num">Latency ms</th></tr>
+  {% for x in item.inferences %}<tr><td>{{ x.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td><td>{{ x.user.name }}</td><td>{% if x.top_page %}{{ x.top_document }}, p. {{ x.top_page }}{% else %}{{ x.error }}{% endif %}</td><td class="num">{{ '%.2f'|format(x.top_probability) if x.top_probability is not none else '' }}</td><td>{{ x.decision }}</td><td>{{ x.model_version }}</td><td class="num">{{ x.latency_ms }}</td></tr>{% endfor %}
+</table></div>
+{% endif %}
+{% else %}
+{% if item.status in ('new', 'escalated', 'in_progress') %}<div class="note">Your inquiry is {{ item.status_name|lower }}. {% if item.status == 'escalated' %}A coordinator will review it because the source was not clear.{% else %}An advisor will answer it.{% endif %}</div>{% endif %}
+{% endif %}
+{% endblock %}

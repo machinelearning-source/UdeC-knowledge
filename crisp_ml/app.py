@@ -39,6 +39,9 @@ from langchain_community.vectorstores import FAISS  # noqa: E402, F401
 
 from knowbot import monitoring, predict, quick_questions  # noqa: E402, F401
 from knowbot.answer import write_answer  # noqa: E402
+from desk import csrf, init_desk  # noqa: E402
+from desk.models import COORDINATOR  # noqa: E402
+from desk.views import roles_required  # noqa: E402
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 REPORTS = os.path.join(ROOT, "reports")
@@ -109,7 +112,23 @@ def _csv(path):
 
 @app.context_processor
 def navigation():
-    return {"phases": PHASES, "current_year": datetime.now().year}
+    return {"phases": PHASES, "current_year": datetime.now().year, "resources": _resources()}
+
+
+FINAL_REPORT = os.path.join(ROOT, "static", "docs", "KnowBot_Final_Technical_Report.pdf")
+
+
+def _resources():
+    """Links shown on the homepage: the final report once it is published, and the presentation video."""
+    report_url = (url_for("static", filename="docs/KnowBot_Final_Technical_Report.pdf") if os.path.exists(FINAL_REPORT)
+                  else "https://github.com/machinelearning-source/UdeC-knowledge/tree/main/crisp_ml/reports")
+    return {"report_url": report_url, "video_url": os.environ.get("PROJECT_VIDEO_URL", "")}
+
+
+@app.route("/guide")
+def guide():
+    """User documentation: how each role uses KnowBot Desk, plus incident reporting and feedback."""
+    return render_template("guide.html")
 
 
 @app.route("/")
@@ -235,6 +254,7 @@ def _predict(question, source):
 
 
 @app.route("/api/rerank", methods=["POST"])
+@csrf.exempt
 def api_rerank():
     """JSON API: {"question": "..."} -> the five best fragments by the model and by KnowBot's order."""
     payload = request.get_json(silent=True) or {}
@@ -254,6 +274,7 @@ def feedback():
 
 
 @app.route("/monitoring/simulate", methods=["POST"])
+@roles_required(COORDINATOR)
 def simulate():
     """Run the 20 test questions through the live model and log them as SIMULATED traffic."""
     split = json.load(open(os.path.join(DATA, "split.json"), encoding="utf-8"))
@@ -289,6 +310,10 @@ def _start_warm_up():
         if _warm_up_pid != os.getpid():
             _warm_up_pid = os.getpid()
             threading.Thread(target=_warm_up, daemon=True).start()
+
+# KnowBot Desk: registration, login, roles and the inquiry management system (desk/).
+init_desk(app)
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=int(os.environ.get("PORT", 5000)), debug=False)

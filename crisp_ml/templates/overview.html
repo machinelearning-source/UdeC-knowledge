@@ -1,18 +1,98 @@
 {% extends "base.html" %}
-{% block title %}Overview{% endblock %}
+{% block title %}KnowBot · PGC documentation{% endblock %}
 {% block content %}
-<h1>Learning to rank KnowBot's sources</h1>
-<p class="lead">KnowBot is a Retrieval-Augmented Generation (RAG) chatbot that answers questions about the official documents of the University of Cundinamarca. Its answers are only as good as the fragments it retrieves. This project trains a Machine Learning model that re-ranks the retrieved fragments so that the page that answers the question comes first.</p>
+<p class="excerpt">Knowledge Management Project (PGC) · Systems and Computing Engineering · Universidad de Cundinamarca, Chía Extension · Machine Learning</p>
+<h1>KnowBot: a Retrieval-Augmented Generation assistant for the institutional regulations and the academic calendar of the University of Cundinamarca</h1>
+<p class="lead">KnowBot answers students' questions about the official documents of the university with verifiable citations. The project developed the chatbot, a Machine Learning re-ranker built with the six CRISP-ML phases, and KnowBot Desk, a private web information system that manages academic inquiries and uses the model inside that process.</p>
+<p class="excerpt">Team: Oscar Javier Bello Daza, Mariana León Triana, Luis Orlando Ramírez Mosquera, Luis Alberto Rebolledo Ariza.</p>
 
+<div class="card">
+  <strong>Project resources</strong>
+  <div class="quick-links">
+    <a class="button small" href="{{ url_for('desk.login') }}">Intelligent system (KnowBot Desk)</a>
+    <a class="button small secondary" href="{{ resources.report_url }}" {% if not resources.report_url.startswith('/') %}target="_blank" rel="noopener"{% endif %}>Technical report</a>
+    <a class="button small secondary" href="{{ url_for('phase', slug='business') }}">CRISP-ML evidence</a>
+    <a class="button small secondary" href="{{ url_for('guide') }}">User documentation</a>
+    <a class="button small secondary" href="https://github.com/machinelearning-source/UdeC-knowledge/tree/main/crisp_ml" target="_blank" rel="noopener">Repository</a>
+    <a class="button small secondary" href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">KnowBot chatbot</a>
+    {% if resources.video_url %}<a class="button small secondary" href="{{ resources.video_url }}" target="_blank" rel="noopener">Presentation video</a>{% else %}<span class="button small secondary" aria-disabled="true">Presentation video (coming soon)</span>{% endif %}
+  </div>
+  <p class="excerpt">Operational modules and business data are protected: sign in or register as a student to use KnowBot Desk.</p>
+</div>
+
+<nav class="desk-nav pgc-index">
+  <a href="#title">Title</a><a href="#problem">Problem and justification</a><a href="#objectives">Objectives</a>
+  <a href="#framework">Reference framework</a><a href="#methodology">Methodology and schedule</a><a href="#results">Results</a><a href="#references">References</a>
+</nav>
+
+<h2 id="title">1. Project title</h2>
+<p><strong>KnowBot: a Retrieval-Augmented Generation (RAG) conversational assistant for querying the institutional regulations and the academic calendar of the University of Cundinamarca.</strong></p>
+<p>The approved title is kept. During development the scope grew with two components that serve the same purpose: a learned re-ranker that orders the retrieved sources (Activity 1) and KnowBot Desk, the web information system that manages the inquiries that need a reviewed answer (Activities 2 and 3).</p>
+
+<h2 id="problem">2. Problem statement and justification</h2>
+<p><strong>Problem.</strong> The information students need for academic procedures is spread across long documents: the Undergraduate Student Regulations, Agreement 005 of 2025, the report of the Student Regulations Commission and the 2026 Academic Calendar. Finding a requirement, a deadline or a date means reading dozens of pages, and the calendar is a wide table with one column per month that is hard to read on a screen or a phone.</p>
+<p><strong>Affected population and consequences.</strong> Undergraduate students repeat the same questions to program coordinations and offices, misread requirements or miss dates (course homologation, semester cancellation, voluntary withdrawal, registration dates). Coordinators and advisors spend time answering repeated questions without a record of what was asked and answered. Keyword search does not solve it, because students phrase questions with words different from the documents.</p>
+<p><strong>Evidence.</strong> On 100 labeled validation questions, the first fragment retrieved by vector search came from the page that answers the question in only 46% of the cases, and 6 questions had no fragment of the right page among the candidates; retrieval, not text generation, was the main cause of wrong or "not found" answers.</p>
+<p><strong>Guiding question.</strong> How can a conversational assistant based on Machine Learning answer students' questions about the regulations and the calendar accurately, with verifiable sources, and hand the cases that need a person to an advisor with a record of the decision?</p>
+<p><strong>Justification.</strong> Language models answer in natural language but can invent information. Retrieval-Augmented Generation reduces that risk by grounding each answer in the official fragments and citing the document and page. A learned re-ranker can put the page that answers the question first, and an inquiry management system turns the model's suggestion into a supervised decision: the advisor confirms or corrects the page, and every confirmation becomes new labeled data. The project integrates Machine Learning, natural language processing and software engineering, is aligned with the research line <em>Learning, knowledge, technologies, communication and digitalization</em> (Agreement 09 of 2021) and the Digital Transmodern Educational Model (MEDIT), and is replicable in other institutions.</p>
+
+<h2 id="objectives">3. Objectives</h2>
+<p><strong>General objective.</strong> Develop, evaluate and publish an intelligent system that answers students' questions about the institutional regulations and the 2026 academic calendar of the University of Cundinamarca with verifiable citations, and supports the management of the inquiries that need a reviewed answer.</p>
+<p><strong>Specific objectives.</strong></p>
+<div class="table-wrap"><table>
+  <tr><th>#</th><th>Objective</th><th>Verification</th><th>Status</th></tr>
+  <tr><td>1</td><td><strong>Data preparation:</strong> build the knowledge base of the four official documents (290 indexed fragments, calendar read cell by cell) and a labeled set of 100 questions with expected document and page.</td><td>FAISS index, validation questions, data quality report</td><td>Achieved</td></tr>
+  <tr><td>2</td><td><strong>Model development:</strong> implement hybrid retrieval and a learned re-ranker with 23 features, comparing Logistic Regression, Random Forest and Gradient Boosting with grouped 5-fold cross-validation.</td><td>Experiment log, cross-validation results</td><td>Achieved</td></tr>
+  <tr><td>3</td><td><strong>Model evaluation:</strong> select a model with a criterion fixed in advance and evaluate it once on 20 held-out questions against KnowBot's order.</td><td>Test metrics, team assessment of errors</td><td>Achieved: Random Forest selected; deployed in shadow mode</td></tr>
+  <tr><td>4</td><td><strong>System implementation:</strong> publish the chatbot and a private web information system with registration, roles, inquiry management and the model inside the workflow.</td><td>Published URLs, protected modules, inference history</td><td>Achieved</td></tr>
+  <tr><td>5</td><td><strong>Validation:</strong> test the published solution (functional test with 100 questions, role and workflow tests) and define monitoring and maintenance.</td><td>Functional test report, automated tests, monitoring page</td><td>Achieved</td></tr>
+</table></div>
+
+<h2 id="framework">4. Reference framework</h2>
+<ul>
+  <li><strong>Retrieval-Augmented Generation.</strong> Lewis et al. (2020) combine a document retriever with a generative model; the answer is built from retrieved fragments, which reduces hallucinations and allows citing the source. KnowBot applies it to institutional documents.</li>
+  <li><strong>Sentence embeddings.</strong> Sentence-BERT (Reimers &amp; Gurevych, 2019) and its multilingual extension (Reimers &amp; Gurevych, 2020) place Spanish and English sentences in the same vector space. KnowBot uses paraphrase-multilingual-MiniLM-L12-v2 locally with FastEmbed, because questions may be in English and the documents are in Spanish.</li>
+  <li><strong>Similarity search and diversity.</strong> FAISS (Johnson et al., 2021) finds the nearest vectors quickly; Maximal Marginal Relevance (Carbonell &amp; Goldstein, 1998) balances relevance and diversity of the retrieved fragments.</li>
+  <li><strong>Keyword ranking.</strong> BM25 (Robertson &amp; Zaragoza, 2009) scores exact terms that embeddings blur, such as official names and article numbers; it is combined with vector search.</li>
+  <li><strong>Learning to rank.</strong> Ranking can be learned as pointwise classification of (query, document) pairs (Liu, 2009). The re-ranker predicts the probability that a fragment comes from the page that answers the question.</li>
+  <li><strong>Random Forest.</strong> An ensemble of decision trees trained on bootstrap samples (Breiman, 2001), robust to noisy labels and able to capture feature interactions; implemented with scikit-learn (Pedregosa et al., 2011).</li>
+  <li><strong>Evaluation of RAG systems.</strong> Retrieval is measured with MRR and Hit@k; answers can be judged by a language model (Zheng et al., 2023), as systematized by RAGAS (Es et al., 2024).</li>
+  <li><strong>CRISP-ML(Q).</strong> A process model with quality assurance for Machine Learning projects in six phases, from business understanding to monitoring (Studer et al., 2021). It structures the re-ranker project.</li>
+  <li><strong>CDIO.</strong> Conceive, Design, Implement, Operate (Crawley et al., 2014), the engineering approach suggested by the Faculty guidelines, used for the overall project plan.</li>
+</ul>
+
+<h2 id="methodology">5. Methodology and development schedule</h2>
+<p>The overall project followed CDIO (conceive, design, implement, operate). The Machine Learning component followed the six CRISP-ML phases, each documented in this application with its evidence:</p>
+<div class="table-wrap"><table>
+  <tr><th>CRISP-ML phase</th><th>What was done</th><th>Evidence</th></tr>
+  <tr><td><a href="{{ url_for('phase', slug='business') }}">1. Business and data understanding</a></td><td>Problem, stakeholders, business and ML objectives, success criteria fixed before modeling, data quality of 100 questions and 290 fragments.</td><td>Phase 1 page, data_quality.json</td></tr>
+  <tr><td><a href="{{ url_for('phase', slug='data') }}">2. Data engineering</a></td><td>Candidate generation (25 vector, 15 BM25, exact matches), 23 features, cleaning, scaling inside the pipeline, split by question to prevent leakage.</td><td>build_dataset.py, dataset.csv, split.json</td></tr>
+  <tr><td><a href="{{ url_for('phase', slug='modeling') }}">3. Model engineering</a></td><td>Three algorithms, grid search with grouped 5-fold cross-validation, three recorded feature experiments.</td><td>train.py, cv_summary.csv, experiments/</td></tr>
+  <tr><td><a href="{{ url_for('phase', slug='evaluation') }}">4. Model evaluation</a></td><td>Random Forest selected (CV MRR 0.594 against 0.585); test MRR 0.658 against 0.724; team assessment of the 9 errors; decision: shadow mode.</td><td>test_metrics.json, team_review.json, figures</td></tr>
+  <tr><td><a href="{{ url_for('phase', slug='deployment') }}">5. Model deployment</a></td><td>Flask application on Render, API and demo, slim embedding mode to fit 512 MB, functional test on the public URL; integration into KnowBot Desk.</td><td>render.yaml, functional_test.json</td></tr>
+  <tr><td><a href="{{ url_for('phase', slug='monitoring') }}">6. Monitoring and maintenance</a></td><td>Seven indicators with thresholds, PSI drift check, inference history with model version, prediction compared with the advisor's confirmed page, retraining criteria.</td><td>monitoring.py, Desk reports</td></tr>
+</table></div>
+<p><strong>Web information system.</strong> KnowBot Desk extends the Flask application with a persistent database (PostgreSQL in production, SQLite locally), registration and login with hashed passwords, three roles (Student, Advisor, Coordinator) enforced on the server, the inquiry workflow (create, model suggestion, escalation, answer with a confirmed source, rating and closing), user and category management, reports, an audit log and the inference history. The model routes each inquiry: below a probability of 0.30 it is escalated to the coordinator; otherwise it goes to the advisors with the suggested page.</p>
+<p><strong>Development schedule (planned against actual).</strong> Planned weeks follow the 16-week semester plan of the approved proposal; actual dates come from the history of the repositories.</p>
+<div class="table-wrap"><table>
+  <tr><th>Activity</th><th>Responsible</th><th>Planned</th><th>Actual</th><th>Deliverable</th></tr>
+  <tr><td>Conceive: requirements, documents, 100-question validation set</td><td>Whole team</td><td>Weeks 1–4</td><td>Up to Oct 16, 2026</td><td>Approved PGC proposal, validation set</td></tr>
+  <tr><td>Design: RAG architecture, prompts, interface</td><td>Whole team</td><td>Weeks 4–7</td><td>Oct 16–18, 2026</td><td>Architecture, first deployment</td></tr>
+  <tr><td>Implement: ingestion, calendar reading, hybrid retrieval, cited answers, Streamlit app</td><td>Whole team</td><td>Weeks 7–11</td><td>Oct 18–31, 2026</td><td>KnowBot chatbot published</td></tr>
+  <tr><td>Operate: answer evaluation, bilingual answers, institutional design</td><td>Whole team</td><td>Weeks 11–14</td><td>Oct 28–Nov 4, 2026</td><td>Evaluation report, KnowBot v3</td></tr>
+  <tr><td>Activity 1: CRISP-ML re-ranker and Flask documentation app</td><td>Whole team</td><td>Week 14</td><td>Nov 14–15, 2026</td><td>Technical report, repository, Render app</td></tr>
+  <tr><td>Activity 2: web information system integrating the model</td><td>Whole team</td><td>Week 15</td><td>Nov 15–16, 2026</td><td>KnowBot Desk, test accounts</td></tr>
+  <tr><td>Activity 3: final PGC documentation and presentation</td><td>Whole team</td><td>Week 16</td><td>Nov 16–17, 2026</td><td>This homepage, final report, video</td></tr>
+</table></div>
+
+<h2 id="results">6. Results at a glance</h2>
 <div class="grid">
   <div class="stat"><div class="value">{{ quality.questions }}</div><div class="label">labeled questions (expected document and page)</div></div>
   <div class="stat"><div class="value">{{ quality.indexed_fragments }}</div><div class="label">indexed fragments from 4 official PDFs</div></div>
   <div class="stat"><div class="value">{{ "{:,}".format(quality.rows) }}</div><div class="label">(question, fragment) pairs in the dataset</div></div>
   <div class="stat"><div class="value">{{ card.model.replace('_', ' ') }}</div><div class="label">selected model (grouped 5-fold cross-validation)</div></div>
 </div>
-
-<h2>Results on the independent test set</h2>
-<p>{{ quality.test_questions }} questions that were never used for training, tuning or model selection.</p>
+<p>{{ quality.test_questions }} questions that were never used for training, tuning or model selection:</p>
 <div class="table-wrap"><table>
   <tr><th>Ranking</th><th class="num">MRR</th><th class="num">Hit@1</th><th class="num">Hit@3</th><th class="num">Page ±1 at rank 1</th></tr>
   {% for key, label in [('vector_baseline', 'Vector search only (FAISS)'), ('knowbot_baseline', 'KnowBot order before this project'), ('selected_model', 'Re-ranker (selected model)')] %}
@@ -20,9 +100,7 @@
   <tr class="{{ 'highlight' if key == 'selected_model' }}"><td>{{ label }}</td><td class="num">{{ '%.3f'|format(m.mrr) }}</td><td class="num">{{ '%.0f'|format(m.hit_at_1 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.hit_at_3 * 100) }}%</td><td class="num">{{ '%.0f'|format(m.near_hit_at_1 * 100) }}%</td></tr>
   {% endfor %}
 </table></div>
-<p class="note">MRR (mean reciprocal rank) is 1 when the expected page is always first, 0.5 when it is second, and so on. Hit@k is the share of questions with the expected page among the first k fragments.</p>
-
-<h2>The six CRISP-ML phases</h2>
+<p class="note">The re-ranker matched KnowBot's order on Hit@3 and separates right and wrong fragments much better (PR-AUC 0.517 against 0.21), but it ranked lower at the first position, so it runs in shadow mode and in KnowBot Desk its suggestion is always confirmed or corrected by an advisor. Every confirmation is stored as a new label for retraining.</p>
 <div class="grid">
   {% for slug, title in phases %}
   <a class="card" href="{{ url_for('phase', slug=slug) }}" style="text-decoration:none;color:inherit"><strong>{{ title }}</strong></a>
@@ -30,10 +108,25 @@
   <a class="card" href="{{ url_for('demo') }}" style="text-decoration:none;color:inherit"><strong>Try the model</strong><br><span class="excerpt">Ask a question and compare the re-ranked fragments with KnowBot's order.</span></a>
 </div>
 
-<h2>Links</h2>
-<ul class="tight">
-  <li>KnowBot chatbot: <a href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">udec-knowledge.streamlit.app</a></li>
-  <li>KnowBot repository: <a href="https://github.com/machinelearning-source/UdeC-knowledge" target="_blank" rel="noopener">machinelearning-source/UdeC-knowledge</a></li>
-  <li>This project's repository (code, scripts, data, model, reports): <a href="https://github.com/Oscar69bello/knowbot-crisp-ml" target="_blank" rel="noopener">Oscar69bello/knowbot-crisp-ml</a></li>
-</ul>
+<h2 id="references">7. Bibliographic references</h2>
+<div class="references">
+<p>Breiman, L. (2001). Random forests. <em>Machine Learning, 45</em>(1), 5–32. https://doi.org/10.1023/A:1010933404324</p>
+<p>Carbonell, J., &amp; Goldstein, J. (1998). The use of MMR, diversity-based reranking for reordering documents and producing summaries. In <em>Proceedings of the 21st Annual International ACM SIGIR Conference on Research and Development in Information Retrieval</em> (pp. 335–336). ACM. https://doi.org/10.1145/290941.291025</p>
+<p>Crawley, E. F., Malmqvist, J., Östlund, S., Brodeur, D. R., &amp; Edström, K. (2014). <em>Rethinking engineering education: The CDIO approach</em> (2nd ed.). Springer. https://doi.org/10.1007/978-3-319-05561-9</p>
+<p>Es, S., James, J., Espinosa Anke, L., &amp; Schockaert, S. (2024). RAGAs: Automated evaluation of retrieval augmented generation. In <em>Proceedings of the 18th Conference of the European Chapter of the Association for Computational Linguistics: System Demonstrations</em> (pp. 150–158). ACL. https://doi.org/10.18653/v1/2024.eacl-demo.16</p>
+<p>Johnson, J., Douze, M., &amp; Jégou, H. (2021). Billion-scale similarity search with GPUs. <em>IEEE Transactions on Big Data, 7</em>(3), 535–547. https://doi.org/10.1109/TBDATA.2019.2921572</p>
+<p>Lewis, P., Perez, E., Piktus, A., Petroni, F., Karpukhin, V., Goyal, N., Küttler, H., Lewis, M., Yih, W., Rocktäschel, T., Riedel, S., &amp; Kiela, D. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. <em>Advances in Neural Information Processing Systems, 33</em>, 9459–9474.</p>
+<p>Liu, T.-Y. (2009). Learning to rank for information retrieval. <em>Foundations and Trends in Information Retrieval, 3</em>(3), 225–331. https://doi.org/10.1561/1500000016</p>
+<p>Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., et al. (2011). Scikit-learn: Machine learning in Python. <em>Journal of Machine Learning Research, 12</em>, 2825–2830.</p>
+<p>Reimers, N., &amp; Gurevych, I. (2019). Sentence-BERT: Sentence embeddings using Siamese BERT-networks. In <em>Proceedings of EMNLP-IJCNLP 2019</em> (pp. 3980–3990). ACL. https://doi.org/10.18653/v1/D19-1410</p>
+<p>Reimers, N., &amp; Gurevych, I. (2020). Making monolingual sentence embeddings multilingual using knowledge distillation. In <em>Proceedings of EMNLP 2020</em> (pp. 4512–4525). ACL. https://doi.org/10.18653/v1/2020.emnlp-main.365</p>
+<p>Robertson, S., &amp; Zaragoza, H. (2009). The probabilistic relevance framework: BM25 and beyond. <em>Foundations and Trends in Information Retrieval, 3</em>(4), 333–389. https://doi.org/10.1561/1500000019</p>
+<p>Studer, S., Bui, T. B., Drescher, C., Hanuschkin, A., Winkler, L., Peters, S., &amp; Müller, K.-R. (2021). Towards CRISP-ML(Q): A machine learning process model with quality assurance methodology. <em>Machine Learning and Knowledge Extraction, 3</em>(2), 392–413. https://doi.org/10.3390/make3020020</p>
+<p>Universidad de Cundinamarca, Consejo Académico. (2025). <em>Acuerdo N.° 005 de 2025: Por el cual se reglamentan las experiencias formativas en el marco de la metodología de campo de aprendizaje que declara el Modelo Educativo Digital Transmoderno – MEDIT</em>.</p>
+<p>Universidad de Cundinamarca, Consejo Superior. (2021). <em>Acuerdo N.° 027 de 2021: Por medio del cual se expide el Reglamento Estudiantil de Pregrado de la Universidad de Cundinamarca</em>.</p>
+<p>Universidad de Cundinamarca, Comisión del Reglamento Estudiantil. (2021, November 16). <em>Proyecto Reglamento Estudiantil V3: Informe a la sesión del Consejo Académico</em>.</p>
+<p>Universidad de Cundinamarca, Facultad de Ingeniería. (2023). <em>Lineamientos para la planificación, ejecución y evaluación de los proyectos de gestión del conocimiento en la Facultad de Ingeniería</em> (Comunicado N.° 03).</p>
+<p>Universidad de Cundinamarca, Oficina de Admisiones y Registro. (2026). <em>Calendario académico 2026</em> (Versión 19).</p>
+<p>Zheng, L., Chiang, W.-L., Sheng, Y., Zhuang, S., Wu, Z., Zhuang, Y., Lin, Z., Li, Z., Li, D., Xing, E. P., Zhang, H., Gonzalez, J. E., &amp; Stoica, I. (2023). Judging LLM-as-a-judge with MT-Bench and Chatbot Arena. <em>Advances in Neural Information Processing Systems, 36</em>, 46595–46623.</p>
+</div>
 {% endblock %}

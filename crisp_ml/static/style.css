@@ -87,3 +87,32 @@ body.side-open .side-panel { transform: none; }
 .card.answer { border-left: 5px solid var(--accent); }
 .card.answer h2 { margin-top: 0; border-left: none; padding-left: 0; }
 .answer-text { line-height: 1.6; }
+.account { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.account form { margin: 0; }
+.account .who { color: var(--soft); font-size: 0.85rem; }
+.button.small, button.small { padding: 5px 12px; font-size: 0.85rem; }
+header.top .button.small { background: var(--accent); color: var(--navy-dark); border-color: var(--accent); }
+header.top .button.small.secondary, header.top button.secondary.small { background: transparent; color: #fff; border-color: var(--soft); }
+.flash { padding: 10px 14px; border-radius: 8px; margin: 0 0 14px; border-left: 4px solid; }
+.flash.good { background: #e6f4ea; border-color: var(--good); }
+.flash.bad { background: #fdecea; border-color: var(--bad); }
+.desk-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.desk-nav a { padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--blue); color: var(--navy); text-decoration: none; font-weight: 600; font-size: 0.9rem; background: #fff; }
+.desk-nav a.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.form-grid { display: grid; gap: 12px; max-width: 640px; }
+.form-grid label { font-weight: 600; color: var(--navy); }
+.form-grid input, .form-grid select, .form-grid textarea, .inline select, .inline input { padding: 9px 11px; border: 1.5px solid var(--blue); border-radius: 10px; font: inherit; width: 100%; }
+.inline { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.inline select, .inline input { width: auto; }
+.status { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
+.status.new { background: #e1f0e6; color: var(--blue); } .status.escalated { background: #fff1d6; color: #8a5a00; }
+.status.in_progress { background: #e7ecff; color: #2a3f9e; } .status.answered { background: #dcf3e6; color: var(--good); }
+.status.closed { background: #eceeed; color: #4f5d53; }
+.ranking label { display: block; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; margin: 6px 0; background: #fff; }
+.ranking label.top { border-color: var(--accent); border-width: 2px; }
+.danger { background: var(--bad); border-color: var(--bad); }
+.quick-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.quick-links .button.secondary { background: #fff; color: var(--navy); }
+.quick-links [aria-disabled="true"] { opacity: 0.6; cursor: default; }
+.pgc-index { margin-top: 18px; }
+.references p { padding-left: 2em; text-indent: -2em; margin: 6px 0; font-size: 0.92rem; }

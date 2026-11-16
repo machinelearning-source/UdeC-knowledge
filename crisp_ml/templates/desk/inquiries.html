@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "desk/_rows.html" import inquiry_table %}
+{% block title %}Inquiries{% endblock %}
+{% block content %}
+<h1>{{ 'My inquiries' if current_user.role == 'student' else 'All inquiries' }}</h1>
+{% include "desk/_nav.html" %}
+<form method="get" class="inline card">
+  <label>Status <select name="status"><option value="">All</option>{% for key, name in statuses.items() %}<option value="{{ key }}" {{ 'selected' if status == key }}>{{ name }}</option>{% endfor %}</select></label>
+  <label>Category <select name="category"><option value="">All</option>{% for c in categories %}<option value="{{ c.id }}" {{ 'selected' if category == c.id }}>{{ c.name }}</option>{% endfor %}</select></label>
+  <button type="submit" class="small">Filter</button>
+</form>
+{{ inquiry_table(inquiries, show_student=current_user.role != 'student') }}
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<h1>Reports and indicators</h1>
+{% include "desk/_nav.html" %}
+<div class="grid">
+  <div class="stat"><div class="value">{{ indicators.total }}</div><div class="label">inquiries registered</div></div>
+  <div class="stat"><div class="value">{{ indicators.median_hours if indicators.median_hours is not none else '—' }}</div><div class="label">median hours to answer</div></div>
+  <div class="stat"><div class="value">{{ indicators.mean_rating if indicators.mean_rating is not none else '—' }}</div><div class="label">mean student rating (1 to 5)</div></div>
+  <div class="stat"><div class="value">{{ '%.0f%%'|format(indicators.model_accuracy * 100) if indicators.model_accuracy is not none else '—' }}</div><div class="label">model's first page confirmed by the advisor ({{ indicators.model_right }} of {{ indicators.model_checked }})</div></div>
+  <div class="stat"><div class="value">{{ indicators.escalated_by_model }}</div><div class="label">inquiries escalated by the model (probability below 0.30)</div></div>
+  <div class="stat"><div class="value">{{ indicators.median_latency if indicators.median_latency is not none else '—' }}</div><div class="label">median model latency (ms) · {{ indicators.inferences }} inferences · {{ indicators.model_errors }} errors</div></div>
+</div>
+<div class="two">
+  <div><h2>By status</h2><div class="table-wrap"><table><tr><th>Status</th><th class="num">Inquiries</th></tr>{% for name, n in indicators.by_status.items() %}<tr><td>{{ name }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</table></div></div>
+  <div><h2>By category</h2><div class="table-wrap"><table><tr><th>Category</th><th class="num">Inquiries</th></tr>{% for name, n in indicators.by_category %}<tr><td>{{ name }}</td><td class="num">{{ n }}</td></tr>{% endfor %}</table></div></div>
+</div>
+<h2>Prediction against actual outcome</h2>
+<p>Each answered inquiry stores the page the model put first and the page the advisor confirmed. Their agreement is the model's accuracy in operation, compared with the 55% Hit@1 of the test set to detect a drop in performance.{% if current_user.role == 'coordinator' %} <a href="{{ url_for('desk.labeled_csv') }}">Download the confirmed questions (CSV)</a> to add them to the training data.{% endif %}</p>
+<h2>Recent actions (audit log)</h2>
+<div class="table-wrap"><table><tr><th>Date (UTC)</th><th>User</th><th>Action</th><th>Entity</th><th>Detail</th></tr>
+{% for a in audit %}<tr><td>{{ a.created_at.strftime('%Y-%m-%d %H:%M') }}</td><td>{{ a.user.name if a.user else '' }}</td><td>{{ a.action }}</td><td>{{ a.entity }} {{ a.entity_id or '' }}</td><td>{{ a.detail }}</td></tr>{% endfor %}
+</table></div>
+{% endblock %}

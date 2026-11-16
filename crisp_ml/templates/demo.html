@@ -30,7 +30,7 @@
     {% for menu in quick %}
     <details class="quick">
       <summary>{{ menu.title }}</summary>
-      <form method="post" action="{{ url_for('demo') }}">
+      <form method="post" action="{{ url_for('demo') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="quick" value="{{ menu.name }}">
         <span class="excerpt">{{ menu.options|length }} options</span>
         <select name="option" required>
@@ -44,7 +44,7 @@
   </div>
 </div>
 
-<form method="post" action="{{ url_for('demo') }}" class="card">
+<form method="post" action="{{ url_for('demo') }}" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <label for="question"><strong>Question</strong> (English or Spanish, up to 500 characters)</label>
   <textarea id="question" name="question" rows="3" maxlength="500" required spellcheck="false">{{ question }}</textarea>
   <div class="examples"><span class="excerpt">Examples from the test set:</span><br>
@@ -81,7 +81,7 @@
     {% endfor %}
   </div>
 </div>
-<form method="post" action="{{ url_for('feedback') }}" class="card">
+<form method="post" action="{{ url_for('feedback') }}" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
   <input type="hidden" name="question" value="{{ result.question }}">
   <strong>Was the first fragment of the model the right one?</strong>
   <p><label><input type="radio" name="useful" value="yes" required> Yes</label> &nbsp; <label><input type="radio" name="useful" value="no"> No</label></p>

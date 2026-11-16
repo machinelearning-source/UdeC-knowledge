@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}User documentation{% endblock %}
+{% block content %}
+<h1>User documentation</h1>
+<p class="lead">How to use KnowBot Desk, the private system that manages academic inquiries with the help of the Machine Learning model. For quick questions without an account, use the <a href="https://udec-knowledge.streamlit.app/" target="_blank" rel="noopener">KnowBot chatbot</a>.</p>
+
+<h2>Getting started</h2>
+<ol class="tight">
+  <li>Open the homepage and choose <strong>Register</strong> (top right). New accounts always have the <strong>Student</strong> role.</li>
+  <li>Sign in with your email and password. The <strong>KnowBot Desk</strong> button opens your dashboard; <strong>Sign out</strong> closes the session.</li>
+  <li>Advisor and Coordinator accounts are created by a coordinator, who assigns the role in <em>Users and roles</em>.</li>
+  <li>If the site was idle, the first visit can take about a minute while the free server wakes up.</li>
+</ol>
+
+<h2>Roles and what each one can do</h2>
+<div class="table-wrap"><table>
+  <tr><th>Function</th><th>Student</th><th>Advisor</th><th>Coordinator</th></tr>
+  <tr><td>Create, edit and delete own inquiries (until an advisor takes them)</td><td>Yes</td><td>—</td><td>—</td></tr>
+  <tr><td>See inquiries</td><td>Only own</td><td>All</td><td>All</td></tr>
+  <tr><td>Take and answer new inquiries, confirming the source page</td><td>—</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Take and answer escalated inquiries</td><td>—</td><td>—</td><td>Yes</td></tr>
+  <tr><td>Rate an answer and close the inquiry</td><td>Own</td><td>—</td><td>—</td></tr>
+  <tr><td>Reports, indicators and model history</td><td>—</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td>Users, roles and categories; export of labeled questions</td><td>—</td><td>—</td><td>Yes</td></tr>
+</table></div>
+
+<h2>Complete workflow</h2>
+<ol>
+  <li><strong>Student:</strong> <em>New inquiry</em> → title, category and question (15 to 500 characters, English or Spanish) → <em>Send inquiry</em>.</li>
+  <li><strong>Model:</strong> the re-ranker scores the pages of the official documents and stores the inference (date, user, result, model version). If its top probability is below 0.30 the inquiry is <em>Escalated</em> to the coordinator; otherwise it is <em>New</em> in the advisors' queue.</li>
+  <li><strong>Advisor:</strong> opens the inquiry, reads the five suggested pages with their probability and excerpt, presses <em>Take this inquiry</em>, selects the page that really supports the answer (or writes another document and page) and sends the answer. An advisor can also send an inquiry to the coordinator.</li>
+  <li><strong>Student:</strong> reads the answer and the confirmed source and rates it from 1 to 5; the inquiry is <em>Closed</em>.</li>
+  <li><strong>Coordinator:</strong> follows the indicators in <em>Reports</em>: inquiries by status and category, response time, ratings and how often the model's page was confirmed.</li>
+</ol>
+
+<h2>How to read the model's result</h2>
+<ul class="tight">
+  <li><strong>Meaning:</strong> the probability that a fragment comes from the page that answers the question.</li>
+  <li><strong>Use:</strong> it pre-selects the page the advisor checks first and routes unsure cases to the coordinator.</li>
+  <li><strong>Limitations:</strong> on the test set the model put the right page first in 55% of the questions and among the first three in 75%; Spanish questions are somewhat weaker. The advisor always confirms or corrects the page.</li>
+</ul>
+
+<h2>Incidents and feedback</h2>
+<ul class="tight">
+  <li>Rate every answer and leave a comment; ratings and confirmed pages are reviewed in <em>Reports</em>.</li>
+  <li>Report problems (wrong date or requirement, errors, access issues) as an issue in the <a href="https://github.com/machinelearning-source/UdeC-knowledge/issues" target="_blank" rel="noopener">project repository</a>. A wrong deadline or requirement is handled first, within one week.</li>
+  <li>The team reviews the monitoring indicators weekly during the semester.</li>
+</ul>
+
+<h2>Training: a 10-minute walkthrough</h2>
+<ol class="tight">
+  <li>Register as a student and create an inquiry about the minimum group size.</li>
+  <li>Sign in as an advisor, take it, check the suggested page (Undergraduate Student Regulations, page 6) and answer.</li>
+  <li>Sign in again as the student, read the answer and rate it.</li>
+  <li>Sign in as the coordinator and open <em>Reports</em> and <em>Model history</em> to see the inference and the confirmed page.</li>
+</ol>
+<p class="excerpt">The full technical manual and user manual are appendices of the <a href="{{ resources.report_url }}">technical report</a>.</p>
+{% endblock %}

@@ -43,7 +43,7 @@
 
 <h2>Monitoring test</h2>
 <p>Predictions logged by this running app. Rows marked <span class="badge sim">simulated</span> come from the button below, which replays the 20 test questions through the live model: they are <strong>simulated operational data</strong>, not real users. Rows from the demo form are marked <span class="badge info">demo</span>.</p>
-<form method="post" action="{{ url_for('simulate') }}"><button type="submit">Run simulated traffic (20 test questions)</button></form>
+{% if current_user.is_authenticated and current_user.role == 'coordinator' %}<form method="post" action="{{ url_for('simulate') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Run simulated traffic (20 test questions)</button></form>{% else %}<p class="excerpt">The simulation writes to the operational log, so only a coordinator signed in to KnowBot Desk can run it.</p>{% endif %}
 
 {% if indicators.rows %}
 <div class="grid" style="margin-top:14px">

@@ -12,6 +12,16 @@
   <div class="bar">
     <a href="{{ url_for('overview') }}"><img src="{{ url_for('static', filename='knowbot-logo.png') }}" alt="KnowBot - Ask. Learn. Know."></a>
     <div class="name">KnowBot Re-ranker<small>A Machine Learning project documented with the six CRISP-ML phases</small></div>
+    <div class="account">
+      {% if current_user.is_authenticated %}
+        <a class="button small" href="{{ url_for('desk.home') }}">KnowBot Desk</a>
+        <span class="who">{{ current_user.name }} · {{ current_user.role_name }}</span>
+        <form method="post" action="{{ url_for('desk.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="secondary small">Sign out</button></form>
+      {% else %}
+        <a class="button small" href="{{ url_for('desk.login') }}">Sign in</a>
+        <a class="button small secondary" href="{{ url_for('desk.register') }}">Register</a>
+      {% endif %}
+    </div>
   </div>
 </header>
 <nav class="phases">
@@ -24,6 +34,7 @@
   </ul>
 </nav>
 <main>
+{% with messages = get_flashed_messages(with_categories=true) %}{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endwith %}
 {% block content %}{% endblock %}
 </main>
 <footer>KnowBot · Ask. Learn. Know. · Universidad de Cundinamarca · Systems and Computing Engineering · {{ current_year }}</footer>

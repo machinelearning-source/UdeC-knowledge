@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+<h1>Sign in to KnowBot Desk</h1>
+<p class="lead">KnowBot Desk manages academic inquiries that need a reviewed answer: students ask, advisors answer with the page of the regulations suggested by the model, and coordinators supervise.</p>
+<form method="post" class="card form-grid">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label for="email">Email</label><input id="email" name="email" type="email" value="{{ email }}" required autocomplete="username">
+  <label for="password">Password</label><input id="password" name="password" type="password" required autocomplete="current-password">
+  <p><button type="submit">Sign in</button></p>
+  <p class="excerpt">No account yet? <a href="{{ url_for('desk.register') }}">Register as a student</a>.</p>
+</form>
+{% endblock %}
