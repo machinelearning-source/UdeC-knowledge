@@ -69,15 +69,21 @@ TEST_ACCOUNTS = [
 
 
 def _create_test_accounts():
-    created = False
+    """Create each test account, or reset its password when the value on the server changed."""
+    changed = False
     for key, name, email, role in TEST_ACCOUNTS:
         password = os.environ.get(f"DESK_{key}_PASSWORD")
-        if password and not User.query.filter_by(email=email).first():
+        if not password:
+            continue
+        user = User.query.filter_by(email=email).first()
+        if not user:
             user = User(name=name, email=email, role=role)
-            user.set_password(password)
             db.session.add(user)
-            created = True
-    if created:
+        elif user.check_password(password):
+            continue
+        user.set_password(password)
+        changed = True
+    if changed:
         db.session.commit()
 
 
